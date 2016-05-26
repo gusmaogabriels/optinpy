@@ -6,5 +6,5 @@ class graph(object):
         self.network = {}
         
     def create(self,nodedic):
-        
+        return []
     
