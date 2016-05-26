@@ -15,5 +15,6 @@ Oct, 2015
 """
 
 import numpy as np
+from .graph.base import *
 
-__all__ = ['graph','np','__author__','__version__']
+__all__ = ['np','graph','__author__','__version__']
