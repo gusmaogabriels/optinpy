@@ -15,6 +15,5 @@ Oct, 2015
 """
 
 import numpy as np
-from .graph import *
 
 __all__ = ['graph','np','__author__','__version__']
