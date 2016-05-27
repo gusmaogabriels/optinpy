@@ -28,7 +28,7 @@ class graph(object):
         self.arcs = []
         self.costs = []
             
-    def add_connection(self, nfrom, nto, cost):
+    def add_connection(self, nfrom, nto, cost, bidirectional = False):
         if len(self.arcs)==0 or [nfrom, nto] not in self.arcs:
             if nfrom not in self.nodes.keys():
                 self.nodes.__setitem__(nfrom, node(nfrom,children=nto))
@@ -46,6 +46,8 @@ class graph(object):
             self.costs += [cost]
         else:
             self.costs[self.arcs.index([nfrom,nto])] = cost
+        if bidirectional:
+            self.add_connection(nto,nfrom,cost)
         
 class node(object):
     
