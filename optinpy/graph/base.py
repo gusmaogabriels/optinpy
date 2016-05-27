@@ -31,15 +31,15 @@ class graph(object):
     def add_connection(self, nfrom, nto, cost):
         if len(self.arcs)==0 or [nfrom, nto] not in self.arcs:
             if nfrom not in self.nodes.keys():
-                self.nodes.__setitem__(nfrom, node(nfrom,child=nto))
-            elif nto not in nfrom.__child:
-                nfrom.__child += [nto]
+                self.nodes.__setitem__(nfrom, node(nfrom,children=nto))
+            elif nto not in self.nodes[nfrom].children:
+                self.nodes[nfrom].children += [nto]
             else:
                 pass
             if nto not in self.nodes.keys():
-                self.nodes.__setitem__(nto,node(nto,parent=nfrom))
-            elif nfrom not in nto.__parent:
-                nto.__parent += [nfrom]
+                self.nodes.__setitem__(nto,node(nto,parents=nfrom))
+            elif nfrom not in self.nodes[nto].parents:
+                self.nodes[nto].parents += [nfrom]
             else:
                 pass
             self.arcs += [[nfrom,nto]]
@@ -52,33 +52,35 @@ class node(object):
     def __init__(self, key, **kwargs):
         """
         .. key as integer
-        .. ** kwargs        .. parent as integer
-                            .. child as integer
+        .. ** kwargs        .. parents as integer
+                            .. children as integer
                             .. b as numeric
         """
         argparser(key,int)      
-        self.__key = key
-        self.__b = 0 # 
-        if kwargs.has_key('parent'):
-            argparser(kwargs['parent'],(int,tuple,list),subvartype=int)
-            self.__parent = kwargs['parent']
+        self.key = key
+        self.b = 0 #
+        self.children = []
+        self.parents = []
+        if kwargs.has_key('parents'):
+            argparser(kwargs['parents'],int)
+            self.parents = [kwargs['parents']]
         else:
-            self.__parent = []
-        if kwargs.has_key('child'):
-            argparser(kwargs['child'],(int,tuple,list),subvartype=int)
-            self.__child = kwargs['child']
+            self.parents = []
+        if kwargs.has_key('children'):
+            argparser(kwargs['children'],int)
+            self.children = [kwargs['children']]
         else:
-            self.__child = []
+            self.children = []
         if kwargs.has_key('b'):
             argparser(kwargs['b'],(int,long,float))
-            self.__b = kwargs['b']
+            self.b = kwargs['b']
         else:
-            self.__b = []
+            self.b = []
             
     def set_b(self,value):
         """
         .. value as numeric
         """
         argparser(value,(int,long,float))
-        self.__b = value
+        self.b = value
         
