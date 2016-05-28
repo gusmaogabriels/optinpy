@@ -18,6 +18,6 @@ Copyright © 2015 - Gabriel Sabença Gusmão
 ----------------
 
  *Graphs*
-  .*Shortest Path Algorithms:*
-    .Dijkstra's
-    .Ford-Bellman-Moore's
+  1. *Shortest Path Algorithms:*
+    - Dijkstra's
+    - Ford-Bellman-Moore's
