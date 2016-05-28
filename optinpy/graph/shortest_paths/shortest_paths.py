@@ -2,15 +2,51 @@
 
 from ..base import argparser, graph 
 
-def bfm(network,n0):
-    
-    return 
-
-def dijkstra(network,n0,verbose=False):
+def fmb(network,n0,verbose=False):
+    '''
+        Standard Ford-Moore-Bellman's algorithm
+        ..network as optinpy.graph object
+        ..n0 as integer node in the graph object
+        ..verbose as boolean
+    '''
     nodes = network.nodes.keys()
     arcs = network.arcs
     ds = [float('inf') for i in range(0,len(nodes))] # distances list
-    rot = [0 for i in range(0,len(nodes))] # route list
+    rot = [n0 for i in range(0,len(nodes))] # route list
+    ds[nodes.index(n0)] = 0
+    t = 0
+    for i in range(0,len(nodes)):
+        ds0 = list(ds)
+        for j in range(0,len(arcs)):
+            if ds[nodes.index(arcs[j][1])] > network.costs[j] + ds[nodes.index(arcs[j][0])]:
+                if i == len(nodes)-1: # this needs validation
+                    print('Negative-weight cycle exists!')
+                    return rot, ds
+                ds[nodes.index(arcs[j][1])] = network.costs[j] + ds[nodes.index(arcs[j][0])]
+                rot[nodes.index(arcs[j][1])] = arcs[j][0]
+            else:
+                pass
+        t += 1
+        if verbose:
+            print('Iteration #{}'.format(t))
+            print('d #{}'.format(ds))
+        if ds == ds0:
+            return rot, ds
+        else:
+            pass
+    return rot, ds
+
+def dijkstra(network,n0,verbose=False):
+    '''
+        Standard Dijkstra's algorithm
+        ..network as optinpy.graph object
+        ..n0 as integer node in the graph object
+        ..verbose as boolean
+    '''
+    nodes = network.nodes.keys()
+    arcs = network.arcs
+    ds = [float('inf') for i in range(0,len(nodes))] # distances list
+    rot = [n0 for i in range(0,len(nodes))] # route list
     on = list(nodes) # open nodes list (O)
     cn = [on.pop(on.index(n0))] # closed nodes list (F)
     ds[nodes.index(n0)] = 0
