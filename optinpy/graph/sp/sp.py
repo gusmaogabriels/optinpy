@@ -10,7 +10,7 @@ def fmb(network,n0,verbose=False):
         ..verbose as boolean
     '''
     nodes = network.nodes.keys()
-    arcs = network.arcs
+    arcs = list(network.arcs)
     ds = [float('inf') for i in range(0,len(nodes))] # distances list
     rot = [n0 for i in range(0,len(nodes))] # route list
     ds[nodes.index(n0)] = 0
