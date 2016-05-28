@@ -4,14 +4,7 @@
 ==================================================================
 *General linear and non-linear optimization methods in Python.*
 
-Copyright © 2015 - Gabriel Sabença Gusmão
-
-[![linkedin](https://static.licdn.com/scds/common/u/img/webpromo/btn_viewmy_160x25.png)](https://br.linkedin.com/pub/gabriel-saben%C3%A7a-gusm%C3%A3o/115/aa6/aa8)
-
-[![researchgate](https://www.researchgate.net/images/public/profile_share_badge.png)](https://www.researchgate.net/profile/Gabriel_Gusmao?cp=shp)
-
 [![license](https://img.shields.io/pypi/l/optinpy.svg)](./LICENSE.md)
-[![pypi version](https://img.shields.io/pypi/v/optinpy.svg)](https://pypi.python.org/pypi/optinpy)
 
 ----------------
 **Description**
@@ -22,3 +15,10 @@ Copyright © 2015 - Gabriel Sabença Gusmão
   1. **Shortest Path Algorithms:**
     - Dijkstra's
     - Ford-Bellman-Moore's
+
+
+Copyright © 2015 - Gabriel Sabença Gusmão
+
+[![linkedin](https://static.licdn.com/scds/common/u/img/webpromo/btn_viewmy_160x25.png)](https://br.linkedin.com/pub/gabriel-saben%C3%A7a-gusm%C3%A3o/115/aa6/aa8)
+
+[![researchgate](https://www.researchgate.net/images/public/profile_share_badge.png)](https://www.researchgate.net/profile/Gabriel_Gusmao?cp=shp)
