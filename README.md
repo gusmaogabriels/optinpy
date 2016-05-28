@@ -4,8 +4,6 @@
 ==================================================================
 *General linear and non-linear optimization methods in Python.*
 
-[![license](https://img.shields.io/pypi/l/optinpy.svg)](./LICENSE.md)
-
 ----------------
 **Description**
 ----------------
