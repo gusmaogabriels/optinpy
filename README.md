@@ -8,7 +8,11 @@
 
 ####**Graphs**
  
-  1. **Shortest Path Algorithms:**
+  1. **Shortest-path Algorithms (.sp):**
+    - Dijkstra's
+    - Ford-Bellman-Moore's
+  
+  2. **Minimum spanning-tree Algorithms (.mst):**
     - Dijkstra's
     - Ford-Bellman-Moore's
 
