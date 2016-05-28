@@ -13,8 +13,8 @@
     - Ford-Bellman-Moore's
   
   2. **Minimum spanning-tree Algorithms (.mst):**
-    - Dijkstra's
-    - Ford-Bellman-Moore's
+    - Prim's
+    - Kruskals's (*under development*)
 
 
 Copyright © 2016 - Gabriel Sabença Gusmão
