@@ -6,7 +6,7 @@
 
 ###**Description**
 
- ####**Graphs**
+ ###**Graphs**
  
   1. **Shortest Path Algorithms:**
     - Dijkstra's
