@@ -6,7 +6,7 @@
 
 ####**Description**
 
-#####**Graphs**
+#####**Graphs** (`.graph`)
   - Equivalent *tableau* (`.tableau`)
   - Minimum-cost flow problem (`.mcfp`) 
   - Big-M (`.bigm`)
