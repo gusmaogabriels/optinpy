@@ -8,14 +8,14 @@
 
 ####**Graphs**
  
-  1. **Shortest-path Algorithms (.sp):**
-    - Dijkstra's
-    - Ford-Bellman-Moore's
+  1. **Shortest-path Algorithms** (`.sp`)
+    - Dijkstra's (`.dijkstra`)
+    - Ford-Bellman-Moore's (`.fmb`)
   
-  2. **Minimum spanning-tree Algorithms (.mst):**
-    - Prim's
-    - Kruskals's alike (see commit notes)
-    - Borůvka's
+  2. **Minimum spanning-tree Algorithms** (`.mst`)
+    - Prim's (`.prim`)
+    - Kruskals'sali ke (see commit notes) (`.kruskal`)
+    - Borůvka's (`.boruvka`)
 
 
 Copyright © 2016 - Gabriel Sabença Gusmão
