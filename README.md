@@ -14,7 +14,8 @@
   
   2. **Minimum spanning-tree Algorithms (.mst):**
     - Prim's
-    - Kruskals's (*under development*)
+    - Kruskals's alike (see commit notes)
+    - Borůvka's
 
 
 Copyright © 2016 - Gabriel Sabença Gusmão
