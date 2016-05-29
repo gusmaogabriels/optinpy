@@ -6,16 +6,19 @@
 
 ###**Description**
 
-####**Graphs**
- 
-  1. **Shortest-path Algorithms** (`.sp`)
-    - Dijkstra's (`.dijkstra`)
-    - Ford-Bellman-Moore's (`.fmb`)
+#####**Graphs**
+  - Equivalent *tableau* (`.tableau`)
+  - Minimum-cost flow problem (`.mcfp`) 
+  - Big-M (`.bigm`)
   
-  2. **Minimum spanning-tree Algorithms** (`.mst`)
-    - Prim's (`.prim`)
-    - Kruskals'sali ke (see commit notes) (`.kruskal`)
-    - Borůvka's (`.boruvka`)
+#####**Shortest-path Algorithms** (`.sp`)
+  - Dijkstra's (`.dijkstra`)
+  - Ford-Bellman-Moore's (`.fmb`)
+  
+#####**Minimum spanning-tree Algorithms** (`.mst`)
+  - Prim's (`.prim`)
+  - Kruskals'sali ke (see commit notes) (`.kruskal`)
+  - Borůvka's (`.boruvka`)
 
 
 Copyright © 2016 - Gabriel Sabença Gusmão
