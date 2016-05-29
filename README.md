@@ -4,7 +4,7 @@
 ==================================================================
 *General linear and non-linear optimization methods in Python.*
 
-###**Description**
+####**Description**
 
 #####**Graphs**
   - Equivalent *tableau* (`.tableau`)
