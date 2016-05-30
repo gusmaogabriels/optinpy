@@ -17,7 +17,7 @@
   
 #####**Minimum spanning-tree Algorithms** (`.mst`)
   - Prim's (`.prim`)
-  - Kruskals'sali ke (see commit notes) (`.kruskal`)
+  - Kruskal's alike (see commit notes) (`.kruskal`)
   - Borůvka's (`.boruvka`)
 
 
