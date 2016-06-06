@@ -15,17 +15,15 @@ def prim(network,n0,verbose=False):
     cn = [on.pop(on.index(n0))] # closed nodes list (F)
     r = n0
     t = 0
-    while len(on)>0:
+    while len(on)>1:
         r0 = r
-        narcs = filter(lambda n : n[0] not in cn or n[1] not in cn,\
-        [i for n in cn for j in [[[n,c] for c in network.nodes[n].children],\
-        [[p,n] for p in network.nodes[n].parents]] for i in j])
-        try:        
-            z = min(zip([network.costs[network.arcs.index(i)] for i in narcs],narcs))
-        except:
-            raise Exception('Graph is disconnected.')
-        arcs += [z[1]]
-        r = filter(lambda n : n not in cn, z[1])[0]
+        z = float('inf')
+        narc = []
+        for n in [network.nodes[i] for i in cn]:
+            for arc in filter(lambda x : x[0] not in cn or x[1] not in cn, n.get_connections()):
+                narc, z = [[narc,z] if network.arcs[arc[0]][arc[1]].cost>z else [arc,network.arcs[arc[0]][arc[1]].cost]][0]    
+        arcs += [narc]
+        r = filter(lambda n : n not in cn, arcs[-1])[0]
         cn += [on.pop(on.index(r))]   
         t += 1
         if verbose:
@@ -46,12 +44,12 @@ def kruskal(network,verbose=False):
     nodes = network.nodes.keys()
     on = list(nodes) # open nodes list (O)
     cn = [] # closed nodes list
-    costs = sorted(zip(network.costs,range(0,len(network.arcs)))) # zip list to link arc positions
+    costs = sorted([[network.arcs[f][t].cost,[f,t]] for f in network.arcs.keys() for t in network.arcs[f].keys()])# list to link arc positions
     trees = []
     arcs = []
     t = 0
-    while len(on)>0 or len(trees)>1:
-        arc = list(network.arcs[costs[0][1]])
+    while len(on)>1 or len(trees)>1:
+        arc = costs[0][1]
         if sum([arc[j] in i for j in [0,1] for i in trees])==2: # both nodes are within trees
             indexer = [sum([arc[j] in i for j in [0,1]]) for i in trees]            
             if not any([i==2 for i in indexer]): # this should link trees, for nodes are in different trees:
@@ -86,27 +84,40 @@ def boruvka(network,verbose=False):
         ..network as optinpy.graph object
         ..verbose as boolean
     '''
-    nodes = network.nodes.keys()
-    trees = [[i] for i in nodes]
-    arcs0 = zip(range(0,len(network.arcs)),network.costs,network.arcs)
+    nodes_map = [[i] for i in range(0,len(network.nodes)-1)]
+    nodes = dict(zip(list(set(network.nodes.keys())^set([0])),nodes_map))
+    trees = [[i] for i in nodes.keys()]
+    arcs0 = [[network.arcs[j][i].cost,[j,i]] for j in network.arcs.keys() for i in network.arcs[j].keys()]
+    arcs0 = [[i,arcs0[i][0],arcs0[i][1]] for i in range(0,len(arcs0))]  
     arcs = []
-    connections = [filter(lambda x : x!=None,[j if i in arcs0[j][2] else None for j in range(0,len(network.arcs))]) for i in nodes]
+    connections = [filter(lambda x : x!=None,[j if i in arcs0[j][2] else None for j in range(0,len(arcs0))]) for i in nodes.keys()]
     t = 0
     while len(trees)>1:
-        indexes = sorted([[i,sorted(zip([arcs0[j][1] for j in connections[i]],connections[i]))[0][1]] for i in range(0,len(trees))])
-        i = 1
-        j = 0
-        while i<len(indexes):
-            if indexes[i][1] == indexes[i-1][1]:
-                connections[indexes[i-1][0]-j] = list(set(connections[indexes[i-1][0]-j]) ^ set(connections[indexes[i][0]-j]))
-                trees[indexes[i-1][0]-j] += trees[indexes[i][0]-j]
-                connections.pop(indexes[i][0]-j)
-                trees.pop(indexes[i][0]-j)
-                arcs += [arcs0[indexes[i][1]][2]]
-                indexes.pop(i)
-                j += 1
-            else:
-                i += 1
+        indexes = [[[filter(lambda x : x in trees[i], j)[0],filter(lambda x : x not in trees[i], j)[0],j] for j in [arcs0[sorted(zip([arcs0[j][1] for j in connections[i]],connections[i]))[0][1]][2]]][0] \
+        for i in range(0,len(trees))]
+        """        
+        sorted([[filter(lambda x : x in trees[i], arcs0[sorted(zip([arcs0[j][1] for j in connections[i]],connections[i]))[0][1]][2])[0],
+                           filter(lambda x : x not in trees[i], arcs0[sorted(zip([arcs0[j][1] for j in connections[i]],connections[i]))[0][1]][2])[0],\
+        arcs0[sorted(zip([arcs0[j][1] for j in connections[i]],connections[i]))[0][1]][2]] \
+        for i in range(0,len(trees))])
+        """
+        while len(indexes)>0 and len(trees)>1:
+            nto, nfrom  = sorted([nodes[indexes[0][0]][0],nodes[indexes[0][1]][0]])                
+            connections[nto] = list(set(connections[nto]) ^ set(connections[nfrom]))
+            connections.pop(nfrom)
+            trees[nto] += trees[nfrom]
+            trees.pop(nfrom)
+            nodes[indexes[0][1]][0] = nto
+            for i in nodes_map:
+                if i[0] >= max([nto,nfrom]):
+                    i[0] -= 1
+                else:
+                    pass
+            arcs += [indexes[0][2]]
+            indexes.pop(0)
+            while len(indexes)>0 and indexes[0][2] in arcs:
+                indexes.pop(0)
+        t += 1
         if verbose:
             print('Iteration #{}'.format(t))
             print('Trees: {}'.format(trees))

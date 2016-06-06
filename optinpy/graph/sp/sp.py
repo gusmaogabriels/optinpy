@@ -10,26 +10,26 @@ def fmb(network,n0,verbose=False):
         ..verbose as boolean
     '''
     nodes = network.nodes.keys()
-    arcs = list(network.arcs)
-    ds = [float('inf') for i in range(0,len(nodes))] # distances list
-    rot = [n0 for i in range(0,len(nodes))] # route list
-    ds[nodes.index(n0)] = 0
+    ds = dict(zip(nodes,[float('inf') for i in range(0,len(nodes))])) # distances list
+    rot = dict(zip(nodes,[n0 for i in range(0,len(nodes))])) # route list
+    ds[n0] = 0
     t = 0
     for i in range(0,len(nodes)):
         ds0 = list(ds)
-        for j in range(0,len(arcs)):
-            if ds[nodes.index(arcs[j][1])] > network.costs[j] + ds[nodes.index(arcs[j][0])]:
-                if i == len(nodes)-1: # this needs validation
-                    print('Negative-weight cycle exists!')
-                    return rot, ds
-                ds[nodes.index(arcs[j][1])] = network.costs[j] + ds[nodes.index(arcs[j][0])]
-                rot[nodes.index(arcs[j][1])] = arcs[j][0]
-            else:
-                pass
+        for j in network.arcs.keys():
+            for k in network.arcs[j].keys():
+                if ds[network.arcs[j][k].destination.key] > network.arcs[j][k].cost + ds[network.arcs[j][k].source.key]:
+                    ds[network.arcs[j][k].destination.key] = network.arcs[j][k].cost + ds[network.arcs[j][k].source.key]
+                    rot[network.arcs[j][k].destination.key] = ds[network.arcs[j][k].source.key]
+                else:
+                    pass
+        if i == len(nodes): # this needs validation
+            print('Negative-weight cycle exists!')
+            return rot, ds
         t += 1
         if verbose:
             print('Iteration #{}'.format(t))
-            print('d #{}'.format(ds))
+            print('d: {}'.format(ds))
         if ds == ds0:
             return rot, ds
         else:
@@ -44,24 +44,23 @@ def dijkstra(network,n0,verbose=False):
         ..verbose as boolean
     '''
     nodes = network.nodes.keys()
-    arcs = network.arcs
-    ds = [float('inf') for i in range(0,len(nodes))] # distances list
-    rot = [n0 for i in range(0,len(nodes))] # route list
+    ds = dict(zip(nodes,[float('inf') for i in range(0,len(nodes))])) # distances list
+    rot = dict(zip(nodes,[n0 for i in range(0,len(nodes))])) # route list
     on = list(nodes) # open nodes list (O)
     cn = [on.pop(on.index(n0))] # closed nodes list (F)
-    ds[nodes.index(n0)] = 0
+    ds[n0] = 0
     r = n0
     t = 0
     while len(on)>0:
         r0 = r
         node = network.nodes[r]
-        for i in node.children:
-            if ds[nodes.index(i)] > network.costs[arcs.index([r,i])] + ds[nodes.index(r)]:
-                ds[nodes.index(i)] = network.costs[arcs.index([r,i])] + ds[nodes.index(r)]
-                rot[nodes.index(i)] = r
+        for i in [i.key for i in node.children]:
+            if ds[i] > network.arcs[r][i].cost + ds[r]:
+                ds[i] = network.arcs[r][i].cost + ds[r]
+                rot[i] = r
             else:
                 pass
-        r = min(zip([ds[nodes.index(i)] for i in on], on))[1]
+        r = min(zip([ds[i] for i in on], on))[1]
         cn += [on.pop(on.index(r))]
         t += 1
         if verbose:
