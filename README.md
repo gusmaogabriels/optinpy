@@ -7,9 +7,9 @@
 ####**Description**
 
 #####**Graphs** (`.graph`)
-  - Equivalent *tableau* (`.tableau`) -> under development
-  - Minimum-cost flow problem (`.mcfp`) -> under development 
-  - Big-M (`.bigm`) -> under development
+  - Equivalent *tableau* (`.tableau`)   -> *under development*
+  - Minimum-cost flow problem (`.mcfp`) -> *under development*
+  - Big-M (`.bigm`)                     -> *under development*
   
 #####**Shortest-path Algorithms** (`.sp`)
   - Dijkstra's (`.dijkstra`)
