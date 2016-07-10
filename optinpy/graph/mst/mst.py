@@ -95,21 +95,15 @@ def boruvka(network,verbose=False):
     while len(trees)>1:
         indexes = [[[filter(lambda x : x in trees[i], j)[0],filter(lambda x : x not in trees[i], j)[0],j] for j in [arcs0[sorted(zip([arcs0[j][1] for j in connections[i]],connections[i]))[0][1]][2]]][0] \
         for i in range(0,len(trees))]
-        """        
-        sorted([[filter(lambda x : x in trees[i], arcs0[sorted(zip([arcs0[j][1] for j in connections[i]],connections[i]))[0][1]][2])[0],
-                           filter(lambda x : x not in trees[i], arcs0[sorted(zip([arcs0[j][1] for j in connections[i]],connections[i]))[0][1]][2])[0],\
-        arcs0[sorted(zip([arcs0[j][1] for j in connections[i]],connections[i]))[0][1]][2]] \
-        for i in range(0,len(trees))])
-        """
         while len(indexes)>0 and len(trees)>1:
-            nto, nfrom  = sorted([nodes[indexes[0][0]][0],nodes[indexes[0][1]][0]])                
-            connections[nto] = list(set(connections[nto]) ^ set(connections[nfrom]))
-            connections.pop(nfrom)
-            trees[nto] += trees[nfrom]
-            trees.pop(nfrom)
-            nodes[indexes[0][1]][0] = nto
+            nto, nfrom  = sorted(zip([nodes[indexes[0][0]][0],nodes[indexes[0][1]][0]],[0,1]))             
+            connections[nto[0]] = list(set(connections[nto[0]]) ^ set(connections[nfrom[0]]))
+            connections.pop(nfrom[0])
+            trees[nto[0]] += trees[nfrom[0]]
+            trees.pop(nfrom[0])
+            nodes[indexes[0][nfrom[1]]][0] = nto[0]
             for i in nodes_map:
-                if i[0] >= max([nto,nfrom]):
+                if i[0] >= max([nto[0],nfrom[0]]):
                     i[0] -= 1
                 else:
                     pass
