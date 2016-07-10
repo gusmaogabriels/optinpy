@@ -102,6 +102,8 @@ class arc(object):
         argparser(cost,(int,long,float))
         self.source = source
         self.destination = destination
+        self.source.__children__ += [destination]
+        self.destination.__parents__ += [source]
         self.cost = cost
         self.flow = 0
         self.graph = graph
@@ -146,6 +148,8 @@ class node(object):
         """     
         self.key = key
         self.b = b
+        self.__children__ = []
+        self.__parents__ = []
         self.children = []
         self.parents = []
         self.mapper = []

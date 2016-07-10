@@ -54,7 +54,7 @@ def dijkstra(network,n0,verbose=False):
     while len(on)>0:
         r0 = r
         node = network.nodes[r]
-        for i in [i.key for i in node.children]:
+        for i in [i.key for i in node.__children__]:
             if ds[i] > network.arcs[r][i].cost + ds[r]:
                 ds[i] = network.arcs[r][i].cost + ds[r]
                 rot[i] = r
@@ -70,6 +70,6 @@ def dijkstra(network,n0,verbose=False):
             print('rot: {}'.format(rot))
             print('F: {}'.format(cn))
             print('B: {}'.format(on))
-            print('V: {}'.format(node.children))
+            print('V: {}'.format([i.key for i in node.__children__]))
             print('r: {}'.format(r))
     return rot, ds
