@@ -12,7 +12,7 @@
   - Arcs objects (`.arc`)
   
 #####**Minimum-cost flow problem** (`.mcfp`)
-  - Big-M (`.bigm`)                   *
+  - Big-M (`.bigm`)                   
   
 #####**Shortest-path Algorithms** (`.sp`)
   - Dijkstra's (`.dijkstra`)
