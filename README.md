@@ -8,8 +8,11 @@
 
 #####**Graphs** (`.graph`)
   - Equivalent *tableau* (`.tableau`)   -> *under development*
-  - Minimum-cost flow problem (`.mcfp`) -> *under development*
-  - Big-M (`.bigm`)                     -> *under development*
+  - Nodes objetcs (`.node`)
+  - Arcs objects (`.arc`)
+  
+#####**Minimum-cost flow problem** (`.mcfp`)
+  - Big-M (`.bigm`)                   *
   
 #####**Shortest-path Algorithms** (`.sp`)
   - Dijkstra's (`.dijkstra`)
