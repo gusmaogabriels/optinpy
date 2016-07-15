@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from ..base import argparser, graph 
-
 def prim(network,n0,verbose=False):
     '''
         Prims's algorithm
