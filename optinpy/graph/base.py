@@ -245,13 +245,13 @@ class node(object):
 
     def update(self,arc=None):
         if len(self.mapper) > 0 and self.key != 0:
-            print('node key:',self.key)
+            #print('node key:',self.key)
             self.__arc_to_root__ = [min(self.mapper)[1:3] if arc==None else [[arc,-1.0] if self==arc.destination else [arc,1.0]][0]][0]          
-            print('arc_to_root and multiplier',self.__arc_to_root__[0](),self.__arc_to_root__[1])
+            #print('arc_to_root and multiplier',self.__arc_to_root__[0](),self.__arc_to_root__[1])
             self.__dist_to_root__ = [float('inf') if self.__arc_to_root__ == None else[min(self.mapper)[0][0] + 1]][0]      
             self.__node_to_root__ = [None if self.key==0 or self.__arc_to_root__ == None else [self.__arc_to_root__[0].source \
             if self.__arc_to_root__[1]<0 else self.__arc_to_root__[0].destination][0]][0]
-            print('node_to_root',self.__node_to_root__.key)
+            #print('node_to_root',self.__node_to_root__.key)
             self.__pi__ = [0 if self.key ==0 else self.__node_to_root__.__pi__[0]+self.__arc_to_root__[1]*self.__arc_to_root__[0].cost]
         else:
             self.__dist_to_root__ = [0 if self.key==0 else float('inf')]
@@ -277,7 +277,6 @@ class node(object):
         self.arcpos.__setitem__(id(arc),id(self.mapper[-1]))
     
     def remove_to(self,destination,arc):
-        print('self',self.key,'remove_to',destination.key,'arc',arc())
         self.children.remove(destination)
         self.mapper.pop([id(i) for i in self.mapper].index(self.arcpos[id(arc)]))
         self.arcpos.__delitem__(id(arc))

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function
 
-from .base import node, argparser
-
 def bigm(network,mcost,verbose=False):
     """
         big-M assumes non-negative flows
