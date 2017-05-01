@@ -1,24 +1,24 @@
 
-==================================================================
+
 **optinpy** 
 ==================================================================
 *General linear and non-linear optimization methods in Python.*
 
-####**Description**
+**Description**
 
-#####**Graphs** (`.graph`)
+**Graphs** (`.graph`)
   - Equivalent *tableau* (`.tableau`)   -> *under development*
   - Nodes objetcs (`.node`)
   - Arcs objects (`.arc`)
   
-#####**Minimum-cost flow problem** (`.mcfp`)
+**Minimum-cost flow problem** (`.mcfp`)
   - Big-M (`.bigm`)                   
   
-#####**Shortest-path Algorithms** (`.sp`)
+**Shortest-path Algorithms** (`.sp`)
   - Dijkstra's (`.dijkstra`)
   - Ford-Bellman-Moore's (`.fmb`)
   
-#####**Minimum spanning-tree Algorithms** (`.mst`)
+**Minimum spanning-tree Algorithms** (`.mst`)
   - Prim's (`.prim`)
   - Kruskal's alike (see commit notes) (`.kruskal`)
   - Borůvka's (`.boruvka`)
