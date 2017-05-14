@@ -6,14 +6,13 @@ requires = ['numpy']
 packages = [
 		'optinpy',
 		'optinpy.graph',
-		'optinpy.finite_diff',
+		'optinpy.finitediff',
 		'optinpy.linesearch',
-    'optinpy.linesearch',
-    'optinpy.mcfp',
-    'optinpy.mst',
-    'optinpy.nonlinear',
-    'optinpy.simplex',
-    'optinpy.sp',
+    		'optinpy.mcfp',
+    		'optinpy.mst',
+    		'optinpy.nonlinear',
+   		'optinpy.simplex',
+    		'optinpy.sp',
 ]
 
 package_dir = {'optinpy' : 'optinpy'}
