@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from . import jacobian, hessian
+from .. import np
+from ..finitediff import jacobian as __jacobian, hessian as __hessian
 
 def xstep(x0,d,alpha):
     '''
@@ -19,13 +20,13 @@ def backtracking(fun,x0,alpha=1,rho=0.5,c=1e-4,**kwargs):
     '''
         backtracking algorithm, arg_min(alpha) fun(x0+alpha*d)
         ..fun as callable object; must be a function of x0 and return a single number
-        ..x0 as a numeric array; point at which the jacobian should be estimated
+        ..x0 as a numeric array; point at which the __jacobian should be estimated
         ..alpha as a numeric value; maximum step from x_i
         ..rho as a numeric value; rate of decrement in alpha
         ..c as a numeric values; constant of Wolfe's condition
-        ..**kwargs as a dictionary with the jacobians function parameters
+        ..**kwargs as a dictionary with the jacobian function parameters
     '''
-    d = np.array(jacobian(fun,x0,**kwargs)) # jacobian as numpy array
+    d = np.array(__jacobian(fun,x0,**kwargs)) # __jacobian as numpy array
     dd = np.dot(-d,d) # steepest descent step
     iters = 0
     while not __armijo(fun,x0,-d,dd,alpha,c):# Armijo's Condition
@@ -37,14 +38,14 @@ def interp23(fun,x0,alpha=1,c=1e-4,alpha_min=0.1,rho=0.5,**kwargs):
     '''
         interpolating algorithm, arg_min(alpha) fun(x0+alpha*d)
         ..fun as callable object; must be a function of x0 and return a single number
-        ..x0 as a numeric array; point at which the jacobian should be estimated
+        ..x0 as a numeric array; point at which the __jacobian should be estimated
         ..alpha as a numeric value; maximum step from x_i
         ..c as a numeric values; constant of Armijo's condition
         ..alpha_min; lower limit for alpha when alpha is too small
-        ..**kwargs as a dictionary with the jacobians function parameters
+        ..**kwargs as a dictionary with the jacobian function parameters
     '''
     alpha0 = alpha
-    d = np.array(jacobian(fun,x0,**kwargs))
+    d = np.array(__jacobian(fun,x0,**kwargs))
     dd = np.dot(-d,d)
     iters = {'first_order':0,'second_order':0,'third_order':0}
     iters['first_order'] += 1
@@ -81,7 +82,7 @@ def unimodality(fun,x0,b,threshold=0.01):
         ..threshold min mean-relative difference between interval bounds as of which the procedeure ceases flowing
     '''
     interv = [0,b]
-    d = np.array(jacobian(fun,x0))
+    d = np.array(__jacobian(fun,x0))
     iters = 0
     while 2*abs((interv[-1]-interv[0])/(abs(interv[-1])+abs(interv[0]))):
         iters += 1
@@ -102,7 +103,7 @@ def golden_ratio(fun,x0,b,threshold=0.01):
         ..b as the upper bound for the alpha domain in Re (b>0)
         ..threshold min mean-relative difference between interval bounds as of which the procedeure ceases flowing
     '''
-    d = np.array(jacobian(fun,x0))
+    d = np.array(__jacobian(fun,x0))
     r = (5**.5-1)/2.0
     interv = [0,b]
     alpha = interv[0] + (1-r)*b

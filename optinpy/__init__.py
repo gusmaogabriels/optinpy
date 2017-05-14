@@ -17,11 +17,11 @@ Oct, 2015
 import numpy as np
 from .graph import *
 from .simplex import *
-from .mcfp import *
-from .sp import *
-from .mst import *
-from .finite_diff import *
-from .linesearch import *
-from .nonlinear import *
+from .mcfp import mcfp
+from .sp import sp
+from .mst import mst
+from .finitediff import finitediff
+from .linesearch import linesearch
+from .nonlinear import nonlinear
 
 __all__ = ['np','graph','__author__','__version__']

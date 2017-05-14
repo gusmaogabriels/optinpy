@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from . import gradient, hessian, xstep, backtracking, interp23, unimodality, golden_ration
+from ..finitediff import jacobian as __jacobian, hessian as __hessian
+from ..linesearch import xstep as __xstep, backtracking as __backtracking, interp23 as __interp23, unimodality as __unimodality, golden_ratio as __golden_ratio
+from .. import np as __np
 
 def gradient_descent(fun,x0,threshold,jacobian_kwargs={},linesearch_kwargs={}):
     '''
@@ -20,12 +22,12 @@ def gradient_descent(fun,x0,threshold,jacobian_kwargs={},linesearch_kwargs={}):
     else: 
         pass    
     iters = 0
-    d = np.array(jacobian(fun,x0,**jacobian_kwargs))
+    d = __np.array(__jacobian(fun,x0,**jacobian_kwargs))
     x = x0
-    while np.dot(d,d) > threshold:
-        alpha = backtracking(fun,x,**linesearch_kwargs['jacobian_kwargs'])['alpha']
-        x = xstep(x,-d,alpha)
-        d = np.array(jacobian(fun,x,**jacobian_kwargs))
+    while __np.dot(d,d) > threshold:
+        alpha = __backtracking(fun,x,**linesearch_kwargs['jacobian_kwargs'])['alpha']
+        x = __xstep(x,-d,alpha)
+        d = __np.array(__jacobian(fun,x,**jacobian_kwargs))
         iters += 1
     return {'x':x, 'f':fun(x), 'iterations':iters}
 
