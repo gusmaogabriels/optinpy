@@ -20,5 +20,8 @@ from .simplex import *
 from .mcfp import *
 from .sp import *
 from .mst import *
+from .finite_diff import *
+from .linesearch import *
+from .nonlinear import *
 
 __all__ = ['np','graph','__author__','__version__']
