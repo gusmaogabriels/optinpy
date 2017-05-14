@@ -2,4 +2,4 @@
 from __future__ import division, absolute_import, print_function
 
 from .. import __author__, __version__, np
-from .bigm import bigm
+from .mcfp import bigm
