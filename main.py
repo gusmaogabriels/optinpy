@@ -12,6 +12,21 @@ b = [-10,10,10,15]
 c = [-2,-2,-3,-3]
 
 S = optinpy.simplex(A,b,c,lb=[-10,-10,-10,-10],ub=[5,5,5,5])
+f = lambda x : (1-x[0])**2 + 100*(x[1]-x[0]**2)**2
+f_aurea = lambda x : np.exp(-x[0])+x[0]**2
+print 'backtracking\n', optinpy.linesearch.backtracking(f,[0,0],-optinpy.finitediff.jacobian(f,[0,0]),1,rho=0.6)
+print 'backtracking\n', optinpy.linesearch.backtracking(f,[0,0],-optinpy.finitediff.jacobian(f,[0,0]),1,rho=0.5)
+print 'interpolate\n', optinpy.linesearch.interp23(f,[0,0],-optinpy.finitediff.jacobian(f,[0,0]),1)
+print 'unimodality\n', optinpy.linesearch.unimodality(f,[0,0],-optinpy.finitediff.jacobian(f,[0,0]),1)
+print 'golden_ratio\n', optinpy.linesearch.golden_ratio(f,[0,0],-optinpy.finitediff.jacobian(f,[0,0]),1)
+print 'golden_ratio\n', optinpy.linesearch.golden_ratio(f_aurea,[0],-optinpy.finitediff.jacobian(f,[0,0]),1)
+#optinpy.nonlinear.unconstrained.params['linesearch']['method'] ='golden_ratio'
+optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'gradient'
+print 'gradient_descent\n', optinpy.nonlinear.unconstrained.fminunc(f,[0,0],0.001)
+optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'newton'
+print 'Newton\n', optinpy.nonlinear.unconstrained.fminunc(f,[0,0],0.001)
+optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'modified-newton'
+print 'Modified-Newton\n', optinpy.nonlinear.unconstrained.fminunc(f,[0,0],0.001)
 #S.dual()
 """
 n = optinpy.graph()

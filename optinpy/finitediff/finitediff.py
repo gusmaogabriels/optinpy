@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from .. import np as __np
+
 def jacobian(fun,x0,epsilon=1e-6,algorithm='central'):
     '''
         Jacobian calculator
@@ -24,7 +26,7 @@ def jacobian(fun,x0,epsilon=1e-6,algorithm='central'):
             fvals += [fun(x0)]
             x0[i] -= _x*epsilon
         grad += [(fvals[1]-fvals[0])/((evpoints[1]-evpoints[0])*epsilon)]
-    return grad
+    return __np.array(grad)
 
 def hessian(fun,x0,epsilon=1e-6,algorithm='central'):
     '''
@@ -77,4 +79,4 @@ def hessian(fun,x0,epsilon=1e-6,algorithm='central'):
                 x0[j] -= points[1]*epsilon
             hessian[i][j] = sum([fvals[k]*coeffs_ij[k] for k in range(len(fvals))])/denom_ij
             hessian[j][i] = hessian[i][j]
-    return hessian
+    return __np.array(hessian)

@@ -15,6 +15,8 @@ Oct, 2015
 """
 
 import numpy as np
+import time
+import scipy
 from .graph import *
 from .simplex import *
 from .mcfp import mcfp
@@ -22,6 +24,6 @@ from .sp import sp
 from .mst import mst
 from .finitediff import finitediff
 from .linesearch import linesearch
-from .nonlinear import nonlinear
+from .nonlinear import unconstrained as __unconstrained
 
 __all__ = ['np','graph','__author__','__version__']
