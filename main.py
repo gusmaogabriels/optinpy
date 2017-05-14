@@ -6,15 +6,14 @@ Created on Thu May 26 19:24:08 2016
   """
 
 import optinpy
-"""
-A = [[1,2,3],[2,3,1],[3,4,1],[0,2,1]]
-b = [1,2,3,-1]
-c = [2,3,1]
 
-S = optinpy.simplex(A,b,c)
-S.pivot(0,1)
-"""
+A = [[-3,2,-4,-5],[4,-2,5,3],[2,4,1,2],[3,2,-2,4]]
+b = [-10,10,10,15]
+c = [-2,-2,-3,-3]
 
+S = optinpy.simplex(A,b,c,lb=[-10,-10,-10,-10],ub=[5,5,5,5])
+#S.dual()
+"""
 n = optinpy.graph()
 bs = zip(range(1,6),[5,-8,0,10,-7])
 for b in bs:
@@ -43,7 +42,7 @@ print("Kruskal's")
 arcs2 = optinpy.mst.kruskal(n2,verbose=True)
 print("Boruvka's")
 arcs3 = optinpy.mst.boruvka(n2,verbose=True)
-
+"""
 """ #SHORTEST PATH
 n = optinpy.graph()
 connections = [[1,2,2],[1,3,4],[1,4,5],[2,4,2],[3,4,1]]

@@ -16,5 +16,9 @@ Oct, 2015
 
 import numpy as np
 from .graph import *
+from .simplex import *
+from .mcfp import *
+from .sp import *
+from .mst import *
 
 __all__ = ['np','graph','__author__','__version__']
