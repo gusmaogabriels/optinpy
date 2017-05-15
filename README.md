@@ -9,8 +9,7 @@
     - [Graphs](#graphs-graph)
     - [Minimum-cost flow problem](#minimum-cost-flow-problem-mcfp)
     - [Shortest-path-Algorithms](#shortest-path-algorithms-sp)
-    - [Minimum spanning-tree Algorithms](#minimum-spanning-tree-algorithms-mst)
-    
+    - [Minimum spanning-tree Algorithms](#minimum-spanning-tree-algorithms-mst)    
   - [Non-linear Optimization](#non-linear-optimization)
     - [Line-search](#line-search-linesearch)
       - [Backtracking](#backtracking-backtracking)
