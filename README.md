@@ -5,16 +5,20 @@
 *General linear and non-linear optimization methods in Python.*
 
 ## Table of Content
-
+  - [Linear Programming](#linear-programming)
+    - [Graphs](graphs)
+    - [Minimum-cost flow problem](minimum-cost-flow-problem)
+    - [Shortest-path-Algorithms](shortest-path-algorithms)
+    - [Minimum spanning-tree Algorithms](minimum-spanning-tree-agorithms)
 
 
 ## Linear Programming
-###**Graphs** (`.graph`)
+### Graphs (`.graph`)
   - Equivalent *tableau* (`.tableau`)   -> *under development*
   - Nodes objetcs (`.node`)
   - Arcs objects (`.arc`)
   
-###**Minimum-cost flow problem** (`.mcfp`)
+### Minimum-cost flow problem (`.mcfp`)
    - Big-M (`.bigm`)                   
         
     **Example**
@@ -30,7 +34,7 @@
     optinpy.bigm(n3,20) # MCF problem via Big-M
     ```
  
-###**Shortest-path Algorithms** (`.sp`)
+### Shortest-path Algorithms (`.sp`)
   - Dijkstra's (`.dijkstra`)
   - Ford-Bellman-Moore's (`.fmb`)
      
@@ -61,7 +65,7 @@
      rot,ds  = optinpy.sp.dijkstra(n,'A',verbose=True) # Shortest-path via Dijkstra
      ```  
   
-###**Minimum spanning-tree Algorithms** (`.mst`)
+### Minimum spanning-tree Algorithms (`.mst`)
   - Prim's (`.prim`)
   - Kruskal's alike (see commit notes) (`.kruskal`)
   - Borůvka's (`.boruvka`)
