@@ -128,18 +128,18 @@
                 {'sigma' : 1} # lower bound for the modified Hessian eigenvalue
           }},
     'jacobian': # jacobian algorithm definition
-       {'algorithm':'central','epsilon':1e-6},
+       {'algorithm':'central','epsilon':1e-6}, # algorithm = 'central', 'forward', 'backward'l epsilon = perturbation
     'hessian':
-      {'algorithm':'central','epsilon':1e-6},\
+       {'algorithm':'central','epsilon':1e-6}, # algorithm = 'central', 'forward', 'backward'l epsilon = perturbation
     'linesearch':
        {'method':'backtracking',
         'params':
            {'backtracking':
-                {'alpha':1,'rho':0.5,'c':1e-4},
+                {'alpha':1,'rho':0.5,'c':1e-4}, # alpha = initial step scale; rho = step reduction factor; c = Armijo's parameter
             'interp23':
-                {'alpha':1,'alpha_min':0.1,'rho':0.5,'c':1e-4},
+                {'alpha':1,'alpha_min':0.1,'rho':0.5,'c':1e-4}, # alpha_min = minimum ultimate alpha below which 3rd order interpolation ensues
             'unimodality':
-                {'b':1,'threshold':1e-4},
+                {'b':1,'threshold':1e-4}, # b = initial step scale in derivatives domain; threshold: variation threshold
             'golden_ratio':
                 {'b':1,'threshold':1e-4}
            }
