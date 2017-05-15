@@ -6,7 +6,7 @@
 
 ## Table of Content
   - [Linear Programming](#linear-programming)
-    - [Graphs](graphs-graph)
+    - [Graphs](#graphs-graph)
     - [Minimum-cost flow problem](minimum-cost-flow-problem-mcfp)
     - [Shortest-path-Algorithms](shortest-path-algorithms-sp)
     - [Minimum spanning-tree Algorithms](minimum-spanning-tree-agorithms-mst)
