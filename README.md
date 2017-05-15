@@ -113,8 +113,8 @@
 ### Unconstrained Optimization (`.unconstrained`)
 #### fminunc (`.fminunc`)
 ##### Gradient (`method='gradient'`)
-##### Newton (`method='Newton'`)
-##### Modified Newton (`method='Modified-Newton'`)
+##### Newton (`method='newton'`)
+##### Modified Newton (`method='modified-newton'`)
 
 Copyright © 2016 - Gabriel Sabença Gusmão
 
