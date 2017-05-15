@@ -69,13 +69,14 @@
                 ['D','E',15],['D','F',6],['E','F',8],['E','G',9],['F','G',11]]
      for c in connections:
         n.add_connection(*c)
-        n2 = optinpy.graph()
+     n2 = optinpy.graph()
      connections = [['A','B',13],['A','C',6],['B','C',7],['B','D',1],['C','E',8],['C','D',14],\
                     ['C','H',20],['D','E',9],['D','F',3],['E','F',2],['E','J',18],['G','H',15],\
                     ['G','I',5],['G','J',19],['G','K',10],['H','J',17],['I','K',11],['J','K',16],\
                     ['J','L',4],['K','L',12]]
      for c in connections:
          n2.add_connection(*c)
+     # Assessing n2
      print("Prims's")
      arcs1 = optinpy.mst.prim(n2,'A',verbose=True)
      print("Kruskal's")
