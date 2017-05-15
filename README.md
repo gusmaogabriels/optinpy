@@ -16,15 +16,15 @@
        
     **Example**
     ```python
-    # BIG-M
-    n3 = optinpy.graph()
-    bs = zip(range(1,6),[10,4,0,-6,-8])
+    ### BIG-M ###
+    n3 = optinpy.graph() # Create an graph object
+    bs = zip(range(1,6),[10,4,0,-6,-8]) # Set node net production (+) or consumption (-)
     for b in bs:
-        n3.add_node(*b)
-    connections = [[1,2,1],[1,3,8],[1,4,1],[2,3,2],[3,4,1],[3,5,4],[4,5,12],[5,2,7]]
+        n3.add_node(*b) # Add node to graph  and assign them a net production (+) or consumption (-)
+    connections = [[1,2,1],[1,3,8],[1,4,1],[2,3,2],[3,4,1],[3,5,4],[4,5,12],[5,2,7]] # Define arcs [from,to,cost]
     for c in connections:
-        n3.add_connection(*c)
-    optinpy.bigm(n3,20)
+        n3.add_connection(*c) # Add arcs (connections) to the graph
+    optinpy.bigm(n3,20) # MCF problem via Big-M
     ```
  
 **Shortest-path Algorithms** (`.sp`)
@@ -33,28 +33,29 @@
      
      **Example**
      ```python
-     n = optinpy.graph()
+     ### Exampe 1 ###
+     n = optinpy.graph()  # Create an graph object
      connections = [[1,2,2],[1,3,4],[1,4,5],[2,4,2],[3,4,1]]
      for c in connections:
-         n.add_connection(*c)
-     rot,ds = optinpy.sp.fmb(n,1,verbose=True)    
-     rot,ds = optinpy.sp.dijkstra(n,1,verbose=True)
+         n.add_connection(*c) # Define arcs [from,to,cost]
+     rot,ds = optinpy.sp.fmb(n,1,verbose=True) # Shortest-path via Ford-Belman-Moore   
+     rot,ds = optinpy.sp.dijkstra(n,1,verbose=True) # Shortest-path via Dijkstra
 
-     # https://www.youtube.com/watch?v=obWXjtg0L64
-     n = optinpy.graph()
+     ### Exampe 2 ### https://www.youtube.com/watch?v=obWXjtg0L64
+     n = optinpy.graph()  # Create an graph object
      connections = [[1,2,10],[1,6,8],[2,4,2],[3,2,1],[4,3,-2],[5,2,-4],\
-                     [5,4,-1],[6,5,1]]
+                     [5,4,-1],[6,5,1]] # Define arcs [from,to,cost]
      for c in connections:
-         n.add_connection(*c)
-     rot,ds = optinpy.sp.fmb(n,1,verbose=True)
+         n.add_connection(*c) # Add arcs (connections) to the graph
+     rot,ds = optinpy.sp.fmb(n,1,verbose=True) # Shortest-path via Ford-Belman-Moore
      
-     # https://www.youtube.com/watch?v=gdmfOwyQlcI
-     n = optinpy.graph()
+     ### Exampe 3 ### https://www.youtube.com/watch?v=gdmfOwyQlcI
+     n = optinpy.graph()  # Create an graph object
      connections = [['A','B',4],['A','E',7],['A','C',3],['B','C',6],['B','D',5],['C','D',11],\
-                     ['C','E',8],['D','E',2],['D','F',2],['D','G',10],['E','G',5]]
+                     ['C','E',8],['D','E',2],['D','F',2],['D','G',10],['E','G',5]] # Define arcs [from,to,cost]
      for c in connections:
-         n.add_connection(*c)
-     rot,ds  = optinpy.sp.dijkstra(n,'A',verbose=True)
+         n.add_connection(*c) # Add arcs (connections) to the graph
+     rot,ds  = optinpy.sp.dijkstra(n,'A',verbose=True) # Shortest-path via Dijkstra
      ```  
   
 **Minimum spanning-tree Algorithms** (`.mst`)
@@ -64,25 +65,25 @@
   
      **Example**
      ```python
-     n = optinpy.graph()
+     n = optinpy.graph()  # Create an graph object
      connections = [['A','B',7],['A','D',5],['B','C',8],['B','D',9],['B','E',7],['C','E',5],\
-                ['D','E',15],['D','F',6],['E','F',8],['E','G',9],['F','G',11]]
+                ['D','E',15],['D','F',6],['E','F',8],['E','G',9],['F','G',11]] # Define arcs [from,to,cost]
      for c in connections:
-        n.add_connection(*c)
+         n.add_connection(*c) # Add arcs (connections) to the graph
      n2 = optinpy.graph()
      connections = [['A','B',13],['A','C',6],['B','C',7],['B','D',1],['C','E',8],['C','D',14],\
                     ['C','H',20],['D','E',9],['D','F',3],['E','F',2],['E','J',18],['G','H',15],\
                     ['G','I',5],['G','J',19],['G','K',10],['H','J',17],['I','K',11],['J','K',16],\
-                    ['J','L',4],['K','L',12]]
+                    ['J','L',4],['K','L',12]] # Define arcs [from,to,cost]
      for c in connections:
-         n2.add_connection(*c)
+         n2.add_connection(*c) # Add arcs (connections) to the graph
      # Assessing n2
      print("Prims's")
-     arcs1 = optinpy.mst.prim(n2,'A',verbose=True)
+     arcs1 = optinpy.mst.prim(n2,'A',verbose=True) # Minimum spanning-tree via Prim
      print("Kruskal's")
-     arcs2 = optinpy.mst.kruskal(n2,verbose=True)
+     arcs2 = optinpy.mst.kruskal(n2,verbose=True) # Minimum spanning-tree via Kruskal
      print("Boruvka's")
-     arcs3 = optinpy.mst.boruvka(n2,verbose=True)
+     arcs3 = optinpy.mst.boruvka(n2,verbose=True) # Minimum spanning-tree via Boruvka
      ```
 
 
