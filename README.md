@@ -100,10 +100,10 @@
      ```
 ## Non-linear Optimization
 ### Line-search (`.linesearch`)
-  - Backtracking (`.backtracking`)
-  - Interpolation, 2nd-3rd order (`.interp23`)
-  - Unimodality (`.unimodality`)
-  - Golden-ratio (`.golden_ratio`)
+#### Backtracking (`.backtracking`)
+#### Interpolation, 2nd-3rd order (`.interp23`)
+#### Unimodality (`.unimodality`)
+#### Golden-ratio (`.golden_ratio`)
 
 Copyright © 2016 - Gabriel Sabença Gusmão
 
