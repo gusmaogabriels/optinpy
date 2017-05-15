@@ -5,12 +5,12 @@
 *General linear and non-linear optimization methods in Python.*
 
 ## Table of Content
-  - [Linear Programming](#linear-programming)
+  - [**Linear Programming**](#linear-programming)
     - [Graphs](#graphs-graph)
     - [Minimum-cost flow problem](#minimum-cost-flow-problem-mcfp)
     - [Shortest-path-Algorithms](#shortest-path-algorithms-sp)
     - [Minimum spanning-tree Algorithms](#minimum-spanning-tree-algorithms-mst)    
-  - [Non-linear Optimization](#non-linear-optimization)
+  - [**Non-linear Optimization**](#non-linear-optimization)
     - [Line-search](#line-search-linesearch)
       - [Backtracking](#backtracking-backtracking)
       - [Interpolation 2nd-3rd](#interpolation-2nd-3rd-order-interp23)
@@ -22,7 +22,7 @@
         - [Newton](#newton-methodnewton)
         - [Modified Newton](#modified-newton-method-modifiednewton)
 
-## Linear Programming
+## **Linear Programming**
 ### Graphs (`.graph`)
   - Equivalent *tableau* (`.tableau`)   -> *under development*
   - Nodes objetcs (`.node`)
@@ -102,7 +102,7 @@
      print("Boruvka's")
      arcs3 = optinpy.mst.boruvka(n2,verbose=True) # Minimum spanning-tree via Boruvka
      ```
-## Non-linear Optimization
+## **Non-linear Optimization**
 ### Line-search (`.linesearch`)
 #### Backtracking (`.backtracking`)
 #### Interpolation, 2nd-3rd order (`.interp23`)
