@@ -13,7 +13,7 @@
     
   - [Non-linear Optimization](#non-linear-optimization)
     - [Line-search](#line-search-linesearch)
-      \* [Backtracking](#backtracking-backtracking)
+      - [Backtracking](#backtracking-backtracking)
       - [Interpolation 2nd-3rd](#interpolation-2nd-3rd-order-interp23)
       - [Unimodality](#unimodality-unimodality)
       - [Golden-ratio](#golden-ratio-golden_ratio)
