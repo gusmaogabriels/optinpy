@@ -166,9 +166,9 @@
   - ##### Modified Newton (`method='modified-newton'`)
     The modified-Newton's algorithm handles the inversion of H(x<sub>0</sub>) by enforcing positive eigenvalues so that Choleski's factorization can be used to solve H(x<sub>0</sub>)\**d* = -∇f(x<sub>0</sub>) as a system of lower-triangula matrices: 
     
-      <p>H(x) = L\*L' </p>
-      <p>L\*y = -∇f(x<sub>0</sub>) </p>
-      <p>L'\**d* = y. </p>
+      <p></p>H(x) = L\*L'
+      <p></p>L\*y = -∇f(x<sub>0</sub>) 
+      <p></p>L'\**d* = y.
 
 Copyright © 2016 - Gabriel Sabença Gusmão
 
