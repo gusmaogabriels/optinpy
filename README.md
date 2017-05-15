@@ -10,6 +10,13 @@
     - [Minimum-cost flow problem](#minimum-cost-flow-problem-mcfp)
     - [Shortest-path-Algorithms](#shortest-path-algorithms-sp)
     - [Minimum spanning-tree Algorithms](#minimum-spanning-tree-algorithms-mst)
+    
+  - [Non-linear Optimization](#non-linear-optimization)
+    - [Line-search](#line-search-linesearch)
+      - [Backtracking](#backtracking-backtracking)
+      - [Interpolation 2nd-3rd](#interpolation-2nd-3rd-order-interp23)
+      - [Unimodality](#unimodality-unimodality)
+      - [Golden-ratio](#golden-ratio-golden-ratio)
 
 ## Linear Programming
 ### Graphs (`.graph`)
@@ -91,7 +98,12 @@
      print("Boruvka's")
      arcs3 = optinpy.mst.boruvka(n2,verbose=True) # Minimum spanning-tree via Boruvka
      ```
-
+## Non-linear Optimization
+### Line-search (`.linesearch`)
+  - Backtracking (`.backtracking`)
+  - Interpolation, 2nd-3rd order (`.interp23`)
+  - Unimodality (`.unimodality`)
+  - Golden-ratio (`.golden_ratio`)
 
 Copyright © 2016 - Gabriel Sabença Gusmão
 
