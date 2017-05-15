@@ -16,7 +16,7 @@
       - [Backtracking](#backtracking-backtracking)
       - [Interpolation 2nd-3rd](#interpolation-2nd-3rd-order-interp23)
       - [Unimodality](#unimodality-unimodality)
-      - [Golden-ratio](#golden-ratio-golden-ratio)
+      - [Golden-ratio](#golden-ratio-golden_ratio)
 
 ## Linear Programming
 ### Graphs (`.graph`)
