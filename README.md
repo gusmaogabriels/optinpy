@@ -6,22 +6,25 @@
 
 ## Table of Content
   - [Linear Programming](#linear-programming)
+    
     - [Graphs](#graphs-graph)
     - [Minimum-cost flow problem](#minimum-cost-flow-problem-mcfp)
     - [Shortest-path-Algorithms](#shortest-path-algorithms-sp)
     - [Minimum spanning-tree Algorithms](#minimum-spanning-tree-algorithms-mst)
     
   - [Non-linear Optimization](#non-linear-optimization)
+    
     - [Line-search](#line-search-linesearch)
       - [Backtracking](#backtracking-backtracking)
       - [Interpolation 2nd-3rd](#interpolation-2nd-3rd-order-interp23)
       - [Unimodality](#unimodality-unimodality)
       - [Golden-ratio](#golden-ratio-golden_ratio)
+    
     - [Unconstrained-optimization](#Unconstrained-optimization-unconstrained)
       - [fminunc](#fminunc)
-        - [Gradient](#gradient-method-gradient)
-        - [Newton](#newton-method-newton)
-        - [Modified Newton](#modified-newton-method-modified-newton)
+        - [Gradient](#gradient-methodgradient)
+        - [Newton](#newton-methodnewton)
+        - [Modified Newton](#modified-newton-method-modifiednewton)
 
 ## Linear Programming
 ### Graphs (`.graph`)
