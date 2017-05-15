@@ -4,7 +4,7 @@
 ==================================================================
 *General linear and non-linear optimization methods in Python.*
 
-***Install it via pip*** -> `pip install --upgrade https://github.com/gusmaogabriels/optinpy/zipball/master`
+*pip install* -> `pip install --upgrade https://github.com/gusmaogabriels/optinpy/zipball/master`
 
 ## Table of Content
   - [**Linear Programming**](#linear-programming)
