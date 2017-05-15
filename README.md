@@ -118,7 +118,7 @@
   **Standard parameters**
    ```python
    {'fminunc': # fminunc algorithm definition
-       {'method': '', # 'gradient', 'newton' or `'modified-newton'
+       {'method': 'newton', # 'gradient', 'newton' or `'modified-newton'
         'params': 
            {'gradient':
                  {},
@@ -132,7 +132,7 @@
     'hessian':
        {'algorithm':'central','epsilon':1e-6}, # algorithm = 'central', 'forward', 'backward'l epsilon = perturbation
     'linesearch':
-       {'method':'backtracking',
+       {'method':'backtracking', # 'backtracking', 'interp23, 'unimodality' or 'golden_ratio'
         'params':
            {'backtracking':
                 {'alpha':1,'rho':0.5,'c':1e-4}, # alpha = initial step scale; rho = step reduction factor; c = Armijo's parameter
