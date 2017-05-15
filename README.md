@@ -117,7 +117,10 @@
   [*fminunc*](#fminunc-fminunc) evokes the so far implemented unconstrained non-linear optimization algorithms given the parameters set.
   
 #### parameters (`.params`)
-  A dictionary object that holds the method/algorithm definition for the [*fminunc*](#fminunc-fminunc) function 
+  A dictionary object that holds the method/algorithm definition for the [*fminunc*](#fminunc-fminunc) function
+  
+  ![Alt Text](/raw/rosen.gif)
+  
   **Standard parameters**
    ```python
    {'fminunc': # fminunc algorithm definition
