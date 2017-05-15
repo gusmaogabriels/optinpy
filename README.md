@@ -20,10 +20,10 @@
       - [Golden-ratio](#golden-ratio-golden_ratio)
     - [Unconstrained-optimization](#Unconstrained-optimization-unconstrained)
       - [fminunc](#fminunc)
-      - [parameters](#parameters)
+      - [parameters](#parameters-params)
         - [Gradient](#gradient-methodgradient)
         - [Newton](#newton-methodnewton)
-        - [Modified Newton](#modified-newton-methodmodifiednewton)
+        - [Modified Newton](#modified-newton-methodmodified-newton)
 
 ## **Linear Programming**
 ### Graphs (`.graph`)
