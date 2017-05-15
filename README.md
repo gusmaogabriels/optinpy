@@ -113,6 +113,42 @@
 
 ### Unconstrained Optimization (`.unconstrained`)
 #### fminunc (`.fminunc`)
+#### parameters (`.params`)
+  A dictionary object that holds the method/algorithm definition for the [*fminunc*](#fminunc-fminunc) function \n
+      
+  Standard parameters
+  
+     ```python
+     {'fminunc': # fminunc algorithm definition
+         {'method': '' # 'gradient', 'newton' or `'modified-newton'
+          'params': 
+             {'gradient':
+                  {},
+              'newton':
+                  {},
+              'modified-newton':
+                  {'sigma' : 1, # lower bound for the modified Hessian eigenvalue
+            }},
+      'jacobian': # jacobian algorithm definition
+         {'algorithm':'central','epsilon':1e-6},
+      'hessian':
+         {'algorithm':'central','epsilon':1e-6},\
+      'linesearch':
+         {'method':'backtracking',
+          'params':
+             {'backtracking':
+                  {'alpha':1,'rho':0.5,'c':1e-4},
+              'interp23':
+                  {'alpha':1,'alpha_min':0.1,'rho':0.5,'c':1e-4},
+              'unimodality':
+                  {'b':1,'threshold':1e-4},
+              'golden_ratio':
+                  {'b':1,'threshold':1e-4}
+             }
+         }
+     }   
+     ```
+    
   - ##### Gradient (`method='gradient'`)
   - ##### Newton (`method='newton'`)
   - ##### Modified Newton (`method='modified-newton'`)
