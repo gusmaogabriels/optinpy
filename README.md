@@ -47,6 +47,7 @@
      for c in connections:
          n.add_connection(*c)
      rot,ds = optinpy.sp.fmb(n,1,verbose=True)
+     
      # https://www.youtube.com/watch?v=gdmfOwyQlcI
      n = optinpy.graph()
      connections = [['A','B',4],['A','E',7],['A','C',3],['B','C',6],['B','D',5],['C','D',11],\
