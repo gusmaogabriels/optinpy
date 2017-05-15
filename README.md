@@ -114,6 +114,8 @@
 
 ### Unconstrained Optimization (`.unconstrained`)
 #### fminunc (`.fminunc`)
+  [*fminunc*](#fminunc-fminunc) evokes the so far implemented unconstrained non-linear optimization algorithms given the parameters set.
+  
 #### parameters (`.params`)
   A dictionary object that holds the method/algorithm definition for the [*fminunc*](#fminunc-fminunc) function 
   **Standard parameters**
@@ -149,8 +151,15 @@
    ```
     
   - ##### Gradient (`method='gradient'`)
+    The gradient algorithm minimizes f(x) by first-order approximation: f(x) = f(x_0) + ∇f(x_0)'Δx, with descent direction, *d*, given by -∇f(x_0).
+    The ultimate iteration step is given by the minimization of f(α) = f(x_0) - α∇f(x_0) with a lineserach algorithm.
+    
   - ##### Newton (`method='newton'`)
+    Newton's method minimizes f(x) as of a second order approximation of the function f(x) = f(x_0) + ∇f(x_0)'Δx + Δx'H(x_0)Δx, where H(x_0) is the Hessian matrix.
+    The descent direction is given by: *d* = -inv(H(x_0))\*∇f(x_0).
+    
   - ##### Modified Newton (`method='modified-newton'`)
+    The modified-Newton's algorithm handles the inversion of H(x_0) by enforcing positive eigenvalues so that Choleski's factorization can be used to solve H(x_0)\**d* = -∇f(x_0) as a system of lower-triangula matrices: H(x) = L\*L' -> L\*y = -∇f(x_0); L'\**d* = y.
 
 Copyright © 2016 - Gabriel Sabença Gusmão
 
