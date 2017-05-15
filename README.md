@@ -17,6 +17,11 @@
       - [Interpolation 2nd-3rd](#interpolation-2nd-3rd-order-interp23)
       - [Unimodality](#unimodality-unimodality)
       - [Golden-ratio](#golden-ratio-golden_ratio)
+    - [Unconstrained-optimization](#Unconstrained-optimization-unconstrained)
+      - [fminunc](#fminunc)
+        - [Gradient](#gradient-method-gradient)
+        - [Newton](#newton-method-newton)
+        - [Modified Newton](#modified-newton-method-modified-newton)
 
 ## Linear Programming
 ### Graphs (`.graph`)
@@ -104,6 +109,12 @@
 #### Interpolation, 2nd-3rd order (`.interp23`)
 #### Unimodality (`.unimodality`)
 #### Golden-ratio (`.golden_ratio`)
+
+### Unconstrained Optimization (`.unconstrained`)
+#### fminunc (`.fminunc`)
+##### Gradient (`method='gradient'`)
+##### Newton (`method='Newton'`)
+##### Modified Newton (`method='Modified-Newton'`)
 
 Copyright © 2016 - Gabriel Sabença Gusmão
 
