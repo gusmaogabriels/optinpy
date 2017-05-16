@@ -164,7 +164,7 @@
     Newton's method minimizes f(x) as of a second order approximation of the function f(x) = f(x<sub>0</sub>) + ∇f(x<sub>0</sub>)'Δx + Δx'H(x<sub>0</sub>)Δx, where H(x<sub>0</sub>) is the Hessian matrix.
     The descent direction is given by: 
     
-      *d* = -inv(H(x<sub>0</sub>))\*∇f(x_<sub>0</sub>).
+      *d* = -inv(H(x<sub>0</sub>))\*∇f(x<sub>0</sub>).
     
   - ##### Modified Newton (`method='modified-newton'`)
     The modified-Newton's algorithm handles the inversion of H(x<sub>0</sub>) by enforcing positive eigenvalues so that Choleski's factorization can be used to solve H(x<sub>0</sub>)\**d* = -∇f(x<sub>0</sub>) as a system of lower-triangula matrices: 
