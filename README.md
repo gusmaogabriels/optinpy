@@ -167,7 +167,7 @@
       *d* = -Hx<sub>0</sub><sup>-1</sup>\*∇f(x<sub>0</sub>).
     
   - ##### Modified Newton (`method='modified-newton'`)
-    The modified-Newton's algorithm handles the inversion of H(x<sub>0</sub>) by enforcing positive eigenvalues so that Cholesky's factorization can be used to solve H(x<sub>0</sub>)\**d* = -∇f(x<sub>0</sub>) as a system of lower-triangular matrices: 
+    The modified-Newton's algorithm handles the inversion of H(x<sub>0</sub>) by enforcing positive eigenvalues so that Cholesky's decomposition can be used to solve H(x<sub>0</sub>)\**d* = -∇f(x<sub>0</sub>) as a system of lower-triangular matrices: 
     
       H(x) = L\*L'
       
