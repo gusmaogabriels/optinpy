@@ -119,7 +119,7 @@
 #### parameters (`.params`)
   A dictionary object that holds the method/algorithm definition for the [*fminunc*](#fminunc-fminunc) function
   
-  **Gradient vs. Newton's Method and Modified-Newton** *(somewhere in between weightned by σ parameter)* starting @ (2,2)
+  **Gradient vs. Newton's Method and Modified-Newton** *(somewhere in between weighted by σ parameter)* starting @ (2,2)
   
   ![Alt Text](/raw/rosen.gif)
   
