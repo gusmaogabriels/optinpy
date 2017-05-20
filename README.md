@@ -1,5 +1,3 @@
-
-
 **optinpy** 
 ==================================================================
 *General linear and non-linear optimization methods in Python.*
@@ -107,7 +105,9 @@
      ```
 ## **Non-linear Optimization**
 ### Line-search (`.linesearch`)
+Unidimensional minimizers that seek improving an objective function along a given descent direction, *d*, i.e. f(x) parametrized as f(*d*) = (x<sub>0</sub>+α×*d*), such that the ensuing value satisfies Armijo's condition: f(x<sub>0</sub>+α×*d*) < f(x<sub>0</sub>)+*c*∇f(x<sub>0</sub>)'*d*, where *c* is an arbitrary threshold, *c* ∈ (0,1).
 #### Backtracking (`.backtracking`)
+Find an α value that satisfies Armijo's condition with successive value decrement. 
 #### Interpolation, 2nd-3rd order (`.interp23`)
 #### Unimodality (`.unimodality`)
 #### Golden-ratio (`.golden_ratio`)
@@ -117,7 +117,7 @@
   [*fminunc*](#fminunc-fminunc) evokes the so far implemented unconstrained non-linear optimization algorithms given the parameters set.
   
 #### parameters (`.params`)
-  A dictionary object that holds the method/algorithm definition for the [*fminunc*](#fminunc-fminunc) function
+  A dictionary object that holds the method/algorithm's set-up for the [*fminunc*](#fminunc-fminunc) function 
   
   **Gradient vs. Newton's Method and Modified-Newton** *(somewhere in between weighted by σ parameter)* starting @ (2,2)
   
@@ -136,9 +136,9 @@
                 {'sigma' : 1} # lower bound for the modified Hessian eigenvalue
           }},
     'jacobian': # jacobian algorithm definition
-       {'algorithm':'central','epsilon':1e-6}, # algorithm = 'central', 'forward', 'backward'l epsilon = perturbation
+       {'algorithm':'central','epsilon':1e-6}, # algorithm = 'central', 'forward', 'backward'; epsilon = perturbation
     'hessian':
-       {'algorithm':'central','epsilon':1e-6}, # algorithm = 'central', 'forward', 'backward'l epsilon = perturbation
+       {'algorithm':'central','epsilon':1e-6}, # algorithm = 'central', 'forward', 'backward'; epsilon = perturbation
     'linesearch':
        {'method':'backtracking', # 'backtracking', 'interp23, 'unimodality' or 'golden_ratio'
         'params':
@@ -160,7 +160,7 @@
     
       *d* = -∇f(x<sub>0</sub>).
       
-    The ultimate iteration step is given by the minimization of f(α) = f(x<sub>0</sub>) - α∇f(x<sub>0</sub>) with a lineserach algorithm.
+    The ultimate iteration step is given by the minimization of f(α) = f(x<sub>0</sub>) - α∇f(x<sub>0</sub>) with a lineserach substep.
     
   - ##### Newton (`method='newton'`)
     Newton's method minimizes f(x) as of a second order approximation of the function f(x) = f(x<sub>0</sub>) + ∇f(x<sub>0</sub>)'Δx + Δx'H(x<sub>0</sub>)Δx, where H(x<sub>0</sub>) is the Hessian matrix.
