@@ -15,7 +15,7 @@
       - [Backtracking](#backtracking-backtracking)
       - [Interpolation 2nd-3rd](#interpolation-2nd-3rd-order-interp23)
       - [Unimodality](#unimodality-unimodality)
-      - [Golden-ratio](#golden-ratio-golden_ratio)
+      - [Golden-sextion](#golden-section-golden_section)
     - [Unconstrained-optimization](#Unconstrained-optimization-unconstrained)
       - [fminunc](#fminunc)
       - [parameters](#parameters-params)
@@ -105,12 +105,17 @@
      ```
 ## **Non-linear Optimization**
 ### Line-search (`.linesearch`)
-Unidimensional minimizers that seek improving an objective function along a given descent direction, *d*, i.e. f(x) parametrized as f(*d*) = (x<sub>0</sub>+α×*d*), such that the ensuing value satisfies Armijo's condition: f(x<sub>0</sub>+α×*d*) < f(x<sub>0</sub>)+*c*∇f(x<sub>0</sub>)'*d*, where *c* is an arbitrary threshold, *c* ∈ (0,1).
+Unidimensional minimizers that seek improving an objective function along a given descent direction, *d*, i.e. f(x) parametrized as f(α) = (x<sub>0</sub>+α×*d*).
+Backtracking and 2nd-3rd order Interpolation methods enforde that the ensuing value satisfies Armijo's condition: f(x<sub>0</sub>+α×*d*) < f(x<sub>0</sub>)+*c*∇f(x<sub>0</sub>)'*d*, where *c* is an arbitrary threshold, *c* ∈ (0,1).
+Unimodality and Golden-section are exploitation-based methods that successively probe and slice the domain determined by *d*, excluding, as of a quasi-convexity assumption on the α-domain, regions for which the function's value should be worse off.
 #### Backtracking (`.backtracking`)
-Find an α value that satisfies Armijo's condition with successive value decrement. 
+Finds an α value that satisfies Armijo's condition with successive value decrement by a factor ρ.
 #### Interpolation, 2nd-3rd order (`.interp23`)
+Finds an α value that satisfies Armijo's condition by successively minimizing a 2nd- or 3rd-order f(α) polynomial interpolated from the latest f-α pairs.
 #### Unimodality (`.unimodality`)
-#### Golden-ratio (`.golden_ratio`)
+Successive α-domain subsectioning by uniformily random probing.
+#### Golden-section (`.golden_section`)
+Successive α-domain subsectioning following the golden-ratio.
 
 ### Unconstrained Optimization (`.unconstrained`)
 #### fminunc (`.fminunc`)
