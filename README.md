@@ -15,7 +15,7 @@
       - [Backtracking](#backtracking-backtracking)
       - [Interpolation 2nd-3rd](#interpolation-2nd-3rd-order-interp23)
       - [Unimodality](#unimodality-unimodality)
-      - [Golden-sextion](#golden-section-golden_section)
+      - [Golden-section](#golden-section-golden_section)
     - [Unconstrained-optimization](#Unconstrained-optimization-unconstrained)
       - [fminunc](#fminunc)
       - [parameters](#parameters-params)
