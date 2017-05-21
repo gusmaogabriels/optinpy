@@ -32,7 +32,7 @@ def backtracking(fun,x0,d=None,alpha=1,rho=0.5,c=1e-4,max_iter=1e3,**kwargs):
         dd = np.dot(d,__jacobian(fun,x0,**kwargs))     
     else:
         d = -np.array(__jacobian(fun,x0,**kwargs)) # steepest descent step
-        dd = -np.dot(d,d) 
+        dd = np.dot(d,-d) 
     iters = 0
     while not __armijo(fun,x0,d,dd,alpha,c) and iters < max_iter:# Armijo's Condition
         alpha = rho*alpha
@@ -51,12 +51,12 @@ def interp23(fun,x0,d=None,alpha=1,c=1e-4,alpha_min=0.1,rho=0.5,max_iter=1e3,**k
         ..**kwargs as a dictionary with the jacobian function parameters
     '''
     alpha0 = alpha
+    f0 = fun(x0)
     if any(d):
-        pass
         dd = np.dot(d,__jacobian(fun,x0,**kwargs))     
     else:
         d = -np.array(__jacobian(fun,x0,**kwargs)) # steepest descent step
-        dd = -np.dot(d,d)
+        dd = np.dot(d,-d)
     iters = {'first_order':0,'second_order':0,'third_order':0}
     iters['first_order'] += 1
     if __armijo(fun,x0,d,dd,alpha0,c):
@@ -64,7 +64,7 @@ def interp23(fun,x0,d=None,alpha=1,c=1e-4,alpha_min=0.1,rho=0.5,max_iter=1e3,**k
     else:
         # second order approximation
         iters['second_order'] += 1
-        alpha1 = -(dd*alpha0**2)/(2*(fun(xstep(x0,d,alpha0))-fun(x0)-dd*alpha0))
+        alpha1 = -(dd*alpha0**2)/(2*(fun(xstep(x0,d,alpha0))-f0-dd*alpha0))
         if __armijo(fun,x0,d,dd,alpha1,c) and alpha1 > alpha_min:# Armijo's Condition
             return {'x':xstep(x0,d,alpha1), 'f':fun(xstep(x0,d,alpha1)), 'alpha':alpha1, 'iterations':sum(iters.values()), 'inner_iterations':iters}
         else:
@@ -77,7 +77,7 @@ def interp23(fun,x0,d=None,alpha=1,c=1e-4,alpha_min=0.1,rho=0.5,max_iter=1e3,**k
                     iters['third_order'] += 1
                     coeff = (1/(alpha0**2*alpha1**2*(alpha1-alpha0)))
                     m = [[alpha0**2,-alpha1**2],[-alpha0**3,alpha1**3]]
-                    v = [fun(xstep(x0,d,alpha1))-fun(x0)-alpha1*dd,fun(xstep(x0,d,alpha0))-fun(x0)-alpha0*dd]
+                    v = [fun(xstep(x0,d,alpha1))-f0-alpha1*dd,fun(xstep(x0,d,alpha0))-f0-alpha0*dd]
                     a, b = coeff*np.dot(m,v)
                     alpha0 = alpha1
                     alpha1 = (-b+(b**2-3*a*dd)**0.5)/(3*a)

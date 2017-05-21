@@ -6,7 +6,7 @@ from ... import np as __np
 from ... import scipy as __sp
 
 params = {'fminunc':{'method':'newton','params':\
-                {'gradient':{'max_iter':1e3},\
+                {'gradient':{'max_iter':1e4},\
                  'newton':{'max_iter':1e3},\
                  'modified-newton':{'sigma':1,'max_iter':1e3},\
                  'conjugate-gradient':{'max_iter':1e3}}},\
@@ -56,13 +56,13 @@ def conj_gradient(fun,x0,d,*args,**kwargs):
         conjugate-gradient method
         ..fun as callable object; must be a function of x0 and return a single number
         ..x0 as a numeric array; point from which to start
-    '''        
+    '''     
     g = __jacobian(fun,x0,**params['jacobian'])
     Q = __hessian(fun,x0,**params['hessian'])
-    if sum(abs(d)) == 0 or kwargs['iters'] + 1 % len(x0) == 0:
+    if sum(abs(d)) == 0 or ((kwargs['iters'] + 1) % len(x0)) == 0:
         return -g, g, Q
     else:
-        beta = g.T.dot(Q).dot(d)/d.T.dot(Q).dot(d)
+        beta = g.T.dot(Q).dot(d)/(d.T.dot(Q).dot(d))
         d = -g + beta*d
         return d, g, Q
 

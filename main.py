@@ -43,7 +43,7 @@ print 'interpolate\n', optinpy.linesearch.interp23(rosen,[0,0],-optinpy.finitedi
 print 'unimodality\n', optinpy.linesearch.unimodality(rosen,[0,0],-optinpy.finitediff.jacobian(rosen,[0,0]),1)
 print 'golden-section\n', optinpy.linesearch.golden_section(rosen,[0,0],-optinpy.finitediff.jacobian(rosen,[0,0]),1)
 
-optinpy.nonlinear.unconstrained.params['linesearch']['method'] ='backtracking'
+optinpy.nonlinear.unconstrained.params['linesearch']['method'] ='interp23'
 p0 = [2,2]
                                       
 optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'gradient'
@@ -73,6 +73,21 @@ plt.gca().set_ylabel('$x_1$')
 plt.gca().set_xlabel('$x_2$')
 plt.gca().set_title('Rosenbrock function contour map')
 plt.legend()
+
+plt.figure()
+plt.plot([i for i in gradientdesc['f']],label='Gradient',color='darkblue')
+plt.plot([i for i in newton['f']],label='Newton',color='darkred')
+plt.plot([i for i in modnewton['f']],label='Modified-Newton',color='darkgreen')
+plt.plot([i for i in conj_gradient['f']],label='Conjugate-Gradient',color='purple')
+plt.gca().set_ylabel('$error$')
+plt.gca().set_xlabel('iteration')
+plt.gca().set_xscale('log')
+plt.gca().set_yscale('log')
+plt.legend()
+plt.gca().set_title('Error evolution')
+
+
+    
 #S.dual()
 """
 plt.figure()
