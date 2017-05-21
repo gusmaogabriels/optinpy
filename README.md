@@ -131,7 +131,7 @@ Successive α-domain subsectioning following the golden-ratio.
   
   **Log-scale error evolution**
   
-  ![Alt Text](/raw/ErrorEvolv.png)
+  ![Alt Text](/raw/ErrorEvol.png)
   
   **Standard parameters**
    ```python
