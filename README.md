@@ -135,11 +135,13 @@ Successive α-domain subsectioning following the golden-ratio.
        {'method': 'newton', # 'gradient', 'newton' or `'modified-newton'
         'params': 
            {'gradient':
-                 {},
+                {'max_iter':1e3},
             'newton':
-                {},
+                {'max_iter':1e3},
             'modified-newton':
-                {'sigma' : 1} # lower bound for the modified Hessian eigenvalue
+                {'sigma' : 1, 'max_iter':1e3}, # sigma is the lower bound for the modified Hessian eigenvalue
+            'conjugate-gradient':
+                {'max_iter':1e3},    
           }},
     'jacobian': # jacobian algorithm definition
        {'algorithm':'central','epsilon':1e-6}, # algorithm = 'central', 'forward', 'backward'; epsilon = perturbation
@@ -149,13 +151,13 @@ Successive α-domain subsectioning following the golden-ratio.
        {'method':'backtracking', # 'backtracking', 'interp23, 'unimodality' or 'golden_ratio'
         'params':
            {'backtracking':
-                {'alpha':1,'rho':0.5,'c':1e-4}, # alpha = initial step scale; rho = step reduction factor; c = Armijo's parameter
+                {'alpha':1,'rho':0.5,'c':1e-4,'max_iter':1e3}, # alpha = initial step scale; rho = step reduction factor; c = Armijo's parameter
             'interp23':
-                {'alpha':1,'alpha_min':0.1,'rho':0.5,'c':1e-4}, # alpha_min = minimum ultimate alpha below which 3rd order interpolation ensues
+                {'alpha':1,'alpha_min':0.1,'rho':0.5,'c':1e-4,'max_iter':1e3}, # alpha_min = minimum ultimate alpha below which 3rd order interpolation ensues
             'unimodality':
-                {'b':1,'threshold':1e-4}, # b = initial step scale in derivatives domain; threshold: variation threshold
+                {'b':1,'threshold':1e-4,'max_iter':1e3}, # b = initial step scale in derivatives domain; threshold: variation threshold
             'golden_ratio':
-                {'b':1,'threshold':1e-4}
+                {'b':1,'threshold':1e-4,'max_iter':1e3}
            }
        }
    }   
