@@ -125,9 +125,13 @@ Successive α-domain subsectioning following the golden-ratio.
 #### parameters (`.params`)
   A dictionary object that holds the method/algorithm's set-up for the [*fminunc*](#fminunc-fminunc) function 
   
-  **Gradient vs. Newton's Method and Modified-Newton** *(somewhere in between weighted by σ parameter)* starting @ (2,2)
+  **Gradient vs. Newton's Method, Modified-Newton** *(somewhere in between weighted by σ parameter)*, **and Conjugate Gradient** starting @ (2,2)
   
   ![Alt Text](/raw/rosen.gif)
+  
+  **Log-scale error evolution**
+  
+  ![Alt Text](/raw/ErrorEvolv.png)
   
   **Standard parameters**
    ```python
