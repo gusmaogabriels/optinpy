@@ -22,6 +22,7 @@
         - [Gradient](#gradient-methodgradient)
         - [Newton](#newton-methodnewton)
         - [Modified Newton](#modified-newton-methodmodified-newton)
+        - [Conjugate Gradient](#conjugate-gradient-methodconjugate-gradient)
 
 ## **Linear Programming**
 ### Graphs (`.graph`)
@@ -171,7 +172,7 @@ Successive α-domain subsectioning following the golden-ratio.
     Newton's method minimizes f(x) as of a second order approximation of the function f(x) = f(x<sub>0</sub>) + ∇f(x<sub>0</sub>)'Δx + Δx'H(x<sub>0</sub>)Δx, where H(x<sub>0</sub>) is the Hessian matrix.
     The descent direction is given by: 
     
-      *d* = -Hx<sub>0</sub><sup>-1</sup>\*∇f(x<sub>0</sub>).
+      *d* = -H(x<sub>0</sub>)<sup>-1</sup>\*∇f(x<sub>0</sub>).
     
   - ##### Modified Newton (`method='modified-newton'`)
     The modified-Newton's algorithm handles the inversion of H(x<sub>0</sub>) by enforcing positive eigenvalues so that Cholesky's decomposition can be used to solve H(x<sub>0</sub>)\**d* = -∇f(x<sub>0</sub>) as a system of lower-triangular matrices: 
@@ -181,6 +182,11 @@ Successive α-domain subsectioning following the golden-ratio.
       L\*y = -∇f(x<sub>0</sub>) 
       
       L'\**d* = y.
+
+  - ##### Conjugate Gradient (`method='conjugate-gradient'`)
+    The conjugate gradient algorithm builds a set of Hessian-orthogonal (*Q*-orthogonal) directions as of Gram-Schmidt *Q*-orthogonalization so that descent directions, *d*, are *Q*-orthogonal and preceeding gradients are orthogonal: *d*<sup>k+1</sup> = *p*<sup>k+1</sup> - ∑<sup>k</sup><sub>i=0</sub>(*p*<sup>k+1</sup>'*Q**d*<sup>i</sup>/*d*<sup>i</sup>'*Q**d*<sup>i</sup>)*d*<sup>i</sup>, where *p* is a linear independent set. Replacing *p*<sup>i</sup> by -∇f(x<sub>i</sub>), leads us to:
+    
+      *d*<sup>k+1</sup> = -∇f(x<sub>k+1</sub>) + ∇f(x<sub>k+1</sub>)'H(x<sub>k+1</sub>)*d*<sup>k</sup>/*d*<sup>k</sup>'H(x<sub>k+1</sub>)*d*<sup>k</sup>
 
 Copyright © 2016 - Gabriel Sabença Gusmão
 
