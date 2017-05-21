@@ -16,7 +16,7 @@ def __armijo(fun,x0,d,dd,alpha,c):
     '''
     return fun(xstep(x0,d,alpha)) <= fun(x0)+c*alpha*dd
 
-def backtracking(fun,x0,d=None,alpha=1,rho=0.5,c=1e-4,**kwargs):
+def backtracking(fun,x0,d=None,alpha=1,rho=0.5,c=1e-4,max_iter=1e3,**kwargs):
     '''
         backtracking algorithm, arg_min(alpha) fun(x0+alpha*d)
         ..fun as callable object; must be a function of x0 and return a single number
@@ -34,12 +34,12 @@ def backtracking(fun,x0,d=None,alpha=1,rho=0.5,c=1e-4,**kwargs):
         d = -np.array(__jacobian(fun,x0,**kwargs)) # steepest descent step
         dd = -np.dot(d,d) 
     iters = 0
-    while not __armijo(fun,x0,d,dd,alpha,c):# Armijo's Condition
+    while not __armijo(fun,x0,d,dd,alpha,c) and iters < max_iter:# Armijo's Condition
         alpha = rho*alpha
         iters += 1
     return {'x':xstep(x0,d,alpha), 'f':fun(xstep(x0,d,alpha)), 'alpha':alpha, 'iterations':iters}
 
-def interp23(fun,x0,d=None,alpha=1,c=1e-4,alpha_min=0.1,rho=0.5,**kwargs):
+def interp23(fun,x0,d=None,alpha=1,c=1e-4,alpha_min=0.1,rho=0.5,max_iter=1e3,**kwargs):
     '''
         interpolating algorithm, arg_min(alpha) fun(x0+alpha*d)
         ..fun as callable object; must be a function of x0 and return a single number
@@ -60,20 +60,20 @@ def interp23(fun,x0,d=None,alpha=1,c=1e-4,alpha_min=0.1,rho=0.5,**kwargs):
     iters = {'first_order':0,'second_order':0,'third_order':0}
     iters['first_order'] += 1
     if __armijo(fun,x0,d,dd,alpha0,c):
-        return {'x':xstep(x0,d,alpha0), 'f':fun(xstep(x0,d,alpha0)), 'alpha':alpha0, 'iterations':iters}
+        return {'x':xstep(x0,d,alpha0), 'f':fun(xstep(x0,d,alpha0)), 'alpha':alpha0, 'iterations':sum(iters.values()), 'inner_iterations':iters}
     else:
         # second order approximation
         iters['second_order'] += 1
         alpha1 = -(dd*alpha0**2)/(2*(fun(xstep(x0,d,alpha0))-fun(x0)-dd*alpha0))
         if __armijo(fun,x0,d,dd,alpha1,c) and alpha1 > alpha_min:# Armijo's Condition
-            return {'x':xstep(x0,d,alpha1), 'f':fun(xstep(x0,d,alpha1)), 'alpha':alpha1, 'iterations':iters}
+            return {'x':xstep(x0,d,alpha1), 'f':fun(xstep(x0,d,alpha1)), 'alpha':alpha1, 'iterations':sum(iters.values()), 'inner_iterations':iters}
         else:
             alpha1 = alpha0*rho
             iters['second_order'] += 1
             if __armijo(fun,x0,d,dd,alpha1,c) and alpha1 > alpha_min: # check whether a single backtracking iteration gives rise to a reasonable stepsize
-                return {'x':xstep(x0,d,alpha1), 'f':fun(xstep(x0,d,alpha1)), 'alpha':alpha1, 'iterations':iters}
+                return {'x':xstep(x0,d,alpha1), 'f':fun(xstep(x0,d,alpha1)), 'alpha':alpha1,'iterations':sum(iters.values()), 'inner_iterations':iters}
             else:
-                while not __armijo(fun,x0,d,dd,alpha1,c):
+                while not __armijo(fun,x0,d,dd,alpha1,c) and iters['third_order'] < max_iter:
                     iters['third_order'] += 1
                     coeff = (1/(alpha0**2*alpha1**2*(alpha1-alpha0)))
                     m = [[alpha0**2,-alpha1**2],[-alpha0**3,alpha1**3]]
@@ -81,9 +81,9 @@ def interp23(fun,x0,d=None,alpha=1,c=1e-4,alpha_min=0.1,rho=0.5,**kwargs):
                     a, b = coeff*np.dot(m,v)
                     alpha0 = alpha1
                     alpha1 = (-b+(b**2-3*a*dd)**0.5)/(3*a)
-            return {'x':xstep(x0,d,alpha1), 'f':fun(xstep(x0,d,alpha1)), 'alpha':alpha1, 'iterations':iters}
+            return {'x':xstep(x0,d,alpha1), 'f':fun(xstep(x0,d,alpha1)), 'alpha':alpha1, 'iterations':sum(iters.values()), 'inner_iterations':iters}
         
-def unimodality(fun,x0,d=None,b=1,threshold=0.01):
+def unimodality(fun,x0,d=None,b=1,threshold=0.01,max_iter=1e3,**kwargs):
     '''
         unimodality algorithm, arg_min(alpha) fun(x0+alpha*d)
         ..fun, a callable object, be strictly quasiconvex between the interval [a,b], a0 = 0
@@ -98,7 +98,7 @@ def unimodality(fun,x0,d=None,b=1,threshold=0.01):
     else:
         d = -np.array(__jacobian(fun,x0,**kwargs)) # steepest descent step
     iters = 0
-    while 2*abs((interv[-1]-interv[0])/(abs(interv[-1])+abs(interv[0]))) > threshold:
+    while 2*abs((interv[-1]-interv[0])/(abs(interv[-1])+abs(interv[0]))) > threshold and iters < max_iter:
         iters += 1
         x = np.sort(np.random.uniform(*interv+[2])) # evaluate alpha and beta uniformily distributed in the interv
         phi = [fun(xstep(x0,d,x_)) for x_ in x]
@@ -109,9 +109,9 @@ def unimodality(fun,x0,d=None,b=1,threshold=0.01):
     alpha = (interv[1]+interv[0])/2.0
     return {'x':xstep(x0,d,alpha), 'f':fun(xstep(x0,d,alpha)), 'alpha':alpha, 'iterations':iters}
                     
-def golden_ratio(fun,x0,d=None,b=1,threshold=0.01):
+def golden_section(fun,x0,d=None,b=1,threshold=0.01,max_iter=1e3,**kwargs):
     '''
-        golden-ration algorithm, arg_min(alpha) fun(x0+alpha*d)
+        golden-section algorithm, arg_min(alpha) fun(x0+alpha*d)
         ..fun, a callable object (function)
         ..x0 as a numeric array; starting point
         ..d as a numeric array: direction towards which to walk
@@ -128,7 +128,7 @@ def golden_ratio(fun,x0,d=None,b=1,threshold=0.01):
     beta = interv[0] + r*b
     phi = [fun(xstep(x0,d,x_)) for x_ in [alpha,beta]]     
     iters = 0
-    while 2*abs((interv[-1]-interv[0])/(abs(interv[-1])+abs(interv[0]))) > threshold:
+    while 2*abs((interv[-1]-interv[0])/(abs(interv[-1])+abs(interv[0]))) > threshold  and iters < max_iter:
         iters += 1
         if phi[0] > phi[1]:
             interv[0] = alpha

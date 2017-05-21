@@ -6,28 +6,89 @@ Created on Thu May 26 19:24:08 2016
   """
 
 import optinpy
+import numpy as np
+from matplotlib import pyplot as plt
+
+font = 'Consolas'
+plt.rc('font',family=font)
+plt.rc('mathtext',fontset='custom')
+plt.rc('mathtext',rm=font)    
+plt.rc('mathtext',it='{}:italic'.format(font))
+plt.rc('mathtext',bf='{}:bold'.format(font))
+plt.rc('mathtext',default='regular')
 
 A = [[-3,2,-4,-5],[4,-2,5,3],[2,4,1,2],[3,2,-2,4]]
 b = [-10,10,10,15]
 c = [-2,-2,-3,-3]
 
 S = optinpy.simplex(A,b,c,lb=[-10,-10,-10,-10],ub=[5,5,5,5])
-f = lambda x : (1-x[0])**2 + 100*(x[1]-x[0]**2)**2
+
+plt.close('all')
+rosen = lambda x : (1-x[0])**2 + 100*(x[1]-x[0]**2)**2
+delta = 0.01
+x = np.linspace(-5, 5, 100)
+y = np.linspace(-5, 5, 100)
+X, Y = np.meshgrid(x, y)
+Z = rosen(np.vstack([X.ravel(), Y.ravel()])).reshape((100,100))
+# Note: the global minimum is at (1,1) in a tiny contour island
+plt.contour(X, Y, Z, np.arange(10)**5,linewidths=0.5)
+plt.text(1, 1, 'O', va='center', ha='center', color='darkred', fontsize=20);
+plt.text(1, 1, 'X', va='center', ha='center', color='darkred', fontsize=10);
+
+               
 f_aurea = lambda x : np.exp(-x[0])+x[0]**2
-print 'backtracking\n', optinpy.linesearch.backtracking(f,[0,0],-optinpy.finitediff.jacobian(f,[0,0]),1,rho=0.6)
-print 'backtracking\n', optinpy.linesearch.backtracking(f,[0,0],-optinpy.finitediff.jacobian(f,[0,0]),1,rho=0.5)
-print 'interpolate\n', optinpy.linesearch.interp23(f,[0,0],-optinpy.finitediff.jacobian(f,[0,0]),1)
-print 'unimodality\n', optinpy.linesearch.unimodality(f,[0,0],-optinpy.finitediff.jacobian(f,[0,0]),1)
-print 'golden_ratio\n', optinpy.linesearch.golden_ratio(f,[0,0],-optinpy.finitediff.jacobian(f,[0,0]),1)
-print 'golden_ratio\n', optinpy.linesearch.golden_ratio(f_aurea,[0],-optinpy.finitediff.jacobian(f,[0,0]),1)
-#optinpy.nonlinear.unconstrained.params['linesearch']['method'] ='golden_ratio'
+print 'backtracking\n', optinpy.linesearch.backtracking(rosen,[0,0],-optinpy.finitediff.jacobian(rosen,[0,0]),1,rho=0.6)
+print 'backtracking\n', optinpy.linesearch.backtracking(rosen,[0,0],-optinpy.finitediff.jacobian(rosen,[0,0]),1,rho=0.5)
+print 'interpolate\n', optinpy.linesearch.interp23(rosen,[0,0],-optinpy.finitediff.jacobian(rosen,[0,0]),1)
+print 'unimodality\n', optinpy.linesearch.unimodality(rosen,[0,0],-optinpy.finitediff.jacobian(rosen,[0,0]),1)
+print 'golden-section\n', optinpy.linesearch.golden_section(rosen,[0,0],-optinpy.finitediff.jacobian(rosen,[0,0]),1)
+
+optinpy.nonlinear.unconstrained.params['linesearch']['method'] ='backtracking'
+p0 = [2,2]
+                                      
 optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'gradient'
-print 'gradient_descent\n', optinpy.nonlinear.unconstrained.fminunc(f,[0,0],0.001)
+gradientdesc = optinpy.nonlinear.unconstrained.fminunc(rosen,p0,0.0005,vectorized=True)
+print 1
+#print 'gradient_descent\n', gradientdesc
+plt.plot([i[0] for i in gradientdesc['x']],[i[1] for i in gradientdesc['x']],'-o',lw=1,ms=2,c='darkblue',mec='black',mfc='blue',label='Gradient')
+print 2
 optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'newton'
-print 'Newton\n', optinpy.nonlinear.unconstrained.fminunc(f,[0,0],0.001)
+newton = optinpy.nonlinear.unconstrained.fminunc(rosen,p0,0.0005,vectorized=True)
+#print 'Newton\n', newton
+plt.plot([i[0] for i in newton['x']],[i[1] for i in newton['x']],'-o',lw=1,ms=2,c='darkred',mec='black',mfc='red',label='Newton')
+print 3
+
 optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'modified-newton'
-print 'Modified-Newton\n', optinpy.nonlinear.unconstrained.fminunc(f,[0,0],0.001)
+optinpy.nonlinear.unconstrained.params['fminunc']['params']['modified-newton']['sigma'] = 0.5 
+modnewton = optinpy.nonlinear.unconstrained.fminunc(rosen,p0,0.0005,vectorized=True)
+#print 'Modified-Newton\n', modnewton
+plt.plot([i[0] for i in modnewton['x']],[i[1] for i in modnewton['x']],'-o',lw=1,ms=2,c='darkgreen',mec='black',mfc='green',label='Modified-Newton')
+print 4
+optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'conjugate-gradient'
+conj_gradient = optinpy.nonlinear.unconstrained.fminunc(rosen,p0,0.0005,vectorized=True)
+#print 'Modified-Newton\n', modnewton
+plt.plot([i[0] for i in conj_gradient['x']],[i[1] for i in conj_gradient['x']],'-o',lw=1,ms=2,c='purple',mec='black',mfc='purple',label='Conjugate-Gradient')
+
+plt.gca().set_ylabel('$x_1$')
+plt.gca().set_xlabel('$x_2$')
+plt.gca().set_title('Rosenbrock function contour map')
+plt.legend()
 #S.dual()
+"""
+plt.figure()
+plt.gca().set_yscale('log')
+plt.gca().set_xscale('log')
+l3, = plt.plot([abs(i) for i in modnewton['f']],label = 'Modified-Newton',c='green')
+l1, = plt.plot([abs(i) for i in gradientdesc['f']],label = 'Gradient')
+l2, = plt.plot([abs(i) for i in newton['f']],label = 'Newton')
+for i in np.logspace(0,1.5,200):
+    print i
+    optinpy.nonlinear.unconstrained.params['fminunc']['params']['modified-newton']['sigma'] = i
+    modnewton = optinpy.nonlinear.unconstrained.fminunc(rosen,p0,0.0005,vectorized=True)
+    plt.plot([abs(j) for j in modnewton['f']],alpha=0.2+(0.8/200)*i,c='green')
+plt.legend()
+plt.gca().set_ybound([0.001,1e3])
+"""
 """
 n = optinpy.graph()
 bs = zip(range(1,6),[5,-8,0,10,-7])
@@ -38,7 +99,7 @@ for c in connections:
     n.add_connection(*c)
 optinpy.mcfp.bigm(n,100)
 
- # Minimum-Spanning Trees
+# Minimum-Spanning Trees
 n = optinpy.graph()
 connections = [['A','B',7],['A','D',5],['B','C',8],['B','D',9],['B','E',7],['C','E',5],\
                 ['D','E',15],['D','F',6],['E','F',8],['E','G',9],['F','G',11]]
