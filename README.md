@@ -114,7 +114,7 @@ Finds an α value that satisfies Armijo's condition with successive value decrem
 #### Interpolation, 2nd-3rd order (`.interp23`)
 Finds an α value that satisfies Armijo's condition by successively minimizing a 2nd- or 3rd-order f(α) polynomial interpolated from the latest f-α pairs.
 #### Unimodality (`.unimodality`)
-Successive α-domain subsectioning by uniformily random probing.
+Successive α-domain subsectioning by uniformly random probing.
 #### Golden-section (`.golden_section`)
 Successive α-domain subsectioning following the golden-ratio.
 
@@ -154,7 +154,7 @@ Successive α-domain subsectioning following the golden-ratio.
     'hessian':
        {'algorithm':'central','epsilon':1e-6}, # algorithm = 'central', 'forward', 'backward'; epsilon = perturbation
     'linesearch':
-       {'method':'backtracking', # 'backtracking', 'interp23, 'unimodality' or 'golden_ratio'
+       {'method':'backtracking', # 'backtracking', 'interp23, 'unimodality' or 'golden-section'
         'params':
            {'backtracking':
                 {'alpha':1,'rho':0.5,'c':1e-4,'max_iter':1e3}, # alpha = initial step scale; rho = step reduction factor; c = Armijo's parameter
@@ -192,7 +192,7 @@ Successive α-domain subsectioning following the golden-ratio.
       L'\**d* = y.
 
   - ##### Conjugate Gradient (`method='conjugate-gradient'`)
-    The conjugate gradient algorithm builds a set of Hessian-orthogonal (*Q*-orthogonal) directions as of Gram-Schmidt *Q*-orthogonalization so that descent directions, *d*, are *Q*-orthogonal and preceeding gradients are orthogonal: *d*<sup>k+1</sup> = *p*<sup>k+1</sup> - ∑<sup>k</sup><sub>i=0</sub>(*p*<sup>k+1</sup>'*Qd*<sup>i</sup>/*d*<sup>i</sup>'*Q**d*<sup>i</sup>)*d*<sup>i</sup>, where *p* is a linear independent set. Replacing *p*<sup>i</sup> by -∇f(x<sub>i</sub>), leads us to:
+    The conjugate gradient algorithm builds a set of Hessian-orthogonal (*Q*-orthogonal) directions as of Gram-Schmidt *Q*-orthogonalization so that descent directions, *d*, are *Q*-orthogonal and preceding gradients are orthogonal: *d*<sup>k+1</sup> = *p*<sup>k+1</sup> - ∑<sup>k</sup><sub>i=0</sub>(*p*<sup>k+1</sup>'*Qd*<sup>i</sup>/*d*<sup>i</sup>'*Q**d*<sup>i</sup>)*d*<sup>i</sup>, where *p* is a linear independent set. Replacing *p*<sup>i</sup> by -∇f(x<sub>i</sub>), leads us to:
     
       *d*<sup>k+1</sup> = -∇f(x<sub>k+1</sub>) + ∇f(x<sub>k+1</sub>)'H(x<sub>k+1</sub>)*d*<sup>k</sup>/*d*<sup>k</sup>'H(x<sub>k+1</sub>)*d*<sup>k</sup>
 
