@@ -16,7 +16,7 @@
       - [Interpolation 2nd-3rd](#interpolation-2nd-3rd-order-interp23)
       - [Unimodality](#unimodality-unimodality)
       - [Golden-section](#golden-section-golden_section)
-    - [Unconstrained-optimization](#unconstrained-optimizationunconstrained)
+    - [Unconstrained optimization](#unconstrained-optimization-unconstrained)
       - [fminunc](#fminunc)
       - [parameters](#parameters-params)
         - [Gradient](#gradient-methodgradient)
