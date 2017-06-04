@@ -28,7 +28,7 @@ def jacobian(fun,x0,epsilon=1e-6,algorithm='central'):
         grad += [(fvals[1]-fvals[0])/((evpoints[1]-evpoints[0])*epsilon)]
     return __np.array(grad)
 
-def hessian(fun,x0,epsilon=1e-6,algorithm='central'):
+def hessian(fun,x0,epsilon=1e-6,algorithm='central',**kwargs):
     '''
         hessian calculator
         ..fun as callable object; must be a function of x0 and return a single number

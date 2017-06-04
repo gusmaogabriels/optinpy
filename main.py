@@ -25,11 +25,13 @@ S = optinpy.simplex(A,b,c,lb=[-10,-10,-10,-10],ub=[5,5,5,5])
 
 plt.close('all')
 rosen = lambda x : (1-x[0])**2 + 100*(x[1]-x[0]**2)**2
-delta = 0.01
+gen = lambda x : np.exp(x[0])*(4*x[0]**2+2*x[1]**2+4*x[0]*x[1]+2*x[0]+1)
+fun_ = rosen
+delta = 0.0001
 x = np.linspace(-5, 5, 100)
 y = np.linspace(-5, 5, 100)
 X, Y = np.meshgrid(x, y)
-Z = rosen(np.vstack([X.ravel(), Y.ravel()])).reshape((100,100))
+Z = fun_(np.vstack([X.ravel(), Y.ravel()])).reshape((100,100))
 # Note: the global minimum is at (1,1) in a tiny contour island
 plt.contour(X, Y, Z, np.arange(10)**5,linewidths=0.5)
 plt.text(1, 1, 'O', va='center', ha='center', color='darkred', fontsize=20);
@@ -37,41 +39,59 @@ plt.text(1, 1, 'X', va='center', ha='center', color='darkred', fontsize=10);
 
                
 f_aurea = lambda x : np.exp(-x[0])+x[0]**2
-print 'backtracking\n', optinpy.linesearch.backtracking(rosen,[0,0],-optinpy.finitediff.jacobian(rosen,[0,0]),1,rho=0.6)
-print 'backtracking\n', optinpy.linesearch.backtracking(rosen,[0,0],-optinpy.finitediff.jacobian(rosen,[0,0]),1,rho=0.5)
-print 'interpolate\n', optinpy.linesearch.interp23(rosen,[0,0],-optinpy.finitediff.jacobian(rosen,[0,0]),1)
-print 'unimodality\n', optinpy.linesearch.unimodality(rosen,[0,0],-optinpy.finitediff.jacobian(rosen,[0,0]),1)
-print 'golden-section\n', optinpy.linesearch.golden_section(rosen,[0,0],-optinpy.finitediff.jacobian(rosen,[0,0]),1)
+print 'backtracking\n', optinpy.linesearch.backtracking(fun_,[0,0],-optinpy.finitediff.jacobian(fun_,[0,0]),1,rho=0.6)
+print 'backtracking\n', optinpy.linesearch.backtracking(fun_,[0,0],-optinpy.finitediff.jacobian(fun_,[0,0]),1,rho=0.5)
+print 'interpolate\n', optinpy.linesearch.interp23(fun_,[0,0],-optinpy.finitediff.jacobian(fun_,[0,0]),1)
+print 'unimodality\n', optinpy.linesearch.unimodality(fun_,[0,0],-optinpy.finitediff.jacobian(fun_,[0,0]),1)
+print 'golden-section\n', optinpy.linesearch.golden_section(fun_,[0,0],-optinpy.finitediff.jacobian(fun_,[0,0]),1)
 
 optinpy.nonlinear.unconstrained.params['linesearch']['method'] ='interp23'
-p0 = [2,2]
+p0 = [-1.9,2]
                                       
 optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'gradient'
-gradientdesc = optinpy.nonlinear.unconstrained.fminunc(rosen,p0,0.0005,vectorized=True)
+gradientdesc = optinpy.nonlinear.unconstrained.fminunc(fun_,p0,0.0005,vectorized=True)
 print 1
 #print 'gradient_descent\n', gradientdesc
 plt.plot([i[0] for i in gradientdesc['x']],[i[1] for i in gradientdesc['x']],'-o',lw=1,ms=2,c='darkblue',mec='black',mfc='blue',label='Gradient')
 print 2
 optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'newton'
-newton = optinpy.nonlinear.unconstrained.fminunc(rosen,p0,0.0005,vectorized=True)
+newton = optinpy.nonlinear.unconstrained.fminunc(fun_,p0,0.0005,vectorized=True)
 #print 'Newton\n', newton
 plt.plot([i[0] for i in newton['x']],[i[1] for i in newton['x']],'-o',lw=1,ms=2,c='darkred',mec='black',mfc='red',label='Newton')
 print 3
 
 optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'modified-newton'
 optinpy.nonlinear.unconstrained.params['fminunc']['params']['modified-newton']['sigma'] = 0.5 
-modnewton = optinpy.nonlinear.unconstrained.fminunc(rosen,p0,0.0005,vectorized=True)
+modnewton = optinpy.nonlinear.unconstrained.fminunc(fun_,p0,0.0005,vectorized=True)
 #print 'Modified-Newton\n', modnewton
 plt.plot([i[0] for i in modnewton['x']],[i[1] for i in modnewton['x']],'-o',lw=1,ms=2,c='darkgreen',mec='black',mfc='green',label='Modified-Newton')
 print 4
 optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'conjugate-gradient'
-conj_gradient = optinpy.nonlinear.unconstrained.fminunc(rosen,p0,0.0005,vectorized=True)
+conj_gradient = optinpy.nonlinear.unconstrained.fminunc(fun_,p0,0.0005,vectorized=True)
 #print 'Modified-Newton\n', modnewton
 plt.plot([i[0] for i in conj_gradient['x']],[i[1] for i in conj_gradient['x']],'-o',lw=1,ms=2,c='purple',mec='black',mfc='purple',label='Conjugate-Gradient')
+print 5
+optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'fletcher-reeves'
+fletcher_reeves = optinpy.nonlinear.unconstrained.fminunc(fun_,p0,0.0005,vectorized=True)
+#print 'Modified-Newton\n', modnewton
+plt.plot([i[0] for i in conj_gradient['x']],[i[1] for i in conj_gradient['x']],'-o',lw=1,ms=2,c='turquoise',mec='black',mfc='blue',label='Fletcher-Reeves')
+print 6
+optinpy.nonlinear.unconstrained.params['fminunc']['method'] = 'quasi-newton'
+optinpy.nonlinear.unconstrained.params['fminunc']['params']['quasi-newton']['hessian_update'] = 'davidon-fletcher-powell' 
+dfp = optinpy.nonlinear.unconstrained.fminunc(fun_,p0,0.0005,vectorized=True)
+#print 'Modified-Newton\n', modnewton
+plt.plot([i[0] for i in conj_gradient['x']],[i[1] for i in conj_gradient['x']],'-o',lw=1,ms=2,c='grey',mec='black',mfc='black',label='Davidon-Fletcher-Powell')
+print 7
+optinpy.nonlinear.unconstrained.params['fminunc']['params']['quasi-newton']['hessian_update'] = 'BFGS' 
+bfgs = optinpy.nonlinear.unconstrained.fminunc(fun_,p0,0.0005,vectorized=True)
+#print 'Modified-Newton\n', modnewton
+plt.plot([i[0] for i in conj_gradient['x']],[i[1] for i in conj_gradient['x']],'-o',lw=1,ms=2,c='gold',mec='black',mfc='black',label='BFGS')
+
+
 
 plt.gca().set_ylabel('$x_1$')
 plt.gca().set_xlabel('$x_2$')
-plt.gca().set_title('Rosenbrock function contour map')
+plt.gca().set_title('rosenbrock function contour map')
 plt.legend()
 
 plt.figure()
@@ -79,6 +99,9 @@ plt.plot([i for i in gradientdesc['f']],label='Gradient',color='darkblue')
 plt.plot([i for i in newton['f']],label='Newton',color='darkred')
 plt.plot([i for i in modnewton['f']],label='Modified-Newton',color='darkgreen')
 plt.plot([i for i in conj_gradient['f']],label='Conjugate-Gradient',color='purple')
+plt.plot([i for i in fletcher_reeves['f']],label='Fletcher-Reeves',color='turquoise')
+plt.plot([i for i in dfp['f']],label='Davidon-Fletcher-Powell',color='black') 
+plt.plot([i for i in bfgs['f']],label='BFGS',color='gold') 
 plt.gca().set_ylabel('$error$')
 plt.gca().set_xlabel('iteration')
 plt.gca().set_xscale('log')
@@ -99,7 +122,7 @@ l2, = plt.plot([abs(i) for i in newton['f']],label = 'Newton')
 for i in np.logspace(0,1.5,200):
     print i
     optinpy.nonlinear.unconstrained.params['fminunc']['params']['modified-newton']['sigma'] = i
-    modnewton = optinpy.nonlinear.unconstrained.fminunc(rosen,p0,0.0005,vectorized=True)
+    modnewton = optinpy.nonlinear.unconstrained.fminunc(fun_,p0,0.0005,vectorized=True)
     plt.plot([abs(j) for j in modnewton['f']],alpha=0.2+(0.8/200)*i,c='green')
 plt.legend()
 plt.gca().set_ybound([0.001,1e3])

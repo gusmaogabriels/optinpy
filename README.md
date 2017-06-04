@@ -23,6 +23,9 @@
         - [Newton](#newton-methodnewton)
         - [Modified Newton](#modified-newton-methodmodified-newton)
         - [Conjugate Gradient](#conjugate-gradient-methodconjugate-gradient)
+		- [Quasi-Newton](#quasi-newton-methodquasi-newton)
+			- [Davidon-Fletcher-Powell](#Davidon-Fletcher-Powell-quasi-newton:hessian_update:dfp)
+			- [Broyden-Fletcher-Goldfarb-Shanno](#Broyden-Fletcher-Goldfarb-Shanno-quasi-newton:hessian_update:BFGS)
 
 ## **Linear Programming**
 ### Graphs (`.graph`)
@@ -196,6 +199,29 @@ Successive α-domain subsectioning following the golden-ratio.
     
       *d*<sup>k+1</sup> = -∇f(x<sub>k+1</sub>) + ∇f(x<sub>k+1</sub>)'H(x<sub>k+1</sub>)*d*<sup>k</sup>/*d*<sup>k</sup>'H(x<sub>k+1</sub>)*d*<sup>k</sup>
 
+	  
+  - ##### Quasi-Newton (`method='quasi-newton'`)
+    Quasi-Newton methods are in between gradient and Newton's method, with successive approximations of the Hessian and its inverse matrix.
+	
+	for the following updates, consider:
+	
+	  q<sup>k</sup> = ∇f(x<sub>k+1</sub>) - ∇f(x<sub>k</sub>) 
+	  
+	  p<sup>k</sup> = α<sub>k</sub>d<sup>k</sup>
+    
+	- ###### Davidon-Fletcher-Powell ('quasi-newton':'hessian_update':'dfp')
+      
+		Rank-2 correction of the inverse Hessian as of a sum of 2 rank-1 matrices.
+			
+		*H*<sup>-1</sup><sub>k+1</sub> = *H*<sup>-1</sup><sub>k</sub> + p<sup>k</sup>(p<sup>k</sup>)'/(p<sup>k</sup>)'q<sup>k</sup> - *H*<sup>-1</sup><sub>k</sub>q<sup>k</sup>(q<sup>k</sup>)'*H*<sup>-1</sup><sub>k</sub>/(q<sup>k</sup>)'*H*<sup>-1</sup><sub>k</sub>q<sup>k</sup>
+
+	- ###### Broyden-Fletcher-Goldfarb-Shanno ('quasi-newton':'hessian_update':'BFGS')
+		
+		Also a Rank-2 correction of the inverse Hessian as of a sum of 2 rank-1 matrices.
+			
+		*H*<sup>-1</sup><sub>k+1</sub> = *H*<sup>-1</sup><sub>k</sub> + (1+(q<sup>k</sup>)'*H*<sup>-1</sup><sub>k</sub>q<sup>k</sup>/(q<sup>k</sup>)'p<sup>k</sup>)p<sup>k</sup>(p<sup>k</sup>)'/(p<sup>k</sup>)'q<sup>k</sup> - (p<sup>k</sup>(q<sup>k</sup>)'*H*<sup>-1</sup><sub>k</sub>+*H*<sup>-1</sup><sub>k</sub>q<sup>k</sup>(p<sup>k</sup>)')/(q<sup>k</sup>)'p<sup>k</sup>
+
+	
 Copyright © 2016 - Gabriel Sabença Gusmão
 
 [![linkedin](https://static.licdn.com/scds/common/u/img/webpromo/btn_viewmy_160x25.png)](https://br.linkedin.com/pub/gabriel-saben%C3%A7a-gusm%C3%A3o/115/aa6/aa8)
