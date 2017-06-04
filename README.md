@@ -24,9 +24,9 @@
         - [Modified Newton](#modified-newton-methodmodified-newton)
         - [Conjugate Gradient](#conjugate-gradient-methodconjugate-gradient)
 		- [Quasi-Newton](#quasi-newton-methodquasi-newton)
-			- [Davidon-Fletcher-Powell](#Davidon-Fletcher-Powell-quasi-newton:hessian_update:dfp)
-			- [Broyden-Fletcher-Goldfarb-Shanno](#Broyden-Fletcher-Goldfarb-Shanno-quasi-newton:hessian_update:BFGS)
-
+			- [Davidon-Fletcher-Powell](#davidon-fletcher-powell-quasi-newtonhessian_updatedfp)
+			- [Broyden-Fletcher-Goldfarb-Shanno](#broyden-fletcher-goldfarb-shanno-quasi-newtonhessian_updatebfgs)
+			
 ## **Linear Programming**
 ### Graphs (`.graph`)
   - Equivalent *tableau* (`.tableau`)   -> *under development*
