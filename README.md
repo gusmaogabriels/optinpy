@@ -147,7 +147,7 @@ Successive α-domain subsectioning following the golden-ratio.
   **Standard parameters**
    ```python
    {'fminunc': # fminunc algorithm definition
-       {'method': 'newton', # 'gradient', 'newton', `'modified-newton', fletcher-reeves or quasi-newton
+       {'method': 'newton', # 'gradient', 'newton', `'modified-newton', 'fletcher-reeves' or 'quasi-newton'
         'params': 
            {'gradient':
                 {'max_iter':1e3},
@@ -159,9 +159,9 @@ Successive α-domain subsectioning following the golden-ratio.
                 {'max_iter':1e3},
 	    'fletcher-reeves':
 	    	{'max_iter':1e3},
-            'quasi-newton':
-	    	{'max_iter':1e3,'hessian_update':'davidon-fletcher-powell'}, # hessian_update is either dfp or BFGS
-          }},
+	    'quasi-newton':
+	    	{'max_iter':1e3,'hessian_update':'davidon-fletcher-powell'} # hessian_update is either dfp or BFGS
+           }},
     'jacobian': # jacobian algorithm definition
        {'algorithm':'central','epsilon':1e-6}, # algorithm = 'central', 'forward', 'backward'; epsilon = perturbation
     'hessian':
