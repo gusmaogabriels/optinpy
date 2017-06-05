@@ -157,10 +157,10 @@ Successive α-domain subsectioning following the golden-ratio.
                 {'sigma' : 1, 'max_iter':1e3}, # sigma is the lower bound for the modified Hessian eigenvalue
             'conjugate-gradient':
                 {'max_iter':1e3},
-	    'fletcher-reeves':
-	    	{'max_iter':1e3},
-	    'quasi-newton':
-	    	{'max_iter':1e3,'hessian_update':'davidon-fletcher-powell'} # hessian_update is either dfp or BFGS
+            'fletcher-reeves':
+                {'max_iter':1e3},
+            'quasi-newton':
+                {'max_iter':1e3,'hessian_update':'davidon-fletcher-powell'} # hessian_update is either dfp or BFGS
            }},
     'jacobian': # jacobian algorithm definition
        {'algorithm':'central','epsilon':1e-6}, # algorithm = 'central', 'forward', 'backward'; epsilon = perturbation
