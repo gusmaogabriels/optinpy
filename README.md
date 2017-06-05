@@ -147,7 +147,7 @@ Successive α-domain subsectioning following the golden-ratio.
   **Standard parameters**
    ```python
    {'fminunc': # fminunc algorithm definition
-       {'method': 'newton', # 'gradient', 'newton' or `'modified-newton'
+       {'method': 'newton', # 'gradient', 'newton', `'modified-newton', fletcher-reeves or quasi-newton
         'params': 
            {'gradient':
                 {'max_iter':1e3},
@@ -156,12 +156,16 @@ Successive α-domain subsectioning following the golden-ratio.
             'modified-newton':
                 {'sigma' : 1, 'max_iter':1e3}, # sigma is the lower bound for the modified Hessian eigenvalue
             'conjugate-gradient':
-                {'max_iter':1e3},    
+                {'max_iter':1e3},
+	    'fletcher-reeves':
+	    	{'max_iter':1e3},
+            'quasi-newton':
+	    	{'max_iter':1e3,'hessian_update':'davidon-fletcher-powell'}, # hessian_update is either dfp or BFGS
           }},
     'jacobian': # jacobian algorithm definition
        {'algorithm':'central','epsilon':1e-6}, # algorithm = 'central', 'forward', 'backward'; epsilon = perturbation
     'hessian':
-       {'algorithm':'central','epsilon':1e-6}, # algorithm = 'central', 'forward', 'backward'; epsilon = perturbation
+       {'algorithm':'central','epsilon':1e-6,'initial':None}, # algorithm = 'central', 'forward', 'backward'; epsilon = perturbation, 'inital' = initial hessian with (size of x)-by-(size of x) or None for identity.
     'linesearch':
        {'method':'backtracking', # 'backtracking', 'interp23, 'unimodality' or 'golden-section'
         'params':
