@@ -4,9 +4,9 @@
 
 **University of Campinas, UNICAMP**
 	
-. IA897 - Introdução à Otimização Matemática - *Introduction to Optimization* 
-. IA881 - Otimização Linear - *Linear Programming*
-. IA543 - Otimização Não Linear - *Nonlinear Optimization* (Prof. Takaaki)
+* IA897 - Introdução à Otimização Matemática - *Introduction to Optimization* 
+* IA881 - Otimização Linear - *Linear Programming*
+* IA543 - Otimização Não Linear - *Nonlinear Optimization* (Prof. Takaaki)
 
 *pip install* -> `pip install --upgrade https://github.com/gusmaogabriels/optinpy/zipball/master`
 
