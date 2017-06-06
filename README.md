@@ -2,13 +2,14 @@
 ==================================================================
 *General linear and non-linear optimization methods in Python.*
 
-**University of Campinas, UNICAMP**
+*pip install* -> `pip install --upgrade https://github.com/gusmaogabriels/optinpy/zipball/master`
+
+**The University of Campinas, UNICAMP**
 	
 * IA897 - Introdução à Otimização Matemática - *Introduction to Optimization* 
 * IA881 - Otimização Linear - *Linear Programming*
 * IA543 - Otimização Não Linear - *Nonlinear Optimization* (Prof. Takaaki)
 
-*pip install* -> `pip install --upgrade https://github.com/gusmaogabriels/optinpy/zipball/master`
 
 ## Table of Content
   - [**Linear Programming**](#linear-programming)
