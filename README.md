@@ -123,7 +123,7 @@
   
   - Primal Step (`S.primal()`)
   
-  	Given *S* a Simplex object, `S.primal()` carries out a primal pivotting as of a primal feasible *x*, including in the basis set the basis of greatest improvement of Objective Function from a feasible initial point and still respecting the primal feasibility*A*×*x* ≤ *b*, then determining which basis should leave the basis set.
+  	Given *S* a Simplex object, `S.primal()` carries out a primal pivotting as of a primal feasible *x*, including in the basis set the basis of greatest improvement of the Objective Functionl, while still respecting the primal feasibility*A*×*x* ≤ *b*, then determining which basis should leave the basis set.
   
   - Dual Simplex (`S.dual()`)
   
