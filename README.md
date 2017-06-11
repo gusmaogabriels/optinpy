@@ -118,11 +118,16 @@
 ### Simplex (`.simplex`)
 BEING REVAMPED
   - Base Class Constructor (`S = optinpy.simplex(A,b,c,lb,ub)`)
-  Define a linear optimization problem *S*: `S = optinpy.simplex(A,b,c,lb,ub)` to find the *minimum* value of *c*×*x* (default) subject to *A*×*x* ≤ *b*, where *A* is a *n*×*m* matrix holding the constraints coefficients, *b* ∈ R<sup>*n*</sup> and *c* ∈ R<sup>*m*</sup> is the objective function cofficients, *lb* and *ub* are the lower and upper bound values in R<sup>*n*</sup> for *x*, respectively. 
+  
+  	Define a linear optimization problem *S*: `S = optinpy.simplex(A,b,c,lb,ub)` to find the *minimum* value of *c*×*x* (default) subject  to *A*×*x* ≤ *b*, where *A* is a *n*×*m* matrix holding the constraints coefficients, *b* ∈ R<sup>*n*</sup> and *c* ∈ R<sup>*m*</sup> is the objective function cofficients, *lb* and *ub* are the lower and upper bound values in R<sup>*n*</sup> for *x*, respectively. 
+  
   - Primal Step (`S.primal()`)
-  Given *S* a Simplex object, `S.primal()` carries out a primal pivotting as of a primal feasible *x*, including in the basis set the basis of greatest improvement of Objective Function from a feasible initial point and still respecting the primal feasibility*A*×*x* ≤ *b*, then determining which basis should leave the basis set.
+  
+  	Given *S* a Simplex object, `S.primal()` carries out a primal pivotting as of a primal feasible *x*, including in the basis set the basis of greatest improvement of Objective Function from a feasible initial point and still respecting the primal feasibility*A*×*x* ≤ *b*, then determining which basis should leave the basis set.
+  
   - Dual Simplex (`S.dual()`)
-  Given *S* a Simplex object, `S.dual()` carries out a dual pivotting as of a dual feasible *x*, so that there is first defined which basis should leave the basis set and the which one should enter while keeping the dual feasibility.
+  
+  	Given *S* a Simplex object, `S.dual()` carries out a dual pivotting as of a dual feasible *x*, so that there is first defined which basis should leave the basis set and the which one should enter while keeping the dual feasibility.
  
 ## **Non-linear Optimization**
 ### Line-search (`.linesearch`)
