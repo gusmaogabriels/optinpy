@@ -116,7 +116,7 @@
      arcs3 = optinpy.mst.boruvka(n2,verbose=True) # Minimum spanning-tree via Boruvka
      ```
 ### Simplex (`.simplex`)
-BEING REVAMPED
+**BEING FIXED: AFTER ADDITION OF LB/UB DEFINITION FOR *x*, GLITCHES CAME ABOUT... IT SHOULD BE FIXED ASAP**
   - Base Class Constructor (`S = optinpy.simplex(A,b,c,lb,ub)`)
   
   	Define a linear optimization problem *S*: `S = optinpy.simplex(A,b,c,lb,ub)` to find the *minimum* value of *c*×*x* (default) subject  to *A*×*x* ≤ *b*, where *A* is a *n*×*m* matrix holding the constraints coefficients, *b* ∈ R<sup>*n*</sup> and *c* ∈ R<sup>*m*</sup> is the objective function cofficients, *lb* and *ub* are the lower and upper bound values in R<sup>*n*</sup> for *x*, respectively. 
