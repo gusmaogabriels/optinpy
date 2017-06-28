@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import division, absolute_import, print_function
 from .. import np as __np
 eps = __np.finfo(__np.float64).eps
 resolution = __np.finfo(__np.float64).resolution

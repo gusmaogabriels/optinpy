@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import division, absolute_import, print_function
 from ...finitediff import jacobian as __jacobian, hessian as __hessian
 from ...linesearch import xstep as __xstep, backtracking as __backtracking, interp23 as __interp23, unimodality as __unimodality, golden_section as __golden_section
 from ... import np as __np
