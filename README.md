@@ -34,10 +34,14 @@
 		- [Quasi-Newton](#quasi-newton-methodquasi-newton)
 			- [Davidon-Fletcher-Powell (DFP)](#davidon-fletcher-powell-quasi-newtonhessian_updatedfp)
 			- [Broyden-Fletcher-Goldfarb-Shanno (BFGS)](#broyden-fletcher-goldfarb-shanno-quasi-newtonhessian_updatebfgs)
-	- [Constrained optimization](#constrained-optimization-constrained)
-		- [fmincon](#fmincon)
-		- [parameters](#parameters-params)
-			- [Projected Gradient](#projected-gradient-methodprojected-gradient)
+    - [Constrained optimization](#constrained-optimization-constrained)
+      - [fmincon](#fmincon)
+      - [parameters](#parameters-params)
+        - [Projected Gradient](#projected-gradient-methodprojected-gradient)
+  - [**Numerical Differentiation**](#numerical-differentiation)
+    - [Finite Difference](#finite-differencefinitediff)
+      - [Jacobian](#jacobianjacobian)
+      - [Hessian](#hessianhessian)
 
 ## **Linear Programming**
 ### Graphs (`.graph`)
@@ -328,6 +332,46 @@ Successive α-domain subsectioning following the golden-ratio.
     
     **Example**: f(*x*) = ||*x*||²-2*x*<sub>1</sub>-3*x*<sub>4</sub>, begining @ (0,0,0,0) to a feasible starting point by Simplex with -∇f(x<sub>0</sub>) cost
     <sup>*</sup> Line-search method: 'interp23' with *alpha* = 1, *rho* = 0.6, *alpha_min* = 0.1, *c* = 0.1 (*Wolfe's condition*); gradient and Hessian calculation from central algorithms and *eps*<sup>0.5</sup> perturbation *epsilon*, where *eps* stands for the smallest *float64* number suchs that 1.0 + *eps* != 0. *max_iter* = 10<sup>3</sup>  
+    
+## **Numerical Differentiation**
+### Finite Difference (`.finitediff`)
+Numerical routines to estimate the *Jacobian* and *Hessian* matrices of a function at a given point, *x*<sub>0</sub>, as of small perturbations along it. As default, the perturbation ε is taken as the square root of the machine precision for a floating point type, *eps*, such that: 1.0 + *eps* != 0, and the algorithm for both *Jacobian* and *Hessian* is the central algorithm.
+
+- ##### Jacobian (`.jacobian`)
+  Typically, the first derivatives of a function or array of functions may be estimated by three different first-order approximation formulas/algorithms:
+  
+  - Central:
+  
+    ∇<sub>x<sub>j</sub></sub>f<sub>i</sub> = (f<sub>i</sub>(*x*<sub>j,0</sub>+ε)-f<sub>i</sub>(*x*<sub>j,0</sub>-ε))/2ε
+  
+  - Forward:
+  
+     ∇<sub>x<sub>j</sub></sub>f<sub>i</sub> = (f<sub>i</sub>(*x*<sub>j,0</sub>+ε)-f<sub>i</sub>(*x*<sub>j,0</sub>))/ε
+  
+  - Backward:
+  
+     ∇<sub>x<sub>j</sub></sub>f<sub>i</sub> = (f<sub>i</sub>(*x*<sub>j,0</sub>)-f<sub>i</sub>(*x*<sub>j,0</sub>-ε))/ε
+  
+- ##### Hessian (`.hessian`)
+  The following alogirthms are used for the estimation of the second derivatives for a function from a reference point *x*<sub>0</sub>:
+  
+  - Central:
+  
+     On-diagonal terms: 𝛿²f/𝛿x<sub>j</sub>² = (-f(x<sub>j,0</sub>+2ε)+16f(x<sub>j,0</sub>+ε)-30f(x<sub>j,0</sub>)+16f(x<sub>j,0</sub>-ε)-f(x<sub>j,0</sub>-2ε))/12ε²
+     
+     Off-diagonal terms: 𝛿²f/𝛿x<sub>j</sub>𝛿x<sub>k</sub> = (f(x<sub>j,0</sub>+ε,x<sub>k,0</sub>+ε)-f(x<sub>j,0</sub>+ε,x<sub>k,0</sub>-ε)-f(x<sub>j,0</sub>-ε,x<sub>k,0</sub>+ε)+f(x<sub>j,0</sub>-ε,x<sub>k,0</sub>-2))/4ε²
+  
+  - Forward:
+  
+     On-diagonal terms: 𝛿²f/𝛿x<sub>j</sub>² = (f(x<sub>j,0</sub>+2ε)-2f(x<sub>j,0</sub>+ε)+f(x<sub>j,0</sub>))/ε²
+     
+     Off-diagonal terms: 𝛿²f/𝛿x<sub>j</sub>𝛿x<sub>k</sub> = (f(x<sub>j,0</sub>+ε,x<sub>k,0</sub>+ε)-f(x<sub>j,0</sub>+ε,x<sub>k,0</sub>)-f(x<sub>j,0</sub>,x<sub>k,0</sub>+ε)+f(x<sub>j,0</sub>,x<sub>k,0</sub>))/ε²
+  
+  - Backward:
+  
+     On-diagonal terms: 𝛿²f/𝛿x<sub>j</sub>² = (f(x<sub>j,0</sub>-2ε)-2f(x<sub>j,0</sub>-ε)+f(x<sub>j,0</sub>))/ε²
+     
+     Off-diagonal terms: 𝛿²f/𝛿x<sub>j</sub>𝛿x<sub>k</sub> = (f(x<sub>j,0</sub>-ε,x<sub>k,0</sub>-ε)-f(x<sub>j,0</sub>-ε,x<sub>k,0</sub>)-f(x<sub>j,0</sub>,x<sub>k,0</sub>-ε)+f(x<sub>j,0</sub>,x<sub>k,0</sub>))/ε²
     
 Copyright © 2016 - Gabriel Sabença Gusmão
 
