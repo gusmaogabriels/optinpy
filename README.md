@@ -39,9 +39,9 @@
       - [parameters](#parameters-params)
         - [Projected Gradient](#projected-gradient-methodprojected-gradient)
   - [**Numerical Differentiation**](#numerical-differentiation)
-    - [Finite Difference](#finite-differencefinitediff)
-      - [Jacobian](#jacobianjacobian)
-      - [Hessian](#hessianhessian)
+    - [Finite Difference](#finite-difference-finitediff)
+      - [Jacobian](#jacobian-jacobian)
+      - [Hessian](#hessian-hessian)
 
 ## **Linear Programming**
 ### Graphs (`.graph`)
