@@ -330,6 +330,8 @@ Successive α-domain subsectioning following the golden-ratio.
 
     The lagrangian multipliers are given by -(*A*<sub>k</sub>*A*<sub>k</sub>')<sup>-1</sup>*A*<sub>k</sub>∇f(x<sub>k</sub>).
     
+    An initial feasible point is attained by minimizing a Simplex from an initial arbitrary with cost function as the gradient at that point. **As the Simplex package is being reestructured, for now, the *Scipy* package *linprog* is being used to solve the Simplex**.
+    
     **Example**: f(*x*) = ||*x*||²-2*x*<sub>1</sub>-3*x*<sub>4</sub>, begining @ (0,0,0,0) to a feasible starting point by Simplex with -∇f(x<sub>0</sub>) cost
     <sup>*</sup> Line-search method: 'interp23' with *alpha* = 1, *rho* = 0.6, *alpha_min* = 0.1, *c* = 0.1 (*Wolfe's condition*); gradient and Hessian calculation from central algorithms and *eps*<sup>0.5</sup> perturbation *epsilon*, where *eps* stands for the smallest *float64* number suchs that 1.0 + *eps* != 0. *max_iter* = 10<sup>3</sup>  
     
