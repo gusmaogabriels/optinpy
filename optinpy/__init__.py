@@ -25,5 +25,6 @@ from .mst import mst
 from .finitediff import finitediff
 from .linesearch import linesearch
 from .nonlinear import unconstrained as __unconstrained
+from .nonlinear import constrained as __constrained
 
 __all__ = ['np','graph','__author__','__version__']

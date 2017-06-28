@@ -2,7 +2,7 @@
 from __future__ import division, absolute_import, print_function
 
 from .unconstrained import unconstrained
-#from .constrained import *
+from .constrained import constrained
 
 
 
