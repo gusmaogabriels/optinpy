@@ -317,7 +317,7 @@ Successive α-domain subsectioning following the golden-ratio.
 
 	If *d* is less than a given arbitrary tolerance, the Lagrangian multipliers are computed to ckeck whether the Karush-Kuhn-Tucker (KKT) conditions are satisfied. If any inequality constraint lagragian multiplier is less than zero, the constraint is relaxed, the respective line in *A*<sub>k</sub> is removed and a the iterative process proceeds with *A*<sub>k+1</sub>. Otherwise the solution satisfies the KKT conditions and the point is said to be optimal.
 
-	The lagrangia multipliers are given by -(*A*<sub>k</sub>*A*<sub>k</sub>')<sup>-1</sup>*A*<sub>k</sub>∇f(x<sub>k</sub>).
+	The lagrangian multipliers are given by -(*A*<sub>k</sub>*A*<sub>k</sub>')<sup>-1</sup>*A*<sub>k</sub>∇f(x<sub>k</sub>).
 
 
 Copyright © 2016 - Gabriel Sabença Gusmão
