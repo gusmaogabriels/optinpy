@@ -11,8 +11,6 @@ packages = [
     		'optinpy.mcfp',
     		'optinpy.mst',
     		'optinpy.nonlinear',
-		'optinpy.nonlinear.constrained',
-		'optinpy.nonlinear.unconstrained',
    		'optinpy.simplex',
     		'optinpy.sp',
 ]
