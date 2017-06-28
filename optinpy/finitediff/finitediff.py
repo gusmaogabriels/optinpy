@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from .. import np as __np
+eps = __np.finfo(__np.float64).eps
+resolution = __np.finfo(__np.float64).resolution
 
-def jacobian(fun,x0,epsilon=1e-6,algorithm='central'):
+def jacobian(fun,x0,epsilon=__np.sqrt(eps),algorithm='central'):
     '''
         Jacobian calculator
         ..fun as callable object; must be a function of x0 and return a single number
@@ -26,9 +28,9 @@ def jacobian(fun,x0,epsilon=1e-6,algorithm='central'):
             fvals += [fun(x0)]
             x0[i] -= _x*epsilon
         grad += [(fvals[1]-fvals[0])/((evpoints[1]-evpoints[0])*epsilon)]
-    return __np.array(grad)
+    return __np.array(grad,__np.float64).copy()
 
-def hessian(fun,x0,epsilon=1e-6,algorithm='central',**kwargs):
+def hessian(fun,x0,epsilon=__np.sqrt(eps),algorithm='central',**kwargs):
     '''
         hessian calculator
         ..fun as callable object; must be a function of x0 and return a single number
