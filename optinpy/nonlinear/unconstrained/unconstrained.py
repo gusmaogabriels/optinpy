@@ -5,6 +5,10 @@ from ...linesearch import xstep as __xstep, backtracking as __backtracking, inte
 from ... import np as __np
 from ... import scipy as __sp
 
+eps = __np.finfo(__np.float64).eps
+resolution = __np.finfo(__np.float64).resolution
+
+
 params = {'fminunc':{'method':'newton','params':\
                 {'gradient':{'max_iter':1e4},\
                  'newton':{'max_iter':1e3},\
@@ -12,11 +16,11 @@ params = {'fminunc':{'method':'newton','params':\
                  'conjugate-gradient':{'max_iter':1e3},\
                  'fletcher-reeves':{'max_iter':1e3},\
                  'quasi-newton':{'max_iter':1e3,'hessian_update':'davidon-fletcher-powell'}}},\
-            'jacobian':{'algorithm':'central','epsilon':1e-6},\
-            'hessian':{'algorithm':'central','epsilon':1e-6,'initial':None},\
+            'jacobian':{'algorithm':'central','epsilon':__np.sqrt(eps)},\
+            'hessian':{'algorithm':'central','epsilon':__np.sqrt(eps),'initial':None},\
             'linesearch':{'method':'backtracking','params':
-                {'backtracking':{'alpha':1,'rho':0.5,'c':1e-3,'max_iter':1e3},\
-                'interp23':{'alpha':1,'alpha_min':0.1,'rho':0.5,'c':1e-3,'max_iter':1e3},\
+                {'backtracking':{'alpha':1,'rho':0.6,'c':1e-3,'max_iter':1e3},\
+                'interp23':{'alpha':1,'alpha_min':0.1,'rho':0.6,'c':1e-3,'max_iter':1e3},\
                 'unimodality':{'b':1,'threshold':1e-4,'max_iter':1e3},
                 'golden-section':{'b':1,'threshold':1e-4,'max_iter':1e3}}}}  
 
@@ -61,7 +65,7 @@ def conj_gradient(fun,x0,d0,g0,Q0,*args,**kwargs):
     '''     
     g = __jacobian(fun,x0,**params['jacobian'])
     Q = __hessian(fun,x0,**params['hessian'])
-    if sum(abs(d0)) == 0 or ((kwargs['iters'] + 1) % len(x0)) == 0:
+    if sum(abs(d0)) < eps or ((kwargs['iters'] + 1) % len(x0)) < eps:
         return -g, g, Q
     else:
         beta = g.T.dot(Q).dot(d0)/(d0.T.dot(Q).dot(d0))
@@ -75,7 +79,7 @@ def fletcher_reeves(fun,x0,d0,g0,Q0,*args,**kwargs):
         ..x0 as a numeric array; point from which to start
     '''     
     g = __jacobian(fun,x0,**params['jacobian'])
-    if sum(abs(d0)) == 0 or ((kwargs['iters'] + 1) % len(x0)) == 0:
+    if sum(abs(d0)) < eps or ((kwargs['iters'] + 1) % len(x0)) < eps:
         return -g, g, []
     else:
         beta = g.T.dot(g)/(g0.T.dot(g0))
@@ -89,7 +93,7 @@ def dfp(fun,x0,d0,g0,Q0,*args,**kwargs):
         ..x0 as a numeric array; point from which to start
     '''     
     g = __jacobian(fun,x0,**params['jacobian'])
-    if sum(abs(d0)) == 0 or ((kwargs['iters'] + 1) % len(x0)) == 0:
+    if sum(abs(d0)) < eps or ((kwargs['iters'] + 1) % len(x0)) < eps:
         Q = [params['hessian']['initial'] if params['hessian']['initial'] else __np.identity(len(x0))][0]
     else:
         q = (g-g0)[__np.newaxis].T
@@ -105,7 +109,7 @@ def bfgs(fun,x0,d0,g0,Q0,*args,**kwargs):
         ..x0 as a numeric array; point from which to start
     '''     
     g = __jacobian(fun,x0,**params['jacobian'])
-    if sum(abs(d0)) == 0 or ((kwargs['iters'] + 1) % len(x0)) == 0:
+    if sum(abs(d0)) < eps or ((kwargs['iters'] + 1) % len(x0)) < eps:
         Q = [params['hessian']['initial'] if params['hessian']['initial'] else __np.identity(len(x0))][0]
     else:
         q = (g-g0)[__np.newaxis].T
@@ -140,7 +144,7 @@ __unc_algorithms = {'gradient':gradient,
                 'quasi-newton':qn}
                     
 
-def fminunc(fun,x0,threshold,vectorized=False,**kwargs):
+def fminunc(fun,x0,threshold=1e-6,vectorized=False,**kwargs):
     '''
         Minimum Unconstrained Optimization
         ..fun as callable object; must be a function of x0 and return a single number
