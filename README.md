@@ -25,7 +25,7 @@
       - [Unimodality](#unimodality-unimodality)
       - [Golden-section](#golden-section-golden_section)
     - [Unconstrained optimization](#unconstrained-optimization-unconstrained)
-      - [fminunc](#fminun-fminunc)
+      - [fminunc](#fminunc-fminunc)
       - [parameters](#parameters-params)
         - [Gradient](#gradient-methodgradient)
         - [Newton](#newton-methodnewton)
