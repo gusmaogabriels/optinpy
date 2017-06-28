@@ -305,19 +305,19 @@ Successive α-domain subsectioning following the golden-ratio.
   - ##### Projected-gradient (`method='projected-gradient'`)
     The projected-gradient algorithm minimizes f(x) by first-order approximation: f(x) = f(x<sub>0</sub>) + ∇f(x<sub>0</sub>)'Δx, with descent direction, *d* under inequalities constraints *A*<=*b* and equalities constraints *A*<sub>eq</sub>=*b*<sub>eq</sub> given by:
 
-  *d* = -*P*∇f(x<sub>k</sub>).
+    *d* = -*P*∇f(x<sub>k</sub>).
 
-	where *P* is the orthogonal projection matrix on the *nullspace* of the subspace defined by the active constraints.
+    where *P* is the orthogonal projection matrix on the *nullspace* of the subspace defined by the active constraints.
 
-	*P* is given by *I* - *A*<sub>k</sub>'(*A*<sub>k</sub>*A*<sub>k</sub>')<sup>-1</sup>*A*<sub>k</sub> and *I* is the identity matrix.
+    *P* is given by *I* - *A*<sub>k</sub>'(*A*<sub>k</sub>*A*<sub>k</sub>')<sup>-1</sup>*A*<sub>k</sub> and *I* is the identity matrix.
 
-	*A*<sub>k</sub> is *n*-by-*m* consists of the union of the set of active inequality constraints and the equality constrints set.
+    *A*<sub>k</sub> is *n*-by-*m* consists of the union of the set of active inequality constraints and the equality constrints set.
 
-  The ultimate iteration step is given by the minimization of f(α) = f(x<sub>0</sub>) - α*d*(x<sub>k</sub>) with a lineserach substep.
+    The ultimate iteration step is given by the minimization of f(α) = f(x<sub>0</sub>) - α*d*(x<sub>k</sub>) with a lineserach substep.
 
-	If *d* is less than a given arbitrary tolerance, the Lagrangian multipliers are computed to ckeck whether the Karush-Kuhn-Tucker (KKT) conditions are satisfied. If any inequality constraint lagragian multiplier is less than zero, the constraint is relaxed, the respective line in *A*<sub>k</sub> is removed and a the iterative process proceeds with *A*<sub>k+1</sub>. Otherwise the solution satisfies the KKT conditions and the point is said to be optimal.
+    If *d* is less than a given arbitrary tolerance, the Lagrangian multipliers are computed to ckeck whether the Karush-Kuhn-Tucker (KKT) conditions are satisfied. If any inequality constraint lagragian multiplier is less than zero, the constraint is relaxed, the respective line in *A*<sub>k</sub> is removed and a the iterative process proceeds with *A*<sub>k+1</sub>. Otherwise the solution satisfies the KKT conditions and the point is said to be optimal.
 
-	The lagrangian multipliers are given by -(*A*<sub>k</sub>*A*<sub>k</sub>')<sup>-1</sup>*A*<sub>k</sub>∇f(x<sub>k</sub>).
+    The lagrangian multipliers are given by -(*A*<sub>k</sub>*A*<sub>k</sub>')<sup>-1</sup>*A*<sub>k</sub>∇f(x<sub>k</sub>).
 
 
 Copyright © 2016 - Gabriel Sabença Gusmão
