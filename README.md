@@ -258,7 +258,7 @@ Successive α-domain subsectioning following the golden-ratio.
 #### parameters (`.params`)
   A dictionary object that holds the method/algorithm's set-up for the [*fmincon*](#fmincon-fmincon-fmincon) function
 
-  **Projected-gradient algorithm lifting off from the axis center @ (0,0,0,0) to a feasible starting point by Simplex with -∇f(x<sub>0</sub>) cost**
+  **Projected-gradient algorithm lifting off from the axis center @ (0,0) to a feasible starting point by Simplex with -∇f(x<sub>0</sub>) cost**
 
   ![Alt Text](/raw/proj-gradient.gif)
 
@@ -318,8 +318,10 @@ Successive α-domain subsectioning following the golden-ratio.
     If *d* is less than a given arbitrary tolerance, the Lagrangian multipliers are computed to ckeck whether the Karush-Kuhn-Tucker (KKT) conditions are satisfied. If any inequality constraint lagragian multiplier is less than zero, the constraint is relaxed, the respective line in *A*<sub>k</sub> is removed and a the iterative process proceeds with *A*<sub>k+1</sub>. Otherwise the solution satisfies the KKT conditions and the point is said to be optimal.
 
     The lagrangian multipliers are given by -(*A*<sub>k</sub>*A*<sub>k</sub>')<sup>-1</sup>*A*<sub>k</sub>∇f(x<sub>k</sub>).
-
-
+    
+    **Example**: f(*x*) = ||*x*||²-2*x*<sub>1</sub>-3*x*<sub>4</sub>, begining @ (0,0,0,0) to a feasible starting point by Simplex with -∇f(x<sub>0</sub>) cost
+    <sup>*</sup> Line-search method: 'interp23' with *alpha* = 1, *rho* = 0.6, *alpha_min* = 0.1, *c* = 0.1 (*Wolfe's condition*); gradient and Hessian calculation from central algorithms and *eps*<sup>0.5</sup> perturbation *epsilon*, where *eps* stands for the smallest *float64* number suchs that 1.0 + *eps* != 0. *max_iter* = 10<sup>3</sup>  
+    
 Copyright © 2016 - Gabriel Sabença Gusmão
 
 [![linkedin](https://static.licdn.com/scds/common/u/img/webpromo/btn_viewmy_160x25.png)](https://br.linkedin.com/pub/gabriel-saben%C3%A7a-gusm%C3%A3o/115/aa6/aa8)
