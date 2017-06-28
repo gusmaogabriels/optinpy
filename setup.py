@@ -8,11 +8,13 @@ packages = [
 		'optinpy.graph',
 		'optinpy.finitediff',
 		'optinpy.linesearch',
-    		'optinpy.mcfp',
-    		'optinpy.mst',
-    		'optinpy.nonlinear',
+    	'optinpy.mcfp',
+    	'optinpy.mst',
+    	'optinpy.nonlinear',
+		'optinpy.nonlinear.constrained',
+		'optinpy.nonlinear.unconstrained',
    		'optinpy.simplex',
-    		'optinpy.sp',
+    	'optinpy.sp',
 ]
 
 package_dir = {'optinpy' : 'optinpy'}
