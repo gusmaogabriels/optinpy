@@ -332,7 +332,15 @@ Successive α-domain subsectioning following the golden-ratio.
     
     An initial feasible point is attained by minimizing a Simplex from an initial arbitrary with cost function as the gradient at that point. **As the Simplex package is being reestructured, for now, the *Scipy* package *linprog* is being used to solve the Simplex**.
     
-    **Example**: f(*x*) = ||*x*||²-2*x*<sub>1</sub>-3*x*<sub>4</sub>, begining @ (0,0,0,0) to a feasible starting point by Simplex with -∇f(x<sub>0</sub>) cost
+    **Example**: f(*x*) = ||*x*||²-2*x*<sub>1</sub>-3*x*<sub>4</sub>, begining @ (0,0,0,0) to a feasible starting point by Simplex with -∇f(x<sub>0</sub>) cost, under constraints:
+    
+     2x<sub>1</sub> + x<sub>2</sub> + x<sub>3</sub> + 4x<sub>4</sub> = 7  
+     x<sub>1</sub> + x<sub>2</sub> + 2x<sub>3</sub> + x<sub>4</sub> = 6
+    
+    The initial feasible point, is found by minimizing -∇f @ (0,0,0,0) = -(-2, 34/3, 0, -7/3) under the constraints, which leads to the initial feasible point *x*<sub>0</sub> = (0, 17/3, 0, 1/3).  
+    Since the are no inequality constraints, the set of active constraints reamins the same of the iterative process, and so does the orthogonal projection matrix onto the active set *nullspace*, *P*.  
+    By using the 2nd-3rd order interpolation method for the linesearch, the optimal solution, *x*\* = (1.123, 0.6507,  1.829, 0.5685) is attained with only one iteration, f(*x*\*) = 1.401.
+    
     <sup>*</sup> Line-search method: 'interp23' with *alpha* = 1, *rho* = 0.6, *alpha_min* = 0.1, *c* = 0.1 (*Wolfe's condition*); gradient and Hessian calculation from central algorithms and *eps*<sup>0.5</sup> perturbation *epsilon*, where *eps* stands for the smallest *float64* number suchs that 1.0 + *eps* != 0. *max_iter* = 10<sup>3</sup>  
     
 ## **Numerical Differentiation**
