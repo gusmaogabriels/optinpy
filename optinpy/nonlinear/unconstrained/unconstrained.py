@@ -1,191 +1,191 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import division, absolute_import, print_function
-from ...finitediff import jacobian as __jacobian, hessian as __hessian
-from ...linesearch import xstep as __xstep, backtracking as __backtracking, interp23 as __interp23, unimodality as __unimodality, golden_section as __golden_section
-from ... import np as __np
-from ... import scipy as __sp
-
-eps = __np.finfo(__np.float64).eps
-resolution = __np.finfo(__np.float64).resolution
+#from _future_ import division, absolute_import, print_function
+from ...finitediff import jacobian as _jacobian, hessian as _hessian
+from ...linesearch import xstep as _xstep, backtracking as _backtracking, interp23 as _interp23, unimodality as _unimodality, golden_section as _golden_section
+from ... import np as _np
+from ... import scipy as _sp
 
 
-params = {'fminunc':{'method':'newton','params':\
+class unconstrained(object):
+    
+    def __init__(self):
+        self.eps = _np.finfo(_np.float64).eps
+        self.resolution = _np.finfo(_np.float64).resolution
+        self.params = {'fminunc':{'method':'newton','params':\
                 {'gradient':{'max_iter':1e4},\
                  'newton':{'max_iter':1e3},\
                  'modified-newton':{'sigma':1,'max_iter':1e3},\
                  'conjugate-gradient':{'max_iter':1e3},\
                  'fletcher-reeves':{'max_iter':1e3},\
                  'quasi-newton':{'max_iter':1e3,'hessian_update':'davidon-fletcher-powell'}}},\
-            'jacobian':{'algorithm':'central','epsilon':__np.sqrt(eps)},\
-            'hessian':{'algorithm':'central','epsilon':__np.sqrt(eps),'initial':None},\
+            'jacobian':{'algorithm':'central','epsilon':_np.sqrt(self.eps)},\
+            'hessian':{'algorithm':'central','epsilon':_np.sqrt(self.eps),'initial':None},\
             'linesearch':{'method':'backtracking','params':
                 {'backtracking':{'alpha':1,'rho':0.6,'c':1e-3,'max_iter':1e3},\
                 'interp23':{'alpha':1,'alpha_min':0.1,'rho':0.6,'c':1e-3,'max_iter':1e3},\
                 'unimodality':{'b':1,'threshold':1e-4,'max_iter':1e3},
                 'golden-section':{'b':1,'threshold':1e-4,'max_iter':1e3}}}}  
+        self._ls_algorithms = {'backtracking':_backtracking,
+                'interp23':_interp23,
+                'unimodality':_unimodality,
+                'golden-section':_golden_section}
+        self._unc_algorithms = {'gradient':self.gradient,
+                'newton':self.newton,
+                'modified-newton':self.mod_newton,
+                'conjugate-gradient':self.conj_gradient,
+                'fletcher-reeves':self.fletcher_reeves,
+                'quasi-newton':self.qn}
 
-def gradient(fun,x0,d0,g0,Q0,*args,**kwargs):
-    '''
-        gradient step (linear convergence)
-        ..fun as callable object; must be a function of x0 and return a single number
-        ..x0 as a numeric array; point from which to start
-    '''
-    g = __jacobian(fun,x0,**params['jacobian'])
-    return -g, g, []
 
-def newton(fun,x0,d0,g0,Q0,*args,**kwargs):
-    '''
-        newton method (quadratic convergence)
-        ..fun as callable object; must be a function of x0 and return a single number
-        ..x0 as a numeric array; point from which to start
-    '''
-    g = __jacobian(fun,x0,**params['jacobian'])
-    Q = __hessian(fun,x0,**params['hessian'])
-    return -__np.linalg.inv(Q).dot(g), g, Q
-
-def mod_newton(fun,x0,d0,g0,Q0,*args,**kwargs):
-    '''
-        newton method
-        ..fun as callable object; must be a function of x0 and return a single number
-        ..x0 as a numeric array; point from which to start
-    '''
-    g = __jacobian(fun,x0,**params['jacobian'])
-    Q = __hessian(fun,x0,**params['hessian'])
-    eigs, nu = __np.linalg.eig(Q)
-    eigs = abs(eigs)
-    eigs[eigs<params['fminunc']['params']['modified-newton']['sigma']] = params['fminunc']['params']['modified-newton']['sigma']
-    d = __sp.linalg.cho_solve(__sp.linalg.cho_factor(nu.dot(__np.diag(eigs)).dot(nu.T)),-g)
-    return d, g, Q
-
-def conj_gradient(fun,x0,d0,g0,Q0,*args,**kwargs):
-    '''
-        conjugate-gradient method
-        ..fun as callable object; must be a function of x0 and return a single number
-        ..x0 as a numeric array; point from which to start
-    '''     
-    g = __jacobian(fun,x0,**params['jacobian'])
-    Q = __hessian(fun,x0,**params['hessian'])
-    if sum(abs(d0)) < eps or ((kwargs['iters'] + 1) % len(x0)) < eps:
-        return -g, g, Q
-    else:
-        beta = g.T.dot(Q).dot(d0)/(d0.T.dot(Q).dot(d0))
-        d = -g + beta*d0
+    def gradient(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+        '''
+            gradient step (linear convergence)
+            ..fun as callable object; must be a function of x0 and return a single number
+            ..x0 as a numeric array; point from which to start
+        '''
+        g = _jacobian(fun,x0,**self.params['jacobian'])
+        return -g, g, []
+    
+    def newton(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+        '''
+            newton method (quadratic convergence)
+            ..fun as callable object; must be a function of x0 and return a single number
+            ..x0 as a numeric array; point from which to start
+        '''
+        g = _jacobian(fun,x0,**self.params['jacobian'])
+        Q = _hessian(fun,x0,**self.params['hessian'])
+        return -_np.linalg.inv(Q).dot(g), g, Q
+    
+    def mod_newton(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+        '''
+            newton method
+            ..fun as callable object; must be a function of x0 and return a single number
+            ..x0 as a numeric array; point from which to start
+        '''
+        g = _jacobian(fun,x0,**self.params['jacobian'])
+        Q = _hessian(fun,x0,**self.params['hessian'])
+        eigs, nu = _np.linalg.eig(Q)
+        eigs = abs(eigs)
+        eigs[eigs<self.params['fminunc']['params']['modified-newton']['sigma']] = self.params['fminunc']['params']['modified-newton']['sigma']
+        d = _sp.linalg.cho_solve(_sp.linalg.cho_factor(nu.dot(_np.diag(eigs)).dot(nu.T)),-g)
         return d, g, Q
     
-def fletcher_reeves(fun,x0,d0,g0,Q0,*args,**kwargs):
-    '''
-        fletcher_reeves
-        ..fun as callable object; must be a function of x0 and return a single number
-        ..x0 as a numeric array; point from which to start
-    '''     
-    g = __jacobian(fun,x0,**params['jacobian'])
-    if sum(abs(d0)) < eps or ((kwargs['iters'] + 1) % len(x0)) < eps:
-        return -g, g, []
-    else:
-        beta = g.T.dot(g)/(g0.T.dot(g0))
-        d = -g + beta*d0
-        return d, g, []
+    def conj_gradient(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+        '''
+            conjugate-gradient method
+            ..fun as callable object; must be a function of x0 and return a single number
+            ..x0 as a numeric array; point from which to start
+        '''     
+        g = _jacobian(fun,x0,**self.params['jacobian'])
+        Q = _hessian(fun,x0,**self.params['hessian'])
+        if sum(abs(d0)) < self.eps or ((kwargs['iters'] + 1) % len(x0)) < self.eps:
+            return -g, g, Q
+        else:
+            beta = g.T.dot(Q).dot(d0)/(d0.T.dot(Q).dot(d0))
+            d = -g + beta*d0
+            return d, g, Q
+        
+    def fletcher_reeves(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+        '''
+            fletcher_reeves
+            ..fun as callable object; must be a function of x0 and return a single number
+            ..x0 as a numeric array; point from which to start
+        '''     
+        g = _jacobian(fun,x0,**self.params['jacobian'])
+        if sum(abs(d0)) < self.eps or ((kwargs['iters'] + 1) % len(x0)) < self.eps:
+            return -g, g, []
+        else:
+            beta = g.T.dot(g)/(g0.T.dot(g0))
+            d = -g + beta*d0
+            return d, g, []
+        
+    def dfp(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+        '''
+            Davidon-Flether-Powell
+            ..fun as callable object; must be a function of x0 and return a single number
+            ..x0 as a numeric array; point from which to start
+        '''     
+        g = _jacobian(fun,x0,**self.params['jacobian'])
+        if sum(abs(d0)) < self.eps or ((kwargs['iters'] + 1) % len(x0)) < self.eps:
+            Q = [self.params['hessian']['initial'] if self.params['hessian']['initial'] else _np.identity(len(x0))][0]
+        else:
+            q = (g-g0)[_np.newaxis].T
+            p = (kwargs['alpha']*d0)[_np.newaxis].T
+            Q = Q0 + _np.dot(p,p.T)/_np.dot(p.T,q) - ( _np.dot(Q0,q).dot(_np.dot(q.T,Q0)))/(_np.dot(q.T,Q0).dot(q))
+        d = -Q.dot(g)
+        return d, g, Q
     
-def dfp(fun,x0,d0,g0,Q0,*args,**kwargs):
-    '''
-        Davidon-Flether-Powell
-        ..fun as callable object; must be a function of x0 and return a single number
-        ..x0 as a numeric array; point from which to start
-    '''     
-    g = __jacobian(fun,x0,**params['jacobian'])
-    if sum(abs(d0)) < eps or ((kwargs['iters'] + 1) % len(x0)) < eps:
-        Q = [params['hessian']['initial'] if params['hessian']['initial'] else __np.identity(len(x0))][0]
-    else:
-        q = (g-g0)[__np.newaxis].T
-        p = (kwargs['alpha']*d0)[__np.newaxis].T
-        Q = Q0 + __np.dot(p,p.T)/__np.dot(p.T,q) - ( __np.dot(Q0,q).dot(__np.dot(q.T,Q0)))/(__np.dot(q.T,Q0).dot(q))
-    d = -Q.dot(g)
-    return d, g, Q
-
-def bfgs(fun,x0,d0,g0,Q0,*args,**kwargs):
-    '''
-        Broyden-Fletcher-Goldfarb-Shanno
-        ..fun as callable object; must be a function of x0 and return a single number
-        ..x0 as a numeric array; point from which to start
-    '''     
-    g = __jacobian(fun,x0,**params['jacobian'])
-    if sum(abs(d0)) < eps or ((kwargs['iters'] + 1) % len(x0)) < eps:
-        Q = [params['hessian']['initial'] if params['hessian']['initial'] else __np.identity(len(x0))][0]
-    else:
-        q = (g-g0)[__np.newaxis].T
-        p = (kwargs['alpha']*d0)[__np.newaxis].T
-        Q = Q0 + (1.0 + q.T.dot(Q0).dot(q)/(q.T.dot(p)))*(p.dot(p.T))/(p.T.dot(q)) - (p.dot(q.T).dot(Q0)+Q0.dot(q).dot(p.T))/(q.T.dot(p))
-    d = -Q.dot(g)
-    return d, g, Q
-
-def qn(fun,x0,d0,g0,Q0,*args,**kwargs):
-    '''
-        Quasi-Newton caller
-        ..fun as callable object; must be a function of x0 and return a single number
-        ..x0 as a numeric array; point from which to start
-    '''     
-    if params['fminunc']['params']['quasi-newton']['hessian_update'] in ('davidon-fletcher-powell','dfp'):
-        return dfp(fun,x0,d0,g0,Q0,*args,**kwargs)
-    elif params['fminunc']['params']['quasi-newton']['hessian_update'] in ('broyden-fletcher-goldfarb-shanno','BFGS','bfgs'):
-        return bfgs(fun,x0,d0,g0,Q0,*args,**kwargs)
-    else:
-        raise Exception('Hessian update method ({}) not implemented'.format(params['fminunc']['params']['quasi-newton']['hessian_update']))
-
-__ls_algorithms = {'backtracking':__backtracking,
-                'interp23':__interp23,
-                'unimodality':__unimodality,
-                'golden-section':__golden_section}
-
-__unc_algorithms = {'gradient':gradient,
-                'newton':newton,
-                'modified-newton':mod_newton,
-                'conjugate-gradient':conj_gradient,
-                'fletcher-reeves':fletcher_reeves,
-                'quasi-newton':qn}
-                    
-
-def fminunc(fun,x0,threshold=1e-6,vectorized=False,**kwargs):
-    '''
-        Minimum Unconstrained Optimization
-        ..fun as callable object; must be a function of x0 and return a single number
-        ..x0 as a numeric array; point from which to start
-        ..threshold as a numeric value; threshold at which to stop the iterations
-        ..**kwargs = initial_hessian : as matrix (default = identity)
-        .. see unconstrained.params for further details on the methods that are being used
-    '''
-    alg = __ls_algorithms[params['linesearch']['method']]
-    ls_kwargs = params['linesearch']['params'][params['linesearch']['method']]
-    d, g, Q = __unc_algorithms[params['fminunc']['method']](fun,x0,__np.zeros(len(x0)),[],[],iters=0)
-    if kwargs.has_key('max_iter'):
-        max_iter= kwargs['max_iter']
-    else:
-        max_iter = params['fminunc']['params'][params['fminunc']['method']]['max_iter']
-    if vectorized:
-        x_vec = [x0]
-    else:
-        pass
-    x = x0
-    iters = 0
-    lsiters = 0
-    while __np.dot(g,g) > threshold and iters < max_iter:
-        ls = alg(fun,x,d,**ls_kwargs)
-        alpha = ls['alpha']
-        lsiters += ls['iterations']
-        #Q = __hessian(fun,x0,**params['hessian'])
-        #alpha = g.T.dot(g)/(g.T.dot(Q).dot(g))
-        x = __xstep(x,d,alpha)
+    def bfgs(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+        '''
+            Broyden-Fletcher-Goldfarb-Shanno
+            ..fun as callable object; must be a function of x0 and return a single number
+            ..x0 as a numeric array; point from which to start
+        '''     
+        g = _jacobian(fun,x0,**self.params['jacobian'])
+        if sum(abs(d0)) < self.eps or ((kwargs['iters'] + 1) % len(x0)) < self.eps:
+            Q = [self.params['hessian']['initial'] if self.params['hessian']['initial'] else _np.identity(len(x0))][0]
+        else:
+            q = (g-g0)[_np.newaxis].T
+            p = (kwargs['alpha']*d0)[_np.newaxis].T
+            Q = Q0 + (1.0 + q.T.dot(Q0).dot(q)/(q.T.dot(p)))*(p.dot(p.T))/(p.T.dot(q)) - (p.dot(q.T).dot(Q0)+Q0.dot(q).dot(p.T))/(q.T.dot(p))
+        d = -Q.dot(g)
+        return d, g, Q
+    
+    def qn(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+        '''
+            Quasi-Newton caller
+            ..fun as callable object; must be a function of x0 and return a single number
+            ..x0 as a numeric array; point from which to start
+        '''     
+        if self.params['fminunc']['params']['quasi-newton']['hessian_update'] in ('davidon-fletcher-powell','dfp'):
+            return self.dfp(fun,x0,d0,g0,Q0,*args,**kwargs)
+        elif self.params['fminunc']['params']['quasi-newton']['hessian_update'] in ('broyden-fletcher-goldfarb-shanno','BFGS','bfgs'):
+            return self.bfgs(fun,x0,d0,g0,Q0,*args,**kwargs)
+        else:
+            raise Exception('Hessian update method ({}) not implemented'.format(self.params['fminunc']['params']['quasi-newton']['hessian_update']))
+    
+    def fminunc(self,fun,x0,threshold=1e-6,vectorized=False,**kwargs):
+        '''
+            Minimum Unconstrained Optimization
+            ..fun as callable object; must be a function of x0 and return a single number
+            ..x0 as a numeric array; point from which to start
+            ..threshold as a numeric value; threshold at which to stop the iterations
+            ..**kwargs = initial_hessian : as matrix (default = identity)
+            .. see unconstrained.params for further details on the methods that are being used
+        '''
+        alg = self._ls_algorithms[self.params['linesearch']['method']]
+        ls_kwargs = self.params['linesearch']['params'][self.params['linesearch']['method']]
+        d, g, Q = self._unc_algorithms[self.params['fminunc']['method']](fun,x0,_np.zeros(len(x0)),[],[],iters=0)
+        if kwargs.has_key('max_iter'):
+            max_iter= kwargs['max_iter']
+        else:
+            max_iter = self.params['fminunc']['params'][self.params['fminunc']['method']]['max_iter']
         if vectorized:
-            x_vec += [x]
+            x_vec = [x0]
         else:
             pass
-        d, g, _ = __unc_algorithms[params['fminunc']['method']](fun,x,d,g,Q,iters=iters,alpha=alpha)
-        iters += 1
-    if vectorized:
-        return {'x':x_vec, 'f':[fun(x) for x in x_vec], 'iterations':iters, 'ls_iterations':lsiters}#, 'parameters' : params.copy()}
-    else:
-        return {'x':x, 'f':fun(x), 'iterations':iters, 'ls_iterations':lsiters}#, 'parameters' : params.copy()}
-
-
-
+        x = x0
+        iters = 0
+        lsiters = 0
+        while _np.dot(g,g) > threshold and iters < max_iter:
+            ls = alg(fun,x,d,**ls_kwargs)
+            alpha = ls['alpha']
+            lsiters += ls['iterations']
+            #Q = _hessian(fun,x0,**params['hessian'])
+            #alpha = g.T.dot(g)/(g.T.dot(Q).dot(g))
+            x = _xstep(x,d,alpha)
+            if vectorized:
+                x_vec += [x]
+            else:
+                pass
+            d, g, _ = self._unc_algorithms[self.params['fminunc']['method']](fun,x,d,g,Q,iters=iters,alpha=alpha)
+            iters += 1
+        if vectorized:
+            return {'x':x_vec, 'f':[fun(x) for x in x_vec], 'iterations':iters, 'ls_iterations':lsiters}#, 'parameters' : params.copy()}
+        else:
+            return {'x':x, 'f':fun(x), 'iterations':iters, 'ls_iterations':lsiters}#, 'parameters' : params.copy()}
     
+    
+    
+        
