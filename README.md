@@ -152,7 +152,7 @@ Successive α-domain subsectioning following the golden-ratio.
 
 ### Unconstrained Optimization (`.unconstrained`)
 #### parameters (`.params`)
-  A dictionary object that holds the method/algorithm's set-up for the [*fminunc*](#fminunc-fminunc) function
+  A dictionary object that holds the method/algorithm's set-up for the [*fminunc*](#fminunc-fminunc), [*fmincon*](#fmincon-fmincon), [*fminnlcon*](#fminunlcon-fminnlcon) functions as well as for linesearch and numerical differentiation algorithms.
 
 **Standard parameters**
    ```python
@@ -251,7 +251,7 @@ Successive α-domain subsectioning following the golden-ratio.
   - ##### Quasi-Newton (`method='quasi-newton'`)
     Quasi-Newton methods are in between gradient and Newton's method, with successive approximations of the Hessian and its inverse matrix.
 
-	for the following updates, consider:
+    for the following updates, consider:
 
 	  q<sup>k</sup> = ∇f(x<sub>k+1</sub>) - ∇f(x<sub>k</sub>)
 
@@ -271,10 +271,7 @@ Successive α-domain subsectioning following the golden-ratio.
 
 ### Constrained Optimization (`.constrained`)
 #### fmincon (`.fmincon`)
-  [*fmincon*](#fmincon-fmincon) extends [*fminunc*](#fminunc-fminunc) functionality for cases in which linear and nonlinear constraints are in play.
-
-#### parameters (`.params`)
-  A dictionary object that holds the method/algorithm's set-up for the [*fmincon*](#fmincon-fmincon-fmincon) function
+  [*fmincon*](#fmincon-fmincon) extends [*fminunc*](#fminunc-fminunc) functionality for cases in which linear constraints are in play.
 
   **Projected-gradient algorithm lifting off from the axis center @ (0,0) to a feasible starting point by Simplex with -∇f(x<sub>0</sub>) cost**
 
@@ -318,6 +315,10 @@ Successive α-domain subsectioning following the golden-ratio.
     By using the 2nd-3rd order interpolation method for the linesearch, the optimal solution, *x*\* = (1.123, 0.6507,  1.829, 0.5685) is attained with only one iteration, f(*x*\*) = 1.401.
     
     <sup>*</sup> Line-search method: 'interp23' with *alpha* = 1, *rho* = 0.6, *alpha_min* = 0.1, *c* = 0.1 (*Wolfe's condition*); gradient and Hessian calculation from central algorithms and *eps*<sup>0.5</sup> perturbation *epsilon*, where *eps* stands for the smallest *float64* number suchs that 1.0 + *eps* != 0. *max_iter* = 10<sup>3</sup>  
+
+### Non-linearly Constrained Optimization (`.constrained`)
+#### fmincon (`.fminnlcon`)
+  [*fminnlcon*](#fminnlcon-fminnlcon) makes use of [*fminunc*](#fminunc-fminunc) routines within linearly and/or non-linearly constrained optimization domains.
     
 ## **Numerical Differentiation**
 ### Finite Difference (`.finitediff`)
