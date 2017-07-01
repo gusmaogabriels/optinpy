@@ -171,13 +171,20 @@ Successive α-domain subsectioning following the golden-ratio.
                 {'max_iter':1e3},
             'quasi-newton':
                 {'max_iter':1e3,'hessian_update':'davidon-fletcher-powell'} # hessian_update is either dfp or BFGS
-    'fmincon':{'method':'newton','params':\
-                {'projected-gradient':{'max_iter':1e3,'threshold':1e-6},\
+	        }},\
+    'fmincon':
+       {'method':'newton','params':\
+           {'projected-gradient':
+	      {'max_iter':1e3,'threshold':1e-6},\
                  }},\
-    'fminnlcon':{'method':'penalty','params':\
-                {'log-barrier':{'max_iter':1e3,'threshold':1e-6},\
-                 'barrier':{'max_iter':1e3,'threshold':1e-6},\
-                 'penalty':{'max_iter':1e3,'threshold':1e-6},\
+    'fminnlcon':
+       {'method':'penalty','params':\
+           {'log-barrier':
+	       {'max_iter':1e3,'threshold':1e-6},\
+             'barrier':
+	        {'max_iter':1e3,'threshold':1e-6},\
+              'penalty':
+	         {'max_iter':1e3,'threshold':1e-6},\
             }},
     'jacobian': # jacobian algorithm definition
        {'algorithm':'central','epsilon':sqrt(eps)}, # algorithm = 'central', 'forward', 'backward'; epsilon = perturbation
@@ -250,17 +257,17 @@ Successive α-domain subsectioning following the golden-ratio.
 
 	  p<sup>k</sup> = α<sub>k</sub>d<sup>k</sup>
 
-	- ###### Davidon-Fletcher-Powell ('quasi-newton':'hessian_update':'dfp')
+  - ###### Davidon-Fletcher-Powell ('quasi-newton':'hessian_update':'dfp')
 
-		Rank-2 correction of the inverse Hessian as of a sum of 2 rank-1 matrices.
+	Rank-2 correction of the inverse Hessian as of a sum of 2 rank-1 matrices.
 
-		*H*<sup>-1</sup><sub>k+1</sub> = *H*<sup>-1</sup><sub>k</sub> + p<sup>k</sup>(p<sup>k</sup>)'/(p<sup>k</sup>)'q<sup>k</sup> - *H*<sup>-1</sup><sub>k</sub>q<sup>k</sup>(q<sup>k</sup>)'*H*<sup>-1</sup><sub>k</sub>/(q<sup>k</sup>)'*H*<sup>-1</sup><sub>k</sub>q<sup>k</sup>
+	*H*<sup>-1</sup><sub>k+1</sub> = *H*<sup>-1</sup><sub>k</sub> + p<sup>k</sup>(p<sup>k</sup>)'/(p<sup>k</sup>)'q<sup>k</sup> - *H*<sup>-1</sup><sub>k</sub>q<sup>k</sup>(q<sup>k</sup>)'*H*<sup>-1</sup><sub>k</sub>/(q<sup>k</sup>)'*H*<sup>-1</sup><sub>k</sub>q<sup>k</sup>
 
-	- ###### Broyden-Fletcher-Goldfarb-Shanno ('quasi-newton':'hessian_update':'BFGS')
+  - ###### Broyden-Fletcher-Goldfarb-Shanno ('quasi-newton':'hessian_update':'BFGS')
 
-		Also a Rank-2 correction of the inverse Hessian as of a sum of 2 rank-1 matrices.
+	Also a Rank-2 correction of the inverse Hessian as of a sum of 2 rank-1 matrices.
 
-		*H*<sup>-1</sup><sub>k+1</sub> = *H*<sup>-1</sup><sub>k</sub> + (1+(q<sup>k</sup>)'*H*<sup>-1</sup><sub>k</sub>q<sup>k</sup>/(q<sup>k</sup>)'p<sup>k</sup>)p<sup>k</sup>(p<sup>k</sup>)'/(p<sup>k</sup>)'q<sup>k</sup> - (p<sup>k</sup>(q<sup>k</sup>)'*H*<sup>-1</sup><sub>k</sub>+*H*<sup>-1</sup><sub>k</sub>q<sup>k</sup>(p<sup>k</sup>)')/(q<sup>k</sup>)'p<sup>k</sup>
+	*H*<sup>-1</sup><sub>k+1</sub> = *H*<sup>-1</sup><sub>k</sub> + (1+(q<sup>k</sup>)'*H*<sup>-1</sup><sub>k</sub>q<sup>k</sup>/(q<sup>k</sup>)'p<sup>k</sup>)p<sup>k</sup>(p<sup>k</sup>)'/(p<sup>k</sup>)'q<sup>k</sup> - (p<sup>k</sup>(q<sup>k</sup>)'*H*<sup>-1</sup><sub>k</sub>+*H*<sup>-1</sup><sub>k</sub>q<sup>k</sup>(p<sup>k</sup>)')/(q<sup>k</sup>)'p<sup>k</sup>
 
 ### Constrained Optimization (`.constrained`)
 #### fmincon (`.fmincon`)
@@ -281,44 +288,6 @@ Successive α-domain subsectioning following the golden-ratio.
    x<sub>1</sub>  - 2x<sub>2</sub> ≤  2   (green)
   
   <sup>*</sup> Line-search method: 'interp23' with *alpha* = 1, *rho* = 0.6, *alpha_min* = 0.1, *c* = 0.1 (*Wolfe's condition*); gradient and Hessian calculation from central algorithms and *eps*<sup>0.5</sup> perturbation *epsilon*, where *eps* stands for the smallest *float64* number suchs that 1.0 + *eps* != 0. *max_iter* = 10<sup>3</sup>
-
-  **Standard parameters**
-   ```python
-   {'fmincon': # fmincon algorithm definition
-       {'method': 'projected-gradient', # 'projected-gradient' is so far the only option (**reduced-gradient under delopment**)
-        'params':
-           {'gradient':
-                {'max_iter':1e3},
-            'newton':
-                {'max_iter':1e3},
-            'modified-newton':
-                {'sigma' : 1, 'max_iter':1e3}, # sigma is the lower bound for the modified Hessian eigenvalue
-            'conjugate-gradient':
-                {'max_iter':1e3},
-            'fletcher-reeves':
-                {'max_iter':1e3},
-            'quasi-newton':
-                {'max_iter':1e3,'hessian_update':'davidon-fletcher-powell'} # hessian_update is either dfp or BFGS
-           }},
-    'jacobian': # jacobian algorithm definition
-       {'algorithm':'central','epsilon':sqrt(eps)}, # algorithm = 'central', 'forward', 'backward'; epsilon = perturbation
-    'hessian':
-       {'algorithm':'central','epsilon':sqrt(eps),'initial':None}, # algorithm = 'central', 'forward', 'backward'; epsilon = perturbation, 'inital' = initial hessian with (size of x)-by-(size of x) or None for identity.
-    'linesearch':
-       {'method':'backtracking', # 'backtracking', 'interp23, 'unimodality' or 'golden-section'
-        'params':
-           {'backtracking':
-                {'alpha':1,'rho':0.5,'c':1e-4,'max_iter':1e3}, # alpha = initial step scale; rho = step reduction factor; c = Armijo's parameter
-            'interp23':
-                {'alpha':1,'alpha_min':0.1,'rho':0.5,'c':1e-4,'max_iter':1e3}, # alpha_min = minimum ultimate alpha below which 3rd order interpolation ensues
-            'unimodality':
-                {'b':1,'threshold':1e-4,'max_iter':1e3}, # b = initial step scale in derivatives domain; threshold: variation threshold
-            'golden_ratio':
-                {'b':1,'threshold':1e-4,'max_iter':1e3}
-           }
-       }
-   }   
-   ```
 
   - ##### Projected-gradient (`method='projected-gradient'`)
     The projected-gradient algorithm minimizes f(x) by first-order approximation: f(x) = f(x<sub>0</sub>) + ∇f(x<sub>0</sub>)'Δx, with descent direction, *d* under inequalities constraints *A*<=*b* and equalities constraints *A*<sub>eq</sub>=*b*<sub>eq</sub> given by:
