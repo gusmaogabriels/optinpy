@@ -323,7 +323,10 @@ Successive α-domain subsectioning following the golden-ratio.
 ### Non-linearly Constrained Optimization (`.constrained`)
 #### fmincon (`.fminnlcon`)
   [*fminnlcon*](#fminnlcon-fminnlcon) makes use of [*fminunc*](#fminunc-fminunc) routines within linearly and/or non-linearly constrained optimization domains. In essence, it all boils down to modifing the objective function to include the constraints weighted by a increasing or decreasing factor so that, when convergence is achieved, the constraint parcel of the objective function tends to zero. The increase in the *c* parameter, which weights the constraints, is given by a *beta* factor.  
-  Since such approach relies on succesive unconstrained optimization and the solution, depending on the algorithm, must always lie within or outside the feasible set, the increase/decrease (*beta* factor) in the constraints weight should be done in a way that on one hand it is not too litle, so that the iterative process would take forever, and, on the other hand, it cannot be too large for then a succeeding solution might hop to the other side of the feasibility frontier, when constraint weighting function become numerically inconsistent.
+  
+  Since such approach relies on succesive unconstrained optimization and the solution, depending on the algorithm, must always lie within or outside the feasible set, the increase/decrease (*beta* factor) in the constraints weight should be done in a way that on one hand it is not too litle, so that the iterative process would take forever, and, on the other hand, it cannot be too large for then a succeeding solution might hop to the other side of the feasibility frontier, when constraint weighting function become numerically inconsistent.  
+  
+  The **unconstrained optimization method that is meployed within inner optimization steps is the one defined in** [`.nonlinear.params`](#parameters-params). The converge phase will depend on the suitability of the unconstrained optimization method both to the plain objective function, f(*x*), and the its combination with the weighted constraint parcel, *P*(*x*) or *B*(*x*).
   
   - ##### Penalty (`method='penalty'`)
     The penalty algorithm starts of from an initially infeasible point with a function of the following shape:
