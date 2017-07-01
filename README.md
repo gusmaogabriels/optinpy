@@ -328,6 +328,8 @@ Successive α-domain subsectioning following the golden-ratio.
   
   The **unconstrained optimization method that is meployed within inner optimization steps is the one defined in** [`.nonlinear.params`](#parameters-params). The converge phase will depend on the suitability of the unconstrained optimization method both to the plain objective function, f(*x*), and the its combination with the weighted constraint parcel, *P*(*x*) or *B*(*x*).
   
+  **Newton's Method might lead to singular *Hessian* matrices close to the feasible set boundaries; therefore, it is strongly advised for one, if willing to use a second-order unconstrained optimization method, to opt for Modified-Newton's instead.**
+  
   - ##### Penalty (`method='penalty'`)
     The penalty algorithm starts of from an initially infeasible point with a function of the following shape:
 
@@ -352,7 +354,12 @@ Successive α-domain subsectioning following the golden-ratio.
     Following the general shape of barrier algorithms, the log-barrier algorithm must as well start from an initialy feasible point. The only difference is in the shape of *B*.
       
       As default, *B*(*x*) = -∑(ln(-g<sub>i</sub>(*x*))) for i = 1, 2, 3, ... *p*, where g<sub>i</sup> is the i<sup>th</sup> constraint.
- 
+  
+  **Example**: f(*x*) = (*x*<sub>1</sub>-2)² + 2(*x*<sub>2</sub>-4)² + 3(*x*<sub>3</sub>-4)², under constraints:  
+  
+     ||*x*||² ≤ 1
+    
+  ![Alt Text](/raw/barrier.png)
     
 ## **Numerical Differentiation**
 ### Finite Difference (`.finitediff`)
