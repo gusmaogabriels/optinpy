@@ -19,6 +19,7 @@
     - [Minimum spanning-tree Algorithms](#minimum-spanning-tree-algorithms-mst)    
     - [Simplex **BEING FIXED**](#simplex-simplex)
   - [**Non-linear Optimization**](#non-linear-optimization)
+    - [Parameters](#parameters-params)
     - [Line-search](#line-search-linesearch)
       - [Backtracking](#backtracking-backtracking)
       - [Interpolation 2nd-3rd](#interpolation-2nd-3rd-order-interp23)
@@ -26,17 +27,15 @@
       - [Golden-section](#golden-section-golden_section)
     - [Unconstrained optimization](#unconstrained-optimization-unconstrained)
       - [fminunc](#fminunc-fminunc)
-      - [parameters](#parameters-params)
         - [Gradient](#gradient-methodgradient)
         - [Newton](#newton-methodnewton)
         - [Modified Newton](#modified-newton-methodmodified-newton)
         - [Conjugate Gradient](#conjugate-gradient-methodconjugate-gradient)
-		- [Quasi-Newton](#quasi-newton-methodquasi-newton)
-			- [Davidon-Fletcher-Powell (DFP)](#davidon-fletcher-powell-quasi-newtonhessian_updatedfp)
-			- [Broyden-Fletcher-Goldfarb-Shanno (BFGS)](#broyden-fletcher-goldfarb-shanno-quasi-newtonhessian_updatebfgs)
+	- [Quasi-Newton](#quasi-newton-methodquasi-newton)
+	- [Davidon-Fletcher-Powell (DFP)](#davidon-fletcher-powell-quasi-newtonhessian_updatedfp)
+	- [Broyden-Fletcher-Goldfarb-Shanno (BFGS)](#broyden-fletcher-goldfarb-shanno-quasi-newtonhessian_updatebfgs)
     - [Constrained optimization](#constrained-optimization-constrained)
       - [fmincon](#fmincon-fmincon)
-      - [parameters](#parameters-params)
         - [Projected Gradient](#projected-gradient-methodprojected-gradient)
   - [**Numerical Differentiation**](#numerical-differentiation)
     - [Finite Difference](#finite-difference-finitediff)
@@ -152,23 +151,10 @@ Successive α-domain subsectioning by uniformly random probing.
 Successive α-domain subsectioning following the golden-ratio.
 
 ### Unconstrained Optimization (`.unconstrained`)
-#### fminunc (`.fminunc`)
-  [*fminunc*](#fminunc-fminunc) evokes the so far implemented unconstrained non-linear optimization algorithms given the parameters set.
-
 #### parameters (`.params`)
   A dictionary object that holds the method/algorithm's set-up for the [*fminunc*](#fminunc-fminunc) function
 
-  **Gradient vs. Newton's Method, Modified-Newton** *(somewhere in between weighted by σ parameter)*, **and Conjugate Gradient** starting @ (2,2)<sup>*</sup>
-
-  ![Alt Text](/raw/rosen.gif)
-
-  **Log-scale error evolution**
-
-  ![Alt Text](/raw/ErrorEvol.png)
-
-  <sup>*</sup> Line-search method: 'interp23' with *alpha* = 1, *rho* = 0.5, *alpha_min* = 0.1, *c* = 0.1 (*Wolfe's condition*); gradient and Hessian calculation from central algorithms and 10<sup>-6</sup> perturbation *epsilon*. *max_iter* = 10<sup>3</sup>
-
-  **Standard parameters**
+**Standard parameters**
    ```python
    {'fminunc': # fminunc algorithm definition
        {'method': 'newton', # 'gradient', 'newton', `'modified-newton', 'fletcher-reeves' or 'quasi-newton'
@@ -185,7 +171,14 @@ Successive α-domain subsectioning following the golden-ratio.
                 {'max_iter':1e3},
             'quasi-newton':
                 {'max_iter':1e3,'hessian_update':'davidon-fletcher-powell'} # hessian_update is either dfp or BFGS
-           }},
+    'fmincon':{'method':'newton','params':\
+                {'projected-gradient':{'max_iter':1e3,'threshold':1e-6},\
+                 }},\
+    'fminnlcon':{'method':'penalty','params':\
+                {'log-barrier':{'max_iter':1e3,'threshold':1e-6},\
+                 'barrier':{'max_iter':1e3,'threshold':1e-6},\
+                 'penalty':{'max_iter':1e3,'threshold':1e-6},\
+            }},
     'jacobian': # jacobian algorithm definition
        {'algorithm':'central','epsilon':sqrt(eps)}, # algorithm = 'central', 'forward', 'backward'; epsilon = perturbation
     'hessian':
@@ -205,6 +198,20 @@ Successive α-domain subsectioning following the golden-ratio.
        }
    }   
    ```
+
+
+#### fminunc (`.fminunc`)
+  [*fminunc*](#fminunc-fminunc) evokes the so far implemented unconstrained non-linear optimization algorithms given the parameters set.
+
+  **Gradient vs. Newton's Method, Modified-Newton** *(somewhere in between weighted by σ parameter)*, **and Conjugate Gradient** starting @ (2,2)<sup>*</sup>
+
+  ![Alt Text](/raw/rosen.gif)
+
+  **Log-scale error evolution**
+
+  ![Alt Text](/raw/ErrorEvol.png)
+
+  <sup>*</sup> Line-search method: 'interp23' with *alpha* = 1, *rho* = 0.5, *alpha_min* = 0.1, *c* = 0.1 (*Wolfe's condition*); gradient and Hessian calculation from central algorithms and 10<sup>-6</sup> perturbation *epsilon*. *max_iter* = 10<sup>3</sup>
 
   - ##### Gradient (`method='gradient'`)
     The gradient algorithm minimizes f(x) by first-order approximation: f(x) = f(x<sub>0</sub>) + ∇f(x<sub>0</sub>)'Δx, with descent direction, *d*, given by:
