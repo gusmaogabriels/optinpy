@@ -332,7 +332,7 @@ Successive α-domain subsectioning following the golden-ratio.
       - *P*(*x*) = 0 for *x* ∈ *S*, where *S* is the feasible set
       - As *c* → inf, *P*(*x*) → 0  
  
-      As default, *P*(*x*) = max({0,g<sub>i</sub>(*x*)})  for i = 1, 2, 3, ... *p*, where g<sub>i</sup> is the i<sup>th</sup> constraint.
+      As default, *P*(*x*) = ∑ max({0,g<sub>i</sub>(*x*)})  for i = 1, 2, 3, ... *p*, where g<sub>i</sup> is the i<sup>th</sup> constraint.
  
   - ##### Barrier (`method='barrier'`)
     Barrier algorithms must start from an initialy feasible point with and, generally, the weighted constrain mapping function leads to the following minimization form:
@@ -342,12 +342,12 @@ Successive α-domain subsectioning following the golden-ratio.
       - *B*(*x*) = 0 for *x* ∈ *S*, where *S* is the feasible set
       - As *1/c* → 0, *B*(*x*) → inf  
       
-      As standard, *B*(*x*) = -sum(1/g<sub>i</sub>(*x*)) for i = 1, 2, 3, ... *p*, where g<sub>i</sup> is the i<sup>th</sup> constraint.
+      As standard, *B*(*x*) = -∑(1/g<sub>i</sub>(*x*)) for i = 1, 2, 3, ... *p*, where g<sub>i</sup> is the i<sup>th</sup> constraint.
  
   - ##### Log-barrier (`method='log-barrier'`)
     Following the general shape of barrier algorithms, the log-barrier algorithm must as well start from an initialy feasible point. The only difference is in the shape of *B*.
       
-      As default, *B*(*x*) = -sum(ln(-g<sub>i</sub>(*x*))) for i = 1, 2, 3, ... *p*, where g<sub>i</sup> is the i<sup>th</sup> constraint.
+      As default, *B*(*x*) = -∑(ln(-g<sub>i</sub>(*x*))) for i = 1, 2, 3, ... *p*, where g<sub>i</sup> is the i<sup>th</sup> constraint.
  
     
 ## **Numerical Differentiation**
