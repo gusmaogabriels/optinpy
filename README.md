@@ -355,9 +355,7 @@ Successive α-domain subsectioning following the golden-ratio.
       
       As default, *B*(*x*) = -∑(ln(-g<sub>i</sub>(*x*))) for i = 1, 2, 3, ... *p*, where g<sub>i</sup> is the i<sup>th</sup> constraint.
   
-  **Example**: f(*x*) = (*x*<sub>1</sub>-2)² + 2(*x*<sub>2</sub>-4)² + 3(*x*<sub>3</sub>-4)², under constraints:  
-  
-     ||*x*||² ≤ 1
+  **Example**: f(*x*) = (*x*<sub>1</sub>-2)² + 2(*x*<sub>2</sub>-4)² + 3(*x*<sub>3</sub>-4)², under the constraint: ||*x*||² ≤ 1.
     
   ![Alt Text](/raw/barrier.png)
     
