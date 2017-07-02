@@ -127,18 +127,18 @@
      arcs3 = optinpy.mst.boruvka(n2,verbose=True) # Minimum spanning-tree via Boruvka
      ```
 ### Simplex (`.simplex`)
-**BEING FIXED: AFTER ADDITION OF LB/UB DEFINITION FOR *x*, GLITCHES CAME ABOUT... IT SHOULD BE FIXED ASAP**
+**BEING FIXED: AFTER ADDITION OF LB/UB DEFINITION FOR x, GLITCHES CAME ABOUT... IT SHOULD BE FIXED ASAP**
   - Base Class Constructor (`S = optinpy.simplex(A,b,c,lb,ub)`)
 
-  	Define a linear optimization problem *S*: `S = optinpy.simplex(A,b,c,lb,ub)` to find the *minimum* value of *c*×*x* (default) subject  to *A*×*x* ≤ *b*, where *A* is a *n*×*m* matrix holding the constraints coefficients, *b* ∈ R<sup>*n*</sup> and *c* ∈ R<sup>*m*</sup> is the objective function cofficients, *lb* and *ub* are the lower and upper bound values in R<sup>*n*</sup> for *x*, respectively.
+  	Define a linear optimization problem *S*: `S = optinpy.simplex(A,b,c,lb,ub)` to find the *minimum* value of *c*×x (default) subject  to *A*×x ≤ *b*, where *A* is a *n*×*m* matrix holding the constraints coefficients, *b* ∈ R<sup>*n*</sup> and *c* ∈ R<sup>*m*</sup> is the objective function cofficients, *lb* and *ub* are the lower and upper bound values in R<sup>*n*</sup> for x, respectively.
 
   - Primal Step (`S.primal()`)
 
-  	Given *S* a Simplex object, `S.primal()` carries out a primal pivotting as of a primal feasible *x*, including in the basis set the basis of greatest improvement of the Objective Functionl, while still respecting the primal feasibility*A*×*x* ≤ *b*, then determining which basis should leave the basis set.
+  	Given *S* a Simplex object, `S.primal()` carries out a primal pivotting as of a primal feasible x, including in the basis set the basis of greatest improvement of the Objective Functionl, while still respecting the primal feasibility*A*×x ≤ *b*, then determining which basis should leave the basis set.
 
   - Dual Simplex (`S.dual()`)
 
-  	Given *S* a Simplex object, `S.dual()` carries out a dual pivotting as of a dual feasible *x*, so that there is first defined which basis should leave the basis set and the which one should enter while keeping the dual feasibility.
+  	Given *S* a Simplex object, `S.dual()` carries out a dual pivotting as of a dual feasible x, so that there is first defined which basis should leave the basis set and the which one should enter while keeping the dual feasibility.
 
 ## **Non-linear Optimization**
 ### Line-search (`.linesearch`)
@@ -288,7 +288,7 @@ Successive α-domain subsectioning following the golden-ratio.
    2x<sub>1</sub>  +  x<sub>2</sub> ≤  3  (blue)  
    x<sub>1</sub>  - 2x<sub>2</sub> ≤  2   (green)
   
-  <sup>*</sup> Line-search method: 'interp23' with *alpha* = 1, *rho* = 0.6, *alpha_min* = 0.1, *c* = 0.1 (*Wolfe's condition*); gradient and Hessian calculation from central algorithms and *eps*<sup>0.5</sup> perturbation *epsilon*, where *eps* stands for the smallest *float64* number suchs that 1.0 + *eps* != 0. *max_iter* = 10<sup>3</sup>
+  <sup>*</sup> Line-search method: 'interp23' with *alpha* = 1, *rho* = 0.6, *alpha_min* = 0.1, *c* = 10<sup>-3</sup> (*Wolfe's condition*); gradient and Hessian calculation from central algorithms and *eps*<sup>0.5</sup> perturbation *epsilon*, where *eps* stands for the smallest *float64* number suchs that 1.0 + *eps* != 0. *max_iter* = 10<sup>3</sup>
 
   - ##### Projected-gradient (`method='projected-gradient'`)
     The projected-gradient algorithm minimizes f(x) by first-order approximation: f(x) = f(x<sub>0</sub>) + ∇f(x<sub>0</sub>)'Δx, with descent direction, *d* under inequalities constraints *A*<=*b* and equalities constraints *A*<sub>eq</sub>=*b*<sub>eq</sub> given by:
@@ -309,16 +309,16 @@ Successive α-domain subsectioning following the golden-ratio.
     
     An initial feasible point is attained by minimizing a Simplex from an initial arbitrary with cost function as the gradient at that point. **As the Simplex package is being reestructured, for now, the *Scipy* package *linprog* is being used to solve the Simplex**.
     
-    **Example**: f(*x*) = ||*x*||²-2*x*<sub>1</sub>-3*x*<sub>4</sub>, begining @ (0,0,0,0) to a feasible starting point by Simplex with -∇f(x<sub>0</sub>) cost, under constraints:
+    **Example**: f(x) = ||x||²-2x<sub>1</sub>-3x<sub>4</sub>, begining @ (0,0,0,0) to a feasible starting point by Simplex with -∇f(x<sub>0</sub>) cost, under constraints:
     
      2x<sub>1</sub> + x<sub>2</sub> + x<sub>3</sub> + 4x<sub>4</sub> = 7  
      x<sub>1</sub> + x<sub>2</sub> + 2x<sub>3</sub> + x<sub>4</sub> = 6
     
-    The initial feasible point, is found by minimizing -∇f @ (0,0,0,0) = -(-2, 34/3, 0, -7/3) under the constraints, which leads to the initial feasible point *x*<sub>0</sub> = (0, 17/3, 0, 1/3).  
+    The initial feasible point, is found by minimizing -∇f @ (0,0,0,0) = -(-2, 34/3, 0, -7/3) under the constraints, which leads to the initial feasible point x<sub>0</sub> = (0, 17/3, 0, 1/3).  
     Since the are no inequality constraints, the set of active constraints reamins the same of the iterative process, and so does the orthogonal projection matrix onto the active set *nullspace*, *P*.  
-    By using the 2nd-3rd order interpolation method for the linesearch, the optimal solution, *x*\* = (1.123, 0.6507,  1.829, 0.5685) is attained with only one iteration, f(*x*\*) = 1.401.
+    By using the 2nd-3rd order interpolation method for the linesearch, the optimal solution, x\* = (1.123, 0.6507,  1.829, 0.5685) is attained with only one iteration, f(x\*) = 1.401.
     
-    <sup>*</sup> Line-search method: 'interp23' with *alpha* = 1, *rho* = 0.6, *alpha_min* = 0.1, *c* = 0.1 (*Wolfe's condition*); gradient and Hessian calculation from central algorithms and *eps*<sup>0.5</sup> perturbation *epsilon*, where *eps* stands for the smallest *float64* number suchs that 1.0 + *eps* != 0. *max_iter* = 10<sup>3</sup>  
+    <sup>*</sup> Line-search method: 'interp23' with *alpha* = 1, *rho* = 0.6, *alpha_min* = 0.1, *c* = 10<sup>-3</sup> (*Wolfe's condition*); gradient and Hessian calculation from central algorithms and *eps*<sup>0.5</sup> perturbation *epsilon*, where *eps* stands for the smallest *float64* number suchs that 1.0 + *eps* != 0. *max_iter* = 10<sup>3</sup>  
 
 ### Non-linearly Constrained Optimization (`.constrained`)
 #### fmincon (`.fminnlcon`)
@@ -326,60 +326,70 @@ Successive α-domain subsectioning following the golden-ratio.
   
   Since such approach relies on succesive unconstrained optimization and the solution, depending on the algorithm, must always lie within or outside the feasible set, the increase/decrease (*beta* factor) in the constraints weight should be done in a way that on one hand it is not too litle, so that the iterative process would take forever, and, on the other hand, it cannot be too large for then a succeeding solution might hop to the other side of the feasibility frontier, when constraint weighting function become numerically inconsistent.  
   
-  The **unconstrained optimization method that is meployed within inner optimization steps is the one defined in** [`.nonlinear.params`](#parameters-params). The converge phase will depend on the suitability of the unconstrained optimization method both to the plain objective function, f(*x*), and the its combination with the weighted constraint parcel, *P*(*x*) or *B*(*x*).
+  The **unconstrained optimization method that is meployed within inner optimization steps is the one defined in** [`.nonlinear.params`](#parameters-params). The converge phase will depend on the suitability of the unconstrained optimization method both to the plain objective function, f(x), and the its combination with the weighted constraint parcel, *P*(x) or *B*(x).
   
   **Newton's Method might lead to singular *Hessian* matrices close to the feasible set boundaries; therefore, it is strongly advised for one, if willing to use a second-order unconstrained optimization method, to opt for Modified-Newton's instead.**
   
   - ##### Penalty (`method='penalty'`)
     The penalty algorithm starts of from an initially infeasible point with a function of the following shape:
 
-      f(*x*) + *c*×*P*(*x*), where *c* is a scalar and *P*(*x*) is a function that maps from ℝ<sup>m</sup> (m restrictions) to ℝ, such that,  
-      - *P*(*x*) ≥ 0 for *x* ∈ ℝ<sup>n</sup>  
-      - *P*(*x*) = 0 for *x* ∈ *S*, where *S* is the feasible set
-      - As *c* → inf, *P*(*x*) → 0  
+      f(x) + *c*×*P*(x), where *c* is a scalar and *P*(x) is a function that maps from ℝ<sup>m</sup> (m restrictions) to ℝ, such that,  
+      - *P*(x) ≥ 0 for x ∈ ℝ<sup>n</sup>  
+      - *P*(x) = 0 for x ∈ *S*, where *S* is the feasible set
+      - As *c* → inf, *P*(x) → 0  
  
-      As default, *P*(*x*) = ∑ max({0,g<sub>i</sub>(*x*)})  for i = 1, 2, 3, ... *p*, where g<sub>i</sup> is the i<sup>th</sup> constraint.
+      As default, *P*(x) = ∑ max({0,g<sub>i</sub>(x)})  for i = 1, 2, 3, ... *p*, where g<sub>i</sub> is the i<sup>th</sup> constraint.
  
   - ##### Barrier (`method='barrier'`)
     Barrier algorithms must start from an initialy feasible point with and, generally, the weighted constrain mapping function leads to the following minimization form:
 
-      f(*x*) + *(1/c)*×*B*(*x*), where *c* is a scalar and *B*(*x*) is a function that maps from ℝ<sup>m</sup> (m restrictions) to ℝ, such that,  
-      - *B*(*x*) ≥ 0 for *x* ∈ ℝ<sup>n</sup>
-      - *B*(*x*) = 0 for *x* ∈ *S*, where *S* is the feasible set
-      - As *1/c* → 0, *B*(*x*) → inf  
+      f(x) + *(1/c)*×*B*(x), where *c* is a scalar and *B*(x) is a function that maps from ℝ<sup>m</sup> (m restrictions) to ℝ, such that,  
+      - *B*(x) ≥ 0 for x ∈ ℝ<sup>n</sup>
+      - *B*(x) = 0 for x ∈ *S*, where *S* is the feasible set
+      - As 1/*c* → 0, *B*(x) → inf  
       
-      As standard, *B*(*x*) = -∑(1/g<sub>i</sub>(*x*)) for i = 1, 2, 3, ... *p*, where g<sub>i</sub> is the i<sup>th</sup> constraint.
+      As standard, *B*(x) = -∑(1/g<sub>i</sub>(x)) for i = 1, 2, 3, ... *p*, where g<sub>i</sub> is the i<sup>th</sup> constraint.
  
   - ##### Log-barrier (`method='log-barrier'`)
     Following the general shape of barrier algorithms, the log-barrier algorithm must as well start from an initialy feasible point. The only difference is in the shape of *B*.
       
-      As default, *B*(*x*) = -∑(ln(-g<sub>i</sub>(*x*))) for i = 1, 2, 3, ... *p*, where g<sub>i</sub> is the i<sup>th</sup> constraint.
+      As default, *B*(x) = -∑(ln(-g<sub>i</sub>(x))) for i = 1, 2, 3, ... *p*, where g<sub>i</sub> is the i<sup>th</sup> constraint.
   
-  **Example**: f(*x*) = (*x*<sub>1</sub>-2)² + 2(*x*<sub>2</sub>-4)² + 3(*x*<sub>3</sub>-4)², under the constraint: ||*x*||² ≤ 1.
+  **Example**: f(x) = (x<sub>1</sub>-2)² + 2(x<sub>2</sub>-4)² + 3(x<sub>3</sub>-4)², under the constraint: ||x||² ≤ 1.
     
-  ![Alt Text](/raw/barrier.png)
+    Barrier and Log-barrier methods beginning from the feasible point x<sub>0</sub> = (0.1,0.1,0.1) and, the Penalty method from the infeasible point (1.4,1.4,1.4), using the Modified-Newton method with minimum eigenvalue set at 1.0 and 'backtracking' linesearch method, with *alpha* = 1, *rho* = 0.6, *c* = 10<sup>-4</sup> (*Wolfe's condition*). The initial value for the nonlineraly-constrained method *c* parameters: *c* = 10<sup>-3</sup> (constraint weight) and *beta* = 1.05 (weight increment, i.e. 5% per iteration). 
+    
+    As regards the graph below, the L2-norm of residual evolution should no be compared between barrier and penalty methods for the starting point are must be different between methods (feasible and infeasible, respectively). In addition, variations in the defined unconstrained optimization method may lead to different optimization paths and, hence, to variations in the L2-norm of residual shape.
+        
+  **L2-norm of residuals as function of the *c* parameter*
+  
+  ![Alt Text](/raw/l2c.png)  
+  
+  **L2-norm of residuals vs. iteration*
+  
+  ![Alt Text](/raw/l2iter.png)  
     
 ## **Numerical Differentiation**
 ### Finite Difference (`.finitediff`)
-Numerical routines to estimate the *Jacobian* and *Hessian* matrices of a function at a given point, *x*<sub>0</sub>, as of small perturbations along it. As default, the perturbation ε is taken as the square root of the machine precision for a floating point type, *eps*, such that: 1.0 + *eps* != 0, and the algorithm for both *Jacobian* and *Hessian* is the central algorithm.
+Numerical routines to estimate the *Jacobian* and *Hessian* matrices of a function at a given point, x<sub>0</sub>, as of small perturbations along it. As default, the perturbation ε is taken as the square root of the machine precision for a floating point type, *eps*, such that: 1.0 + *eps* != 0, and the algorithm for both *Jacobian* and *Hessian* is the central algorithm.
 
 - ##### Jacobian (`.jacobian`)
   Typically, the first derivatives of a function or array of functions may be estimated by three different first-order approximation formulas/algorithms:
   
   - Central:
   
-    ∇<sub>x<sub>j</sub></sub>f<sub>i</sub> = (f<sub>i</sub>(*x*<sub>j,0</sub>+ε)-f<sub>i</sub>(*x*<sub>j,0</sub>-ε))/2ε
+    ∇<sub>x<sub>j</sub></sub>f<sub>i</sub> = (f<sub>i</sub>(x<sub>j,0</sub>+ε)-f<sub>i</sub>(x<sub>j,0</sub>-ε))/2ε
   
   - Forward:
   
-     ∇<sub>x<sub>j</sub></sub>f<sub>i</sub> = (f<sub>i</sub>(*x*<sub>j,0</sub>+ε)-f<sub>i</sub>(*x*<sub>j,0</sub>))/ε
+     ∇<sub>x<sub>j</sub></sub>f<sub>i</sub> = (f<sub>i</sub>(x<sub>j,0</sub>+ε)-f<sub>i</sub>(x<sub>j,0</sub>))/ε
   
   - Backward:
   
-     ∇<sub>x<sub>j</sub></sub>f<sub>i</sub> = (f<sub>i</sub>(*x*<sub>j,0</sub>)-f<sub>i</sub>(*x*<sub>j,0</sub>-ε))/ε
+     ∇<sub>x<sub>j</sub></sub>f<sub>i</sub> = (f<sub>i</sub>(x<sub>j,0</sub>)-f<sub>i</sub>(x<sub>j,0</sub>-ε))/ε
   
 - ##### Hessian (`.hessian`)
-  The following alogirthms are used for the estimation of the second derivatives for a function from a reference point *x*<sub>0</sub>:
+  The following alogirthms are used for the estimation of the second derivatives for a function from a reference point x<sub>0</sub>:
   
   - Central:
   
