@@ -349,6 +349,8 @@ Successive α-domain subsectioning following the golden-ratio.
       - As 1/*c* → 0, *B*(x) → inf  
       
       As standard, *B*(x) = -∑(1/g<sub>i</sub>(x)) for i = 1, 2, 3, ... *p*, where g<sub>i</sub> is the i<sup>th</sup> constraint.
+    
+    One must beware that the unconstrained method along with the line-search algorithm to be used with the barrier method must be carefully chosen in order not to overshoot to the infeasible region. This will probably happen for the gradient algorithm in case the calculated or estimated gradients are not normalized within each iteration. 
  
   - ##### Log-barrier (`method='log-barrier'`)
     Following the general shape of barrier algorithms, the log-barrier algorithm must as well start from an initialy feasible point. The only difference is in the shape of *B*.
