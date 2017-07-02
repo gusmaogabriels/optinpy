@@ -348,12 +348,12 @@ Successive α-domain subsectioning following the golden-ratio.
       - *B*(*x*) = 0 for *x* ∈ *S*, where *S* is the feasible set
       - As *1/c* → 0, *B*(*x*) → inf  
       
-      As standard, *B*(*x*) = -∑(1/g<sub>i</sub>(*x*)) for i = 1, 2, 3, ... *p*, where g<sub>i</sup> is the i<sup>th</sup> constraint.
+      As standard, *B*(*x*) = -∑(1/g<sub>i</sub>(*x*)) for i = 1, 2, 3, ... *p*, where g<sub>i</sub> is the i<sup>th</sup> constraint.
  
   - ##### Log-barrier (`method='log-barrier'`)
     Following the general shape of barrier algorithms, the log-barrier algorithm must as well start from an initialy feasible point. The only difference is in the shape of *B*.
       
-      As default, *B*(*x*) = -∑(ln(-g<sub>i</sub>(*x*))) for i = 1, 2, 3, ... *p*, where g<sub>i</sup> is the i<sup>th</sup> constraint.
+      As default, *B*(*x*) = -∑(ln(-g<sub>i</sub>(*x*))) for i = 1, 2, 3, ... *p*, where g<sub>i</sub> is the i<sup>th</sup> constraint.
   
   **Example**: f(*x*) = (*x*<sub>1</sub>-2)² + 2(*x*<sub>2</sub>-4)² + 3(*x*<sub>3</sub>-4)², under the constraint: ||*x*||² ≤ 1.
     
