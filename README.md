@@ -355,11 +355,13 @@ Successive α-domain subsectioning following the golden-ratio.
       
       As default, *B*(x) = -∑(ln(-g<sub>i</sub>(x))) for i = 1, 2, 3, ... *p*, where g<sub>i</sub> is the i<sup>th</sup> constraint.
   
-  **Example**: f(x) = (x<sub>1</sub>-2)² + 2(x<sub>2</sub>-4)² + 3(x<sub>3</sub>-4)², under the constraint: ||x||² ≤ 1.
+  **Example**: f(x) = (x<sub>1</sub>-2)² + 2(x<sub>2</sub>-4)² + 3(x<sub>3</sub>-4)², under the constraint: ||x||² ≤ 1.  
+  
+  Optimal point @ x\* = (0.1547,0.5744,0.8038), f(x\*) = 57.5212
     
-  Barrier and Log-barrier methods beginning from the feasible point x<sub>0</sub> = (0.1,0.1,0.1) and, the Penalty method from the infeasible point (1.4,1.4,1.4), using the Modified-Newton method with minimum eigenvalue set at 1.0 and 'backtracking' linesearch method, with *alpha* = 1, *rho* = 0.6, *c* = 10<sup>-4</sup> (*Wolfe's condition*). The initial value for the nonlineraly-constrained method *c* parameters: *c* = 10<sup>-3</sup> (constraint weight) and *beta* = 1.1 (weight increment, i.e. 10% per iteration). 
+  Barrier and Log-barrier methods beginning from the feasible point x<sub>0</sub> = (0.1,0.1,0.1) and, the Penalty method from the infeasible point (1.4,1.4,1.4), using the Modified-Newton method with minimum eigenvalue set at 1.0 and 'backtracking' linesearch method, with *alpha* = 1, *rho* = 0.6, *c* = 10<sup>-4</sup> (*Wolfe's condition*). The initial value for the nonlineraly-constrained method *c* parameters: *c* = 10<sup>-3</sup> (constraint weight) and *beta* = 1.1 (weight increment, i.e. 10% per iteration) and threshold of 10<sup>-4</sup>. 
     
-  As regards the graph below, the L2-norm of residual evolution should no be compared between barrier and penalty methods for the starting point are must be different between methods (feasible and infeasible, respectively). In addition, variations in the defined unconstrained optimization method may lead to different optimization paths and, hence, to variations in the L2-norm of residual shape.
+  As regards the graphs below, the L2-norm of residual evolution should no be compared between barrier and penalty methods for the starting point are must be different between methods (feasible and infeasible, respectively). In addition, variations in the defined unconstrained optimization method may lead to different optimization paths and, hence, to variations in the L2-norm of residual shape.
         
   **L2-norm of residuals as function of the *c* parameter**
   
