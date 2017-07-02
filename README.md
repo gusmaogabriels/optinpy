@@ -322,7 +322,7 @@ Successive α-domain subsectioning following the golden-ratio.
 
 ### Non-linearly Constrained Optimization (`.constrained`)
 #### fmincon (`.fminnlcon`)
-  [*fminnlcon*](#fminnlcon-fminnlcon) makes use of [*fminunc*](#fminunc-fminunc) routines within linearly and/or non-linearly constrained optimization domains. In essence, it all boils down to modifing the objective function to include the constraints weighted by a increasing or decreasing factor so that, when convergence is achieved, the constraint parcel of the objective function tends to zero. The increase in the *c* parameter, which weights the constraints, is given by a *beta* factor.  
+  [*fminnlcon*](#fminnlcon-fminnlcon) makes use of [*fminunc*](#fminunc-fminunc) routines within linearly and/or non-linearly constrained optimization domains. In essence, it all boils down to modifying the objective function to include the constraints weighted by a increasing or decreasing factor so that, when convergence is achieved, the constraint parcel of the objective function tends to zero. The increase in the *c* parameter, which weights the constraints, is given by a *beta* factor.  
   
   Since such approach relies on succesive unconstrained optimization and the solution, depending on the algorithm, must always lie within or outside the feasible set, the increase/decrease (*beta* factor) in the constraints weight should be done in a way that on one hand it is not too litle, so that the iterative process would take forever, and, on the other hand, it cannot be too large for then a succeeding solution might hop to the other side of the feasibility frontier, when constraint weighting function become numerically inconsistent.  
   
@@ -357,7 +357,7 @@ Successive α-domain subsectioning following the golden-ratio.
   
   **Example**: f(x) = (x<sub>1</sub>-2)² + 2(x<sub>2</sub>-4)² + 3(x<sub>3</sub>-4)², under the constraint: ||x||² ≤ 1.
     
-  Barrier and Log-barrier methods beginning from the feasible point x<sub>0</sub> = (0.1,0.1,0.1) and, the Penalty method from the infeasible point (1.4,1.4,1.4), using the Modified-Newton method with minimum eigenvalue set at 1.0 and 'backtracking' linesearch method, with *alpha* = 1, *rho* = 0.6, *c* = 10<sup>-4</sup> (*Wolfe's condition*). The initial value for the nonlineraly-constrained method *c* parameters: *c* = 10<sup>-3</sup> (constraint weight) and *beta* = 1.05 (weight increment, i.e. 5% per iteration). 
+  Barrier and Log-barrier methods beginning from the feasible point x<sub>0</sub> = (0.1,0.1,0.1) and, the Penalty method from the infeasible point (1.4,1.4,1.4), using the Modified-Newton method with minimum eigenvalue set at 1.0 and 'backtracking' linesearch method, with *alpha* = 1, *rho* = 0.6, *c* = 10<sup>-4</sup> (*Wolfe's condition*). The initial value for the nonlineraly-constrained method *c* parameters: *c* = 10<sup>-3</sup> (constraint weight) and *beta* = 1.1 (weight increment, i.e. 10% per iteration). 
     
   As regards the graph below, the L2-norm of residual evolution should no be compared between barrier and penalty methods for the starting point are must be different between methods (feasible and infeasible, respectively). In addition, variations in the defined unconstrained optimization method may lead to different optimization paths and, hence, to variations in the L2-norm of residual shape.
         
@@ -365,7 +365,7 @@ Successive α-domain subsectioning following the golden-ratio.
   
   ![Alt Text](/raw/l2c.png)  
   
-  **L2-norm of residuals vs. iteration**
+  **L2-norm of residuals (left) and *P*(x) or *B*(x) (right) vs. iteration**
   
   ![Alt Text](/raw/l2iter.png)  
     
