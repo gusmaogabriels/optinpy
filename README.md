@@ -331,7 +331,7 @@ Successive α-domain subsectioning following the golden-ratio.
   **Newton's Method might lead to singular *Hessian* matrices close to the feasible set boundaries; therefore, it is strongly advised for one, if willing to use a second-order unconstrained optimization method, to opt for Modified-Newton's instead.**
   
   - ##### Penalty (`method='penalty'`)
-    The penalty algorithm starts of from an initially infeasible point with a function of the following shape:
+    The penalty algorithm starts from from an initially infeasible point with a function of the following shape:
 
       f(x) + *c*×*P*(x), where *c* is a scalar and *P*(x) is a function that maps from ℝ<sup>m</sup> (m restrictions) to ℝ, such that,  
       - *P*(x) ≥ 0 for x ∈ ℝ<sup>n</sup>  
