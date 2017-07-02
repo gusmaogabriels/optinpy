@@ -34,8 +34,8 @@ Z = fun_(np.vstack([X.ravel(), Y.ravel()])).reshape((100,100))
 # Note: the global minimum is at (1,1) in a tiny contour island
 p0 = [-1.9,2]
 
-optinpy.nonlinear.constrained.params['linesearch']['method'] ='interp23'
-optinpy.nonlinear.unconstrained.params['linesearch']['method'] ='interp23'
+optinpy.nonlinear.params['linesearch']['method'] ='interp23'
+optinpy.nonlinear.params['linesearch']['method'] ='interp23'
 
 """
                                  plt.contour(X, Y, Z, np.arange(10)**5,linewidths=0.5)
@@ -119,8 +119,10 @@ plt.contour(X, Y, Z, np.arange(10)**5,linewidths=0.5)
 plt.text(1, 1, 'O', va='center', ha='center', color='darkred', fontsize=20);
 plt.text(1, 1, 'X', va='center', ha='center', color='darkred', fontsize=10);
 
-optinpy.nonlinear.constrained.params['fmincon']['method'] = 'projected-gradient'
-optinpy.nonlinear.constrained.params['fmincon']['params']['projected-gradient']['max_iter'] = 10000
+optinpy.nonlinear.params['fmincon']['method'] = 'projected-gradient'
+optinpy.nonlinear.params['fmincon']['params']['projected-gradient']['max_iter'] = 10000
+optinpy.nonlinear.params['fminunc']['method'] = 'modified-newton'
+optinpy.nonlinear.params['linesearch']['method'] = 'backtracking'
 """
 A = [[-2.,-1.],[-5.,3.],[2.,1.],[1.,-2.]]; b = [-1.,0.,3.,2.]
 
@@ -146,9 +148,47 @@ Aeq = np.array([[2.,1.,1.,4.],[1.,1.,2.,1.]],np.float64); beq = np.array([7.,6.]
 p0 = np.zeros(4,np.float64)
 proj_grad284 = optinpy.nonlinear.constrained.fmincon(fun284,p0,A=A,b=b,Aeq=Aeq,beq=beq,threshold=1e-6,vectorized=True)
 
-fun278 = lambda x : (x[0]-2.)**2 + 2.*(x[0] - 4.)**2 + 3.*(x[2]-4.)**2
-g = [lambda x : np.linalg.norm(x)**2-1]
-barrier = optinpy.nonlinear.constrained.fminnlcon(fun278,[0.,0.,0.],g,1.,2.,vectorized=True)
+
+fun278 = lambda x : (x[0]-2.)**2 + 2.*(x[1] - 4.)**2 + 3.*(x[2]-4.)**2
+g = [lambda x : np.linalg.norm(x)**2-1.]
+c = 1e-3
+beta = 1.1
+optinpy.nonlinear.params['fminunc']['method'] = 'modified-newton'
+optinpy.nonlinear.params['linesearch']['method'] = 'backtracking'
+optinpy.nonlinear.constrained.params['fminnlcon']['method'] = 'log-barrier'
+logbarrier = optinpy.nonlinear.constrained.fminnlcon(fun278,[0.1,0.1,0.1],g,c,beta,threshold=1e-04,vectorized=True)
+optinpy.nonlinear.constrained.params['fminnlcon']['method'] = 'barrier'
+barrier = optinpy.nonlinear.constrained.fminnlcon(fun278,[0.1,0.1,0.1],g,c,beta,threshold=1e-04,vectorized=True)
+optinpy.nonlinear.constrained.params['fminnlcon']['method'] = 'penalty'
+penalty = optinpy.nonlinear.constrained.fminnlcon(fun278,[1.4,1.4,1.4],g,c,beta,threshold=1e-04,vectorized=True)
+
+plt.figure()
+plt.plot(barrier['c'][1:], [abs(i-57.124) for i in barrier['f']][1:],label='Barrier',color='darkblue')
+plt.plot(logbarrier['c'][1:], [abs(i-57.124) for i in logbarrier['f']][1:],label='Log-barrier',color='darkred')
+plt.plot(penalty['c'][1:],[abs(i-57.124) for i in penalty['f']][1:],label='Penalty',color='darkgreen')
+plt.gca().set_xscale('log')
+plt.gca().set_yscale('log')
+plt.gca().set_xlabel('c')
+plt.gca().set_ylabel('L2-norm of residue')
+plt.legend()
+
+plt.figure()
+ax = plt.gca()
+plt.plot([abs(i-57.124) for i in barrier['f']][1:],label='Barrier',color='darkblue')
+plt.plot([abs(i-57.124) for i in logbarrier['f']][1:],label='Log-barrier',color='darkred')
+plt.plot([abs(i-57.124) for i in penalty['f']][1:],label='Penalty',color='darkgreen')
+plt.gca().set_xscale('log')
+plt.gca().set_yscale('log')
+plt.gca().set_xlabel('iterations')
+plt.gca().set_ylabel('L2-norm of residue [solid-line]')
+plt.legend()
+ax2 = plt.twinx()
+plt.plot(barrier['err'][1:],'--',label='Barrier',color='darkblue')
+plt.plot(logbarrier['err'][1:],'--',label='Log-barrier',color='darkred')
+plt.plot(penalty['err'][1:],'--',label='Penalty',color='darkgreen')
+plt.gca().set_yscale('log')
+plt.gca().set_ylabel('P(x) or B(x) [dashed-line]')
+
 
 #S.dual()
 """

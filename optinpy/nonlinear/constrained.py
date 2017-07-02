@@ -1,40 +1,31 @@
 # -*- coding: utf-8 -*-
+"""
+Created on Sat Jul 01 11:20:34 2017
 
-#from _future_ import division, absolute_import, #print_function
-from ...finitediff import jacobian as _jacobian, hessian as _hessian
-from ...linesearch import xstep as _xstep, backtracking as _backtracking, interp23 as _interp23, unimodality as _unimodality, golden_section as _golden_section
-from ..unconstrained import unconstrained
-from ... import np as _np
-from ... import scipy as _sp
+@author: GABRIS46
+"""
+from ..finitediff import jacobian as _jacobian, hessian as _hessian
+from ..linesearch import xstep as _xstep, backtracking as _backtracking, interp23 as _interp23, unimodality as _unimodality, golden_section as _golden_section
+from .. import np as _np
+from .. import scipy as _sp
+from ..nonlinear import unconstrained
 
 class constrained(object):
     
-    def __init__(self):
+    def __init__(self,parameters,unconstrained):
         self.eps = _np.finfo(_np.float64).eps
         self.resolution = _np.finfo(_np.float64).resolution
-        self.params = {'fmincon':{'method':'newton','params':\
-                        {'projected-gradient':{'max_iter':1e3,'threshold':1e-6},\
-                         }},\
-                  'fminnlcon':{'method':'log-barrier','params':\
-                        {'log-barrier':{'max_iter':1e3,'threshold':1e-6},\
-                         'penalty':{'max_iter':1e3,'threshold':1e-6},\
-                         }},  
-                    'jacobian':{'algorithm':'central','epsilon':_np.sqrt(self.eps)},\
-                    'hessian':{'algorithm':'central','epsilon':_np.sqrt(self.eps),'initial':None},\
-                    'linesearch':{'method':'backtracking','params':
-                        {'backtracking':{'alpha':1,'rho':0.6,'c':1e-3,'max_iter':1e3},\
-                        'interp23':{'alpha':1,'alpha_min':0.1,'rho':0.6,'c':1e-3,'max_iter':1e3},\
-                        'unimodality':{'b':1,'threshold':1e-4,'max_iter':1e3},
-                        'golden-section':{'b':1,'threshold':1e-4,'max_iter':1e3}}}}  
+        self.params = parameters
+        self.__unconstrained = unconstrained
         self._ls_algorithms = {'backtracking':_backtracking,
                     'interp23':_interp23,
                     'unimodality':_unimodality,
                     'golden-section':_golden_section}
     
-        self._con_algorithms = {'projected-gradient':self.proj_gradient
+        self._con_algorithms = {'projected-gradient':self._proj_gradient
                         }
 
-    def proj_gradient(self,fun,x0,d0,g0,Q0,A_,I,J,K,*args,**kwargs):
+    def _proj_gradient(self,fun,x0,d0,g0,Q0,A_,I,J,K,*args,**kwargs):
         '''
             projected gradient (linear convergence)
             ..fun as callable object; must be a function of x0 and return a single number
@@ -71,7 +62,7 @@ class constrained(object):
                     I ^= set(js)
                     #print 1, I, J, K
                     #print '### proj grad end in'
-                    return self.proj_gradient(fun,x0,d0,g0,Q0,A_,I,J,K,alpha=_np.inf)
+                    return self._proj_gradient(fun,x0,d0,g0,Q0,A_,I,J,K,alpha=_np.inf)
                 else:
                     pass
             else:
@@ -188,7 +179,7 @@ class constrained(object):
                 alpha = amax(alpha,x,d,A,b,I,J,K)
                 #print 'alpha Final', alpha, I, J
                 lsiters += ls['iterations']
-                #Q = _hessian(fun,x0,**self.params['hessian'])
+                #Q = _hessian(fun,x0,**params['hessian'])
                 #alpha = g.T.dot(g)/(g.T.dot(Q).dot(g))
                 x = _xstep(x,d,alpha)            
                 #print 'x1: ',x
@@ -231,7 +222,11 @@ class constrained(object):
             f = lambda x : fun(x)+c*P(x)
             chck = lambda x : c*P(x)
         elif self.params['fminnlcon']['method'] == 'log-barrier':
-            B = lambda x : -_np.sum([_np.log(-1./_(x)) for _ in g]) # g(x) <= 0
+            B = lambda x : -_np.sum([_np.log(-_(x)) for _ in g]) # g(x) <= 0
+            f = lambda x : fun(x)+(1./c)*B(x)
+            chck = lambda x : (1./c)*B(x)
+        elif self.params['fminnlcon']['method'] == 'barrier':
+            B = lambda x : -_np.sum([1./_(x) for _ in g]) # g(x) <= 0
             f = lambda x : fun(x)+(1./c)*B(x)
             chck = lambda x : (1./c)*B(x)
         else:
@@ -240,27 +235,38 @@ class constrained(object):
         if vectorized:
             x_vec = [x0]
             c_vec = [c]
+            err_vec =[chck(x)]
         else:
             pass
         iters = 0
         inner_iters = 0
         lsiters = 0
+        print chck(x)
+        #print P(x)
         while chck(x) > threshold:
-            sol = unconstrained.fminunc(f,x,threshold)
-            x = sol['x'][-1]
+            print 'f(x) = ', f(x)#,'P(x) = ', P(x)
+            sol = self.__unconstrained.fminunc(f,x,threshold)
+            print sol
+            x = sol['x']
+            print 'x',x
+            print 'f(x)',f(x)
+            #print 'P(x)',P(x)
+            print 'chck',chck(x)
             c *= beta
             if vectorized:
                 x_vec += [x]
+                c_vec += [c]
+                err_vec += [chck(x)]
             else:
                 pass
             iters += 1
             inner_iters += sol['iterations']
             lsiters += sol['ls_iterations']
         if vectorized:
-            return {'x':x_vec, 'f':[fun(x) for x in x_vec], 'c': c_vec,'iterations':iters,'inner_iterations':inner_iters,'ls_iterations':lsiters}#, 'parameters' : params.copy()}
+            print x_vec
+            return {'x':x_vec, 'f':[fun(x) for x in x_vec], 'c': c_vec, 'err' : err_vec, 'iterations':iters,'inner_iterations':inner_iters,'ls_iterations':lsiters}#, 'parameters' : params.copy()}
         else:
             return {'x':x, 'f':fun(x),'c':c,'iterations':iters,'inner_iterations':inner_iters,'ls_iterations':lsiters}#, 'parameters' : params.copy()}
-        
         
         
         

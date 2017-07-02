@@ -1,44 +1,31 @@
 # -*- coding: utf-8 -*-
 
 #from _future_ import division, absolute_import, print_function
-from ...finitediff import jacobian as _jacobian, hessian as _hessian
-from ...linesearch import xstep as _xstep, backtracking as _backtracking, interp23 as _interp23, unimodality as _unimodality, golden_section as _golden_section
-from ... import np as _np
-from ... import scipy as _sp
+from ..finitediff import jacobian as _jacobian, hessian as _hessian
+from ..linesearch import xstep as _xstep, backtracking as _backtracking, interp23 as _interp23, unimodality as _unimodality, golden_section as _golden_section
+from .. import np as _np
+from .. import scipy as _sp
 
 
 class unconstrained(object):
     
-    def __init__(self):
+    def __init__(self,parameters):
         self.eps = _np.finfo(_np.float64).eps
         self.resolution = _np.finfo(_np.float64).resolution
-        self.params = {'fminunc':{'method':'newton','params':\
-                {'gradient':{'max_iter':1e4},\
-                 'newton':{'max_iter':1e3},\
-                 'modified-newton':{'sigma':1,'max_iter':1e3},\
-                 'conjugate-gradient':{'max_iter':1e3},\
-                 'fletcher-reeves':{'max_iter':1e3},\
-                 'quasi-newton':{'max_iter':1e3,'hessian_update':'davidon-fletcher-powell'}}},\
-            'jacobian':{'algorithm':'central','epsilon':_np.sqrt(self.eps)},\
-            'hessian':{'algorithm':'central','epsilon':_np.sqrt(self.eps),'initial':None},\
-            'linesearch':{'method':'backtracking','params':
-                {'backtracking':{'alpha':1,'rho':0.6,'c':1e-3,'max_iter':1e3},\
-                'interp23':{'alpha':1,'alpha_min':0.1,'rho':0.6,'c':1e-3,'max_iter':1e3},\
-                'unimodality':{'b':1,'threshold':1e-4,'max_iter':1e3},
-                'golden-section':{'b':1,'threshold':1e-4,'max_iter':1e3}}}}  
+        self.params = parameters 
         self._ls_algorithms = {'backtracking':_backtracking,
                 'interp23':_interp23,
                 'unimodality':_unimodality,
                 'golden-section':_golden_section}
-        self._unc_algorithms = {'gradient':self.gradient,
-                'newton':self.newton,
-                'modified-newton':self.mod_newton,
-                'conjugate-gradient':self.conj_gradient,
-                'fletcher-reeves':self.fletcher_reeves,
-                'quasi-newton':self.qn}
+        self._unc_algorithms = {'gradient':self._gradient,
+                'newton':self._newton,
+                'modified-newton':self._mod_newton,
+                'conjugate-gradient':self._conj_gradient,
+                'fletcher-reeves':self._fletcher_reeves,
+                'quasi-newton':self._qn}
 
 
-    def gradient(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+    def _gradient(self,fun,x0,d0,g0,Q0,*args,**kwargs):
         '''
             gradient step (linear convergence)
             ..fun as callable object; must be a function of x0 and return a single number
@@ -47,7 +34,7 @@ class unconstrained(object):
         g = _jacobian(fun,x0,**self.params['jacobian'])
         return -g, g, []
     
-    def newton(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+    def _newton(self,fun,x0,d0,g0,Q0,*args,**kwargs):
         '''
             newton method (quadratic convergence)
             ..fun as callable object; must be a function of x0 and return a single number
@@ -57,7 +44,7 @@ class unconstrained(object):
         Q = _hessian(fun,x0,**self.params['hessian'])
         return -_np.linalg.inv(Q).dot(g), g, Q
     
-    def mod_newton(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+    def _mod_newton(self,fun,x0,d0,g0,Q0,*args,**kwargs):
         '''
             newton method
             ..fun as callable object; must be a function of x0 and return a single number
@@ -71,7 +58,7 @@ class unconstrained(object):
         d = _sp.linalg.cho_solve(_sp.linalg.cho_factor(nu.dot(_np.diag(eigs)).dot(nu.T)),-g)
         return d, g, Q
     
-    def conj_gradient(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+    def _conj_gradient(self,fun,x0,d0,g0,Q0,*args,**kwargs):
         '''
             conjugate-gradient method
             ..fun as callable object; must be a function of x0 and return a single number
@@ -86,7 +73,7 @@ class unconstrained(object):
             d = -g + beta*d0
             return d, g, Q
         
-    def fletcher_reeves(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+    def _fletcher_reeves(self,fun,x0,d0,g0,Q0,*args,**kwargs):
         '''
             fletcher_reeves
             ..fun as callable object; must be a function of x0 and return a single number
@@ -100,7 +87,7 @@ class unconstrained(object):
             d = -g + beta*d0
             return d, g, []
         
-    def dfp(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+    def _dfp(self,fun,x0,d0,g0,Q0,*args,**kwargs):
         '''
             Davidon-Flether-Powell
             ..fun as callable object; must be a function of x0 and return a single number
@@ -116,7 +103,7 @@ class unconstrained(object):
         d = -Q.dot(g)
         return d, g, Q
     
-    def bfgs(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+    def _bfgs(self,fun,x0,d0,g0,Q0,*args,**kwargs):
         '''
             Broyden-Fletcher-Goldfarb-Shanno
             ..fun as callable object; must be a function of x0 and return a single number
@@ -132,7 +119,7 @@ class unconstrained(object):
         d = -Q.dot(g)
         return d, g, Q
     
-    def qn(self,fun,x0,d0,g0,Q0,*args,**kwargs):
+    def _qn(self,fun,x0,d0,g0,Q0,*args,**kwargs):
         '''
             Quasi-Newton caller
             ..fun as callable object; must be a function of x0 and return a single number
@@ -185,7 +172,6 @@ class unconstrained(object):
             return {'x':x_vec, 'f':[fun(x) for x in x_vec], 'iterations':iters, 'ls_iterations':lsiters}#, 'parameters' : params.copy()}
         else:
             return {'x':x, 'f':fun(x), 'iterations':iters, 'ls_iterations':lsiters}#, 'parameters' : params.copy()}
-    
-    
+
     
         
