@@ -19,7 +19,7 @@ def __armijo(fun,x0,d,dd,alpha,c):
     '''
     return fun(xstep(x0,d,alpha)) <= fun(x0)+c*alpha*dd
 
-def backtracking(fun,x0,d=None,alpha=1,rho=0.5,c=1e-4,max_iter=1e3,**kwargs):
+def backtracking(fun,x0,d=None,alpha=1,rho=0.6,c=1e-4,max_iter=1e3,**kwargs):
     '''
         backtracking algorithm, arg_min(alpha) fun(x0+alpha*d)
         ..fun as callable object; must be a function of x0 and return a single number

@@ -228,7 +228,7 @@ class constrained(object):
         elif self.params['fminnlcon']['method'] == 'barrier':
             B = lambda x : -_np.sum([1./_(x) for _ in g]) # g(x) <= 0
             f = lambda x : fun(x)+(1./c)*B(x)
-            chck = lambda x : (1./c)*B(x)
+            chck = lambda x : (1./c)*B(x)   
         else:
             raise Exception('The fminnlcon method ({}) has not been identified.'.format(self.params['fminnlcon']['method']))
         x = x0
