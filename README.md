@@ -74,7 +74,7 @@
 
      **Example**
      ```python
-     ### Exampe 1 ###
+     ### Example 1 ###
      n = optinpy.graph()  # Create an graph object
      connections = [[1,2,2],[1,3,4],[1,4,5],[2,4,2],[3,4,1]]
      for c in connections:
@@ -82,7 +82,7 @@
      rot,ds = optinpy.sp.fmb(n,1,verbose=True) # Shortest-path via Ford-Belman-Moore   
      rot,ds = optinpy.sp.dijkstra(n,1,verbose=True) # Shortest-path via Dijkstra
 
-     ### Exampe 2 ### https://www.youtube.com/watch?v=obWXjtg0L64
+     ### Example 2 ### https://www.youtube.com/watch?v=obWXjtg0L64
      n = optinpy.graph()  # Create an graph object
      connections = [[1,2,10],[1,6,8],[2,4,2],[3,2,1],[4,3,-2],[5,2,-4],\
                      [5,4,-1],[6,5,1]] # Define arcs [from,to,cost]
@@ -90,7 +90,7 @@
          n.add_connection(*c) # Add arcs (connections) to the graph
      rot,ds = optinpy.sp.fmb(n,1,verbose=True) # Shortest-path via Ford-Belman-Moore
 
-     ### Exampe 3 ### https://www.youtube.com/watch?v=gdmfOwyQlcI
+     ### Example 3 ### https://www.youtube.com/watch?v=gdmfOwyQlcI
      n = optinpy.graph()  # Create an graph object
      connections = [['A','B',4],['A','E',7],['A','C',3],['B','C',6],['B','D',5],['C','D',11],\
                      ['C','E',8],['D','E',2],['D','F',2],['D','G',10],['E','G',5]] # Define arcs [from,to,cost]
