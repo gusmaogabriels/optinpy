@@ -4,13 +4,6 @@
 
 *pip install* -> `pip install --upgrade https://github.com/gusmaogabriels/optinpy/zipball/master`
 
-**The University of Campinas, UNICAMP**
-
-* IA897 - Introdução à Otimização Matemática - *Introduction to Optimization*
-* IA881 - Otimização Linear - *Linear Programming*
-* IA543 - Otimização Não Linear - *Nonlinear Optimization* (Prof. Takaaki)
-
-
 ## Table of Content
   - [**Linear Programming**](#linear-programming)
     - [Graphs](#graphs-graph)
@@ -413,6 +406,12 @@ Numerical routines to estimate the *Jacobian* and *Hessian* matrices of a functi
      
      Off-diagonal terms: 𝛿²f/𝛿x<sub>j</sub>𝛿x<sub>k</sub> = (f(x<sub>j,0</sub>-ε,x<sub>k,0</sub>-ε)-f(x<sub>j,0</sub>-ε,x<sub>k,0</sub>)-f(x<sub>j,0</sub>,x<sub>k,0</sub>-ε)+f(x<sub>j,0</sub>,x<sub>k,0</sub>))/ε²
     
+**The University of Campinas, UNICAMP**
+
+* IA897 - Introdução à Otimização Matemática - *Introduction to Optimization*
+* IA881 - Otimização Linear - *Linear Programming*
+* IA543 - Otimização Não Linear - *Nonlinear Optimization* (Prof. Takaaki)
+
 Copyright © 2016 - Gabriel Sabença Gusmão
 
 [![linkedin](https://static.licdn.com/scds/common/u/img/webpromo/btn_viewmy_160x25.png)](https://br.linkedin.com/pub/gabriel-saben%C3%A7a-gusm%C3%A3o/115/aa6/aa8)
