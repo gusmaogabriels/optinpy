@@ -60,3 +60,7 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+.venv/
+.pytest_cache/
+.DS_Store

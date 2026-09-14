@@ -1,30 +1,18 @@
-# -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function
+"""Optinpy: native optimization algorithms with JAX numerical kernels."""
+__author__ = {"Gabriel S. Gusmao": "gusmaogabriels@gmail.com"}
+__version__ = "2.0.0a1"
 
-__author__ = {'Gabriel S. Gusmao' : 'gusmaogabriels@gmail.com'}
-__version__ = '1.0a'
-
-"""
-By Gabriel S. Gusmão (Gabriel Sabença Gusmão)
-Oct, 2015
-    optinpy version 1.0a
-    ~~~~
-    "General linear and nonlinear optimization methods"
-    :copyright: (c) 2015 Gabriel S. Gusmão
-    :license: GPU, see LICENSE for more details.
-"""
-
+# NumPy is retained for the legacy graph/simplex interfaces. Numerical
+# optimization, differentiation, and line searches import JAX directly.
 import numpy as np
-import time
-import scipy
-from .graph import *
-from .simplex import *
+from .graph import graph, node
+from .simplex import simplex
 from .mcfp import mcfp
 from .sp import sp
 from .mst import mst
-from .finitediff import finitediff
-from .linesearch import linesearch
-from .nonlinear import unconstrained as __unconstrained
-from .nonlinear import constrained as __constrained
+from . import finitediff, linesearch, nonlinear
+from .nonlinear import minimize, compile_minimizer, fminunc, fmincon, fminnlcon, params, unconstrained, constrained
 
-__all__ = ['np','graph','__author__','__version__']
+__all__ = ["graph", "node", "simplex", "mcfp", "sp", "mst", "finitediff",
+           "linesearch", "nonlinear", "minimize", "compile_minimizer", "fminunc", "fmincon", "fminnlcon",
+           "params", "unconstrained", "constrained", "__version__"]

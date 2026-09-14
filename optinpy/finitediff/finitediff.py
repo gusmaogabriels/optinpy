@@ -1,85 +1,79 @@
-# -*- coding: utf-8 -*-
+"""Automatic and finite-difference derivatives implemented with JAX.
 
-from __future__ import division, absolute_import, print_function
-from .. import np as __np
-eps = __np.finfo(__np.float64).eps
-resolution = __np.finfo(__np.float64).resolution
+The historical ``jacobian`` name denotes the gradient of a scalar objective.
+Inputs are never mutated. Functions must accept JAX arrays.
+"""
+import jax
+import jax.numpy as jnp
 
-def jacobian(fun,x0,epsilon=__np.sqrt(eps),algorithm='central'):
-    '''
-        Jacobian calculator
-        ..fun as callable object; must be a function of x0 and return a single number
-        ..x0 as a numeric array; point at which the jacobian should be estimated
-        ..espilon as a numeric value; perturbation from which the jacobian is estimated
-        ..algorithm as a string among 'central', 'forward', 'backward'; algorithm to be used to estimate the jacobian
-    '''
-    grad = []
-    if algorithm == 'central':
-        evpoints = [-1,1]
-    elif algorithm == 'forward':
-        evpoints = [0,1]
-    elif algorithm == 'backward':
-        evpoints = [-1,0]
+
+def as_vector(x):
+    x = jnp.asarray(x)
+    if x.ndim != 1 or x.size == 0:
+        raise ValueError("x must be a nonempty one-dimensional array")
+    if jnp.issubdtype(x.dtype, jnp.complexfloating):
+        raise TypeError("x must be real-valued")
+    return x.astype(jnp.result_type(x.dtype, float))
+
+
+def _step(x, epsilon, order):
+    if epsilon is not None:
+        if epsilon <= 0:
+            raise ValueError("epsilon must be positive")
+        return jnp.asarray(epsilon, dtype=x.dtype)
+    return jnp.asarray(jnp.finfo(x.dtype).eps ** (1 / order), dtype=x.dtype)
+
+
+def jacobian(fun, x0, epsilon=None, algorithm="autodiff"):
+    """Gradient via autodiff (default), central, forward, or backward differences.
+
+    ``algorithm`` and ``epsilon`` are static options when compiling with JAX.
+    """
+    x = as_vector(x0)
+    if algorithm == "autodiff":
+        return jax.grad(fun)(x)
+    if algorithm not in ("central", "forward", "backward"):
+        raise ValueError(f"Unknown differentiation algorithm: {algorithm}")
+    h = _step(x, epsilon, 3 if algorithm == "central" else 2)
+    offsets = h * jnp.eye(x.size, dtype=x.dtype)
+    if algorithm == "central":
+        return jax.vmap(lambda e: (fun(x + e) - fun(x - e)) / (2 * h))(offsets)
+    sign = 1 if algorithm == "forward" else -1
+    return jax.vmap(lambda e: (fun(x + sign * e) - fun(x)) / (sign * h))(offsets)
+
+
+def hessian(fun, x0, epsilon=None, algorithm="autodiff", initial=None):
+    """Hessian; central differences retain the original five-point diagonal.
+
+    ``initial`` is accepted for legacy parameter dictionaries.
+    """
+    x = as_vector(x0)
+    if algorithm == "autodiff":
+        return jax.hessian(fun)(x)
+    if algorithm not in ("central", "forward", "backward"):
+        raise ValueError(f"Unknown differentiation algorithm: {algorithm}")
+    h = _step(x, epsilon, 4 if algorithm == "central" else 3)
+    offsets = h * jnp.eye(x.size, dtype=x.dtype)
+    if algorithm == "central":
+        # Evaluate only one triangle, as in the original implementation, and
+        # share f(x) across the fourth-order diagonal probes.
+        # The probe layout depends only on the static vector size. Construct it
+        # while tracing instead of running triangular-index generation per call.
+        pairs = [(i, j) for i in range(x.size) for j in range(i + 1, x.size)]
+        i, j = jnp.asarray(pairs, dtype=jnp.int32).reshape(-1, 2).T
+        def entry(e, v):
+            return (fun(x + e + v) - fun(x + e - v)
+                    - fun(x - e + v) + fun(x - e - v)) / (4 * h * h)
+        mixed = jax.vmap(entry)(offsets[i], offsets[j])
+        center = fun(x)
+        diagonal = jax.vmap(lambda e: (-fun(x + 2*e) + 16*fun(x + e)
+                                       - 30*center + 16*fun(x - e) - fun(x - 2*e))
+                            / (12*h*h))(offsets)
+        return jnp.diag(diagonal).at[i, j].set(mixed).at[j, i].set(mixed)
     else:
-        raise Exception("Algorithm must be either 'central', 'forward' or 'backward'.")    
-    for i in range(len(x0)):
-        fvals = []
-        for _x in evpoints:
-            x0[i] += _x*epsilon
-            fvals += [fun(x0)]
-            x0[i] -= _x*epsilon
-        grad += [(fvals[1]-fvals[0])/((evpoints[1]-evpoints[0])*epsilon)]
-    return __np.array(grad,__np.float64).copy()
+        sign = 1 if algorithm == "forward" else -1
 
-def hessian(fun,x0,epsilon=__np.sqrt(eps),algorithm='central',**kwargs):
-    '''
-        hessian calculator
-        ..fun as callable object; must be a function of x0 and return a single number
-        ..x0 as a numeric array; point at which the hessian should be estimated
-        ..espilon as a numeric value; perturbation from which the hessian is estimated
-        ..algorithm as a string among 'central', 'forward', 'backward'; algorithm to be used to estimate the hessian
-    '''
-    hessian = [[None for j in range(len(x0))] for i in range(len(x0))]
-    if algorithm == 'central':
-        evpoints_ij = [[1,1],[1,-1],[-1,1],[-1,-1]]
-        evpoints_ii = [[2,0],[1,0],[0,0],[-1,0],[-2,0]]
-        coeffs_ij = [1,-1,-1,1]
-        coeffs_ii = [-1,16,-30,16,-1]
-        denom_ij = 4*epsilon**2
-        denom_ii = 12*epsilon**2
-    elif algorithm == 'forward':
-        evpoints_ij = [[1,1],[1,0],[0,1],[0,0]]
-        evpoints_ii = evpoints_ij
-        coeffs_ii = [1,-1,-1,1]
-        coeffs_ij = coeffs_ii
-        denom_ij = epsilon**2
-        denom_ii = denom_ij
-    elif algorithm == 'backward':
-        evpoints_ij = [[-1,-1],[-1,0],[0,-1],[0,0]]
-        evpoints_ii = evpoints_ij
-        coeffs_ii = [1,-1,-1,1]
-        coeffs_ij = coeffs_ii
-        denom_ij = epsilon**2
-        denom_ii = denom_ij
-    else:
-        raise Exception("Algorithm must be either 'central', 'forward' or 'backward'.")    
-    for i in range(0,len(x0)):
-        fvals = []
-        for points in evpoints_ii:
-            x0[i] += points[0]*epsilon
-            x0[i] += points[1]*epsilon
-            fvals += [fun(x0)]
-            x0[i] -= points[0]*epsilon
-            x0[i] -= points[1]*epsilon
-        hessian[i][i] = sum([fvals[k]*coeffs_ii[k] for k in range(len(fvals))])/denom_ii
-        for j in range(i+1,len(x0)):
-            fvals = []
-            for points in evpoints_ij:
-                x0[i] += points[0]*epsilon
-                x0[j] += points[1]*epsilon
-                fvals += [fun(x0)]
-                x0[i] -= points[0]*epsilon
-                x0[j] -= points[1]*epsilon
-            hessian[i][j] = sum([fvals[k]*coeffs_ij[k] for k in range(len(fvals))])/denom_ij
-            hessian[j][i] = hessian[i][j]
-    return __np.array(hessian)
+        def entry(e, v):
+            return (fun(x + sign * (e + v)) - fun(x + sign * e)
+                    - fun(x + sign * v) + fun(x)) / (h * h)
+    return jax.vmap(lambda e: jax.vmap(lambda v: entry(e, v))(offsets))(offsets)

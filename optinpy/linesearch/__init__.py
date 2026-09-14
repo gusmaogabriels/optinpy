@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function
+"""Native JAX line-search algorithms."""
+from .linesearch import xstep, backtracking, interp23, unimodality, golden_section, strong_wolfe
 
-from .linesearch import xstep, backtracking, interp23, unimodality, golden_section
+__all__ = ["xstep", "backtracking", "interp23", "unimodality", "golden_section", "strong_wolfe"]

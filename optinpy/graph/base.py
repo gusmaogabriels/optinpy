@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function
+
 
 def argparser(x,vartype,**kwargs):
     if isinstance(x,vartype):
-        if kwargs.has_key('varsize'):
+        if 'varsize' in kwargs:
             if len(x) == kwargs['varsize']:
                 pass
             else:
                 raise IndexError('Size mismatch.')
         else:
             pass
-        if kwargs.has_key('subvartype') and not isinstance(x,kwargs['subvartype']):
+        if 'subvartype' in kwargs and not isinstance(x,kwargs['subvartype']):
             if all([isinstance(i,kwargs['subvartype']) for i in x]):
                 pass
             else:
@@ -22,26 +22,26 @@ def argparser(x,vartype,**kwargs):
         raise TypeError('variable type mismatch.')
 
 class graph(object):
-    
+
     def __init__(self):
         """
             ..graph object instantiatior
         """
         self.nodes_map = {0:0}
-        self.nodes = {0:node(0,0)}   
+        self.nodes = {0:node(0,0)}
         self.arcs = {}
         self.root_weight = float('inf')
         self.basic = []
         self.non_basic = []
         self.__root_arcs = []
-        
+
     def set_root_weight(self,weight):
-        self.root_weight = weight        
+        self.root_weight = weight
         for a in self.__root_arcs:
             a.cost = self.root_weight
         self.nodes[0].update()
         self.__update_crawler(self.nodes[0])
-    
+
     def __update_crawler(self,node):
         for n in node.children:
             if n == n.__node_to_root__ or n == self.nodes[0]:
@@ -55,7 +55,7 @@ class graph(object):
             else:
                 n.update()
                 self.__update_crawler(n)
-            
+
     def add_node(self,key,b):
         """
             ..graph object instantiatior
@@ -63,18 +63,20 @@ class graph(object):
             ..b as a list/tuple of numeric b values for the nodes
         """
         key, b = [x if isinstance(x,(list,tuple)) else [x] for x in [key,b]]
-        argparser(b,(list,tuple),varsize=len(key),subvartype=(int,long,float))
+        argparser(b,(list,tuple),varsize=len(key),subvartype=(int,float))
+        if any(k in self.nodes for k in key):
+            raise ValueError("Node labels must be unique; 0 is the artificial root")
         for i in range(0,len(key)):
             self.nodes.__setitem__(key[i],node(key[i],b[i]))
             self.nodes[0].b -= b[i]
-            if b[i]>=0 and key[i] not in self.nodes_map.keys():
+            if b[i]>=0 and key[i] not in list(self.nodes_map.keys()):
                 self.add_connection(key[i],0,self.root_weight)
                 self.arcs[key[i]][0].activate()
                 self.nodes[key[i]].__arc_to_root__ = [self.arcs[key[i]][0],1.0]
                 self.nodes[key[i]].__node_to_root__ = self.nodes[0]
                 self.arcs[key[i]][0].flow = b[i]
                 self.__root_arcs += [self.arcs[key[i]][0]]
-            elif b[i]<0 and key[i] not in self.nodes_map.keys():
+            elif b[i]<0 and key[i] not in list(self.nodes_map.keys()):
                 self.add_connection(0,key[i],self.root_weight)
                 self.arcs[0][key[i]].activate()
                 self.nodes[key[i]].__arc_to_root__ = [self.arcs[0][key[i]],-1.0]
@@ -84,9 +86,9 @@ class graph(object):
             else:
                 pass
             self.nodes_map.__setitem__(key[i],len(self.nodes_map))
-                               
+
     def add_connection(self, source, destination, cost, bidirectional = False):
-        """ 
+        """
             ..add_connection
             ..source as list/tuple of label or int references to nodes
             ..destination as list/tuple of label or int references to nodes
@@ -94,28 +96,32 @@ class graph(object):
             ..bidirection as list/tuple of boolean values of the size of source and destination
         """
         source, destination, cost, bidirectional = [x if isinstance(x,(list,tuple)) else [x] for x in [source, destination, cost, bidirectional]]
-        argparser(source,(list,tuple),subvartype=(int,long,float,basestring))
-        argparser(destination,(list,tuple),varsize=len(source),subvartype=(int,long,float,basestring))
-        argparser(cost,(list,tuple),varsize=len(source),subvartype=(int,long,float,basestring))
+        argparser(source,(list,tuple),subvartype=(int,float,str))
+        argparser(destination,(list,tuple),varsize=len(source),subvartype=(int,float,str))
+        argparser(cost,(list,tuple),varsize=len(source),subvartype=(int,float,str))
         argparser(bidirectional,(list,tuple),varsize=len(source),subvartype=(bool))
         nodes = list(set(source)^set(destination))+list(set(source)&set(destination))
-        for n in filter(lambda x : x != False, [x if x not in self.nodes.keys() else False for x in nodes]):
+        for n in [x for x in [x if x not in list(self.nodes.keys()) else False for x in nodes] if x != False]:
             self.add_node(n,0)
         for i in range(0,len(source)):
-            if self.arcs.has_key(source[i]):
+            if source[i] in self.arcs:
                 self.arcs[source[i]].__setitem__(destination[i],arc(self.nodes[source[i]],self.nodes[destination[i]],cost[i],self))
-            else: 
+            else:
                 self.arcs.__setitem__(source[i],{destination[i]:arc(self.nodes[source[i]],self.nodes[destination[i]],cost[i],self)})
-            
+
+        for s, t, c, both in zip(source, destination, cost, bidirectional):
+            if both:
+                self.add_connection(t, s, c)
+
 class arc(object):
-    
+
     def __init__(self,source,destination,cost=0.0,graph=None):
         """
         .. this is the arc class and ties two node objects
-        .. source and destination as node objects        
+        .. source and destination as node objects
         .. cost as numeric
         """
-        argparser(cost,(int,long,float))
+        argparser(cost,(int,float))
         self.source = source
         self.destination = destination
         self.source.__children__ += [destination]
@@ -129,10 +135,10 @@ class arc(object):
         else:
             pass
         self.__state__ = [False]
-        
+
     def __call__(self):
         return('ARC f:{} t:{}'.format(self.source.key,self.destination.key))
-               
+
     def pivot(self):
         """
             activate this arc and then deactivate the barrier arc whithin the created loop.
@@ -145,17 +151,17 @@ class arc(object):
         adestination = []
         out_arc = []
         while not set(nsource) & set(ndestination):
-            if source.__node_to_root__ != None:             
+            if source.__node_to_root__ != None:
                 nsource += [source.__node_to_root__.key]
                 asource += [[source.__arc_to_root__[0],[1 if source==source.__arc_to_root__[0].destination else -1][0]]]
                 if source.__arc_to_root__[1]>0:
-                    out_arc += [[source.__arc_to_root__[0].flow,source.__arc_to_root__[0],-1]]                  
+                    out_arc += [[source.__arc_to_root__[0].flow,source.__arc_to_root__[0],-1]]
                 else:
                     pass # we've reached the root from the source side
                 source = source.__node_to_root__
             else:
                 pass
-            if destination.__node_to_root__ != None:           
+            if destination.__node_to_root__ != None:
                 ndestination += [destination.__node_to_root__.key]
                 adestination += [[destination.__arc_to_root__[0],[1 if destination==destination.__arc_to_root__[0].source else -1][0]]]
                 if destination.__arc_to_root__[1]<0:
@@ -171,7 +177,7 @@ class arc(object):
         nsource = nsource[0:nsource.index(lcn)]
         ndestination = ndestination[0:ndestination.index(lcn)]
         arcs = [i[0] for i in asource]+[i[0] for i in adestination]
-        out_arc.sort()
+        out_arc.sort(key=lambda item: item[0])
         while out_arc[0][1] not in arcs:
             out_arc.pop(0)
         out_arc = out_arc[0]
@@ -202,7 +208,7 @@ class arc(object):
             print('Update: arc {}'.format(arcs[i][0]()))
             self.graph.nodes[nodes[i]].update(arcs[i+d][0])
             i+= 1
-            
+
     def activate(self):
         self.source.set_to(self.destination,self)
         self.destination.set_from(self.source,self)
@@ -210,26 +216,26 @@ class arc(object):
             self.graph.non_basic.remove(self)
             self.graph.basic += [self]
         else:
-            pass 
+            pass
         self.__state__[0] = True
-        
+
     def deactivate(self):
-        self.source.remove_to(self.destination,self)            
-        self.destination.remove_from(self.source,self)                  
+        self.source.remove_to(self.destination,self)
+        self.destination.remove_from(self.source,self)
         if self.graph != None and self.__state__[0] == True:
             self.graph.basic.remove(self)
             self.graph.non_basic += [self]
         else:
             pass
         self.__state__[0] = False
-        
+
 class node(object):
-    
+
     def __init__(self, key, b):
         """
         .. key as any label (numeric or string)
         .. b as numeric
-        """     
+        """
         self.key = key
         self.b = b
         self.__children__ = []
@@ -246,9 +252,9 @@ class node(object):
     def update(self,arc=None):
         if len(self.mapper) > 0 and self.key != 0:
             #print('node key:',self.key)
-            self.__arc_to_root__ = [min(self.mapper)[1:3] if arc==None else [[arc,-1.0] if self==arc.destination else [arc,1.0]][0]][0]          
+            self.__arc_to_root__ = [min(self.mapper, key=lambda item: item[0][0])[1:3] if arc==None else [[arc,-1.0] if self==arc.destination else [arc,1.0]][0]][0]
             #print('arc_to_root and multiplier',self.__arc_to_root__[0](),self.__arc_to_root__[1])
-            self.__dist_to_root__ = [float('inf') if self.__arc_to_root__ == None else[min(self.mapper)[0][0] + 1]][0]      
+            self.__dist_to_root__ = [float('inf') if self.__arc_to_root__ == None else[min(self.mapper, key=lambda item: item[0][0])[0][0] + 1]][0]
             self.__node_to_root__ = [None if self.key==0 or self.__arc_to_root__ == None else [self.__arc_to_root__[0].source \
             if self.__arc_to_root__[1]<0 else self.__arc_to_root__[0].destination][0]][0]
             #print('node_to_root',self.__node_to_root__.key)
@@ -258,24 +264,24 @@ class node(object):
             self.__arc_to_root__ = [None]
             self.__node_to_root__ = None
             self.__pi__ = [0]
-        
+
     def set_b(self,value):
         """
         .. value as numeric
         """
-        argparser(value,(int,long,float))
+        argparser(value,(int,float))
         self.b = value
 
     def set_to(self,destination,arc):
         self.children += [destination]
         self.mapper += [[[[0] if arc.destination.key == 0 or self.key ==0 else destination.__dist_to_root__][0],arc,1.0]]
         self.arcpos.__setitem__(id(arc),id(self.mapper[-1]))
-    
+
     def set_from(self,source,arc):
         self.parents += [source]
         self.mapper += [[[[0] if arc.source.key == 0 or self.key ==0 else source.__dist_to_root__][0],arc,-1.0]]
         self.arcpos.__setitem__(id(arc),id(self.mapper[-1]))
-    
+
     def remove_to(self,destination,arc):
         self.children.remove(destination)
         self.mapper.pop([id(i) for i in self.mapper].index(self.arcpos[id(arc)]))
@@ -284,7 +290,7 @@ class node(object):
             self.__arc_to_root__ = [None]
         else:
             pass
-   
+
     def remove_from(self,source,arc):
         self.parents.remove(source)
         self.mapper.pop([id(i) for i in self.mapper].index(self.arcpos[id(arc)]))
@@ -293,7 +299,7 @@ class node(object):
             self.__arc_to_root__ = [None]
         else:
             pass
-        
+
     def get_connections(self):
-        return [[self.key,i.key] for i in self.children]+[[i.key,self.key] for i in self.parents]
-        
+        return [[self.key,i.key] for i in self.__children__]+[[i.key,self.key] for i in self.__parents__]
+

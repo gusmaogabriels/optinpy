@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "optinpy"
+version = "2.0.0a1"
+description = "Native optimization algorithms in JAX"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
+authors = [{name = "Gabriel S. Gusmao", email = "gusmaogabriels@gmail.com"}]
+keywords = ["optimization", "jax", "autodiff", "nonlinear", "graph"]
+dependencies = ["jax>=0.4.38", "numpy>=1.26"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+
+[project.scripts]
+optinpy = "optinpy.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "build>=1.2", "twine>=6"]
+benchmark = [
+    "scipy>=1.12", "clarabel>=0.11,<0.12", "lineax>=0.1,<0.2",
+    "optimistix>=0.1,<0.2", "optax>=0.2.3,<0.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/gusmaogabriels/optinpy"
+Issues = "https://github.com/gusmaogabriels/optinpy/issues"
+
+[tool.setuptools.packages.find]
+include = ["optinpy*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
