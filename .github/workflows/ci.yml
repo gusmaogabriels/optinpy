@@ -1,0 +1,125 @@
+name: Tests and distributions
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python: ['3.11', '3.12', '3.13']
+        dependencies: [latest]
+        include:
+          - os: macos-latest
+            python: '3.12'
+            dependencies: latest
+          - os: windows-latest
+            python: '3.12'
+            dependencies: latest
+          - os: ubuntu-latest
+            python: '3.11'
+            dependencies: minimum
+    runs-on: ${{ matrix.os }}
+    env:
+      JAX_PLATFORMS: cpu
+      JAX_ENABLE_X64: 'true'
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install supported minimum dependencies
+        if: matrix.dependencies == 'minimum'
+        run: python -m pip install "jax[cpu]==0.4.38" "numpy==1.26.4" ".[dev]"
+      - name: Install current dependencies
+        if: matrix.dependencies != 'minimum'
+        run: python -m pip install ".[dev]"
+      - name: Numerical and API regression tests
+        run: python -m pytest -q
+      - name: Run the example
+        run: python main.py
+      - name: Run the installed local CLI
+        run: |
+          optinpy --version
+          optinpy minimize quadratic --x0 "[0, 0]" --json
+          python -m optinpy methods --json
+
+  simplex-comparison:
+    runs-on: ubuntu-latest
+    env:
+      JAX_PLATFORMS: cpu
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install ".[dev,benchmark]"
+      - name: Compare against HiGHS simplex, HiGHS IPM, and Clarabel
+        run: python -m pytest -q tests/test_simplex_comparison.py
+      - name: Reproduce comparison report (timings are informational)
+        run: python -m benchmarks.compare_simplex --random-cases 8 --repeats 1 --float32 --output build/simplex-comparison
+      - name: Separate process startup, JIT compilation, and warm execution
+        run: python -m benchmarks.time_simplex --case-indices 0 --repeats 3 --output build/simplex-timing
+      - name: Record timing spread on repeated identical inputs
+        run: python -m benchmarks.repeat_simplex --trials 1 --repeats 8 --case-indices 0 1 --output build/simplex-repeatability
+      - name: Check compiled solver reuse and batching measurements
+        run: python -m benchmarks.jax_audit --group usage --trials 1 --repeats 3 --eager-repeats 1 --output build/jax-performance
+      - name: Check forward/reverse derivatives and matrix-free products
+        run: python -m benchmarks.autodiff_modes --trials 1 --repeats 3 --sizes 16 --output build/autodiff-modes
+      - name: Validate optional JAX library comparisons
+        run: python -m pytest -q tests/test_jax_library_comparison.py
+      - name: Compare Lineax, Optimistix, and Optax (timings are informational)
+        run: python -m benchmarks.compare_jax_libraries --quick --trials 1 --repeats 3 --strict --output build/jax-library-comparison
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: simplex-comparison
+          path: |
+            build/simplex-comparison.*
+            build/simplex-timing.*
+            build/simplex-repeatability.*
+            build/jax-performance.*
+            build/autodiff-modes.*
+            build/jax-library-comparison.*
+          if-no-files-found: error
+
+  build:
+    needs: [tests, simplex-comparison]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install build twine
+      - name: Build sdist and wheel (wheel is built from sdist)
+        run: python -m build
+      - run: python -m twine check dist/*
+      - name: Install and smoke-test the wheel outside the source tree
+        run: |
+          python -m venv /tmp/optinpy-wheel
+          /tmp/optinpy-wheel/bin/python -m pip install --force-reinstall dist/*.whl
+          cd /tmp
+          /tmp/optinpy-wheel/bin/python -c 'import optinpy, jax.numpy as jnp; r = optinpy.minimize(lambda x: jnp.sum((x - 2)**2), [0., 0.]); assert r["success"]; print(optinpy.__version__, r["x"])'
+          /tmp/optinpy-wheel/bin/optinpy minimize quadratic --x0 '[0, 0]' --json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: distributions
+          path: dist/*
+          if-no-files-found: error

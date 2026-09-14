@@ -1,0 +1,5 @@
+include README.md CONTRIBUTING.md main.py
+recursive-include tests *.py
+recursive-include docs *.md *.json
+recursive-include raw *.png *.gif
+recursive-include benchmarks *.py

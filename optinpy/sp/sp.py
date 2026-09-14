@@ -1,73 +1,61 @@
-# -*- coding: utf-8 -*-
+"""Native shortest-path algorithms on optinpy graphs (node 0 is artificial)."""
+from heapq import heappop, heappush
+from itertools import count
+from math import isfinite
 
-def fmb(network,n0,verbose=False):
-    '''
-        Standard Ford-Moore-Bellman's algorithm
-        ..network as optinpy.graph object
-        ..n0 as integer node in the graph object
-        ..verbose as boolean
-    '''
-    nodes = network.nodes.keys()
-    ds = dict(zip(nodes,[float('inf') for i in range(0,len(nodes))])) # distances list
-    rot = dict(zip(nodes,[n0 for i in range(0,len(nodes))])) # route list
-    ds[n0] = 0
-    t = 0
-    for i in range(0,len(nodes)):
-        ds0 = list(ds)
-        for j in network.arcs.keys():
-            for k in network.arcs[j].keys():
-                if ds[network.arcs[j][k].destination.key] > network.arcs[j][k].cost + ds[network.arcs[j][k].source.key]:
-                    ds[network.arcs[j][k].destination.key] = network.arcs[j][k].cost + ds[network.arcs[j][k].source.key]
-                    rot[network.arcs[j][k].destination.key] = ds[network.arcs[j][k].source.key]
-                else:
-                    pass
-        if i == len(nodes): # this needs validation
-            print('Negative-weight cycle exists!')
-            return rot, ds
-        t += 1
-        if verbose:
-            print('Iteration #{}'.format(t))
-            print('d: {}'.format(ds))
-        if ds == ds0:
-            return rot, ds
-        else:
-            pass
-    return rot, ds
 
-def dijkstra(network,n0,verbose=False):
-    '''
-        Standard Dijkstra's algorithm
-        ..network as optinpy.graph object
-        ..n0 as integer node in the graph object
-        ..verbose as boolean
-    '''
-    nodes = network.nodes.keys()
-    ds = dict(zip(nodes,[float('inf') for i in range(0,len(nodes))])) # distances list
-    rot = dict(zip(nodes,[n0 for i in range(0,len(nodes))])) # route list
-    on = list(nodes) # open nodes list (O)
-    cn = [on.pop(on.index(n0))] # closed nodes list (F)
-    ds[n0] = 0
-    r = n0
-    t = 0
-    while len(on)>0:
-        r0 = r
-        node = network.nodes[r]
-        for i in [i.key for i in node.__children__]:
-            if ds[i] > network.arcs[r][i].cost + ds[r]:
-                ds[i] = network.arcs[r][i].cost + ds[r]
-                rot[i] = r
-            else:
-                pass
-        r = min(zip([ds[i] for i in on], on))[1]
-        cn += [on.pop(on.index(r))]
-        t += 1
+def _edges(network):
+    return [(u, v, a.cost) for u, arcs in network.arcs.items() for v, a in arcs.items()
+            if u != 0 and v != 0]
+
+
+def _initial(network, n0):
+    if n0 == 0 or n0 not in network.nodes:
+        raise ValueError("The source must be an existing non-artificial node")
+    distances = dict.fromkeys(network.nodes, float('inf'))
+    predecessors = dict.fromkeys(network.nodes)
+    distances[n0], predecessors[n0] = 0., n0
+    return predecessors, distances
+
+
+def fmb(network, n0, verbose=False):
+    """Bellman-Ford; reject a negative cycle reachable from the source."""
+    predecessors, distances = _initial(network, n0)
+    edges = _edges(network)
+    for _ in range(max(0, len(network.nodes) - 2)):
+        changed = False
+        for u, v, cost in edges:
+            if distances[u] + cost < distances[v]:
+                distances[v], predecessors[v] = distances[u] + cost, u
+                changed = True
         if verbose:
-            print('Iteration #{}'.format(t))
-            print('r0: {}'.format(r0))
-            print('d: {}'.format(ds))
-            print('rot: {}'.format(rot))
-            print('F: {}'.format(cn))
-            print('B: {}'.format(on))
-            print('V: {}'.format([i.key for i in node.__children__]))
-            print('r: {}'.format(r))
-    return rot, ds
+            print(distances)
+        if not changed:
+            break
+    if any(distances[u] + cost < distances[v] for u, v, cost in edges):
+        raise ValueError("A reachable negative-weight cycle exists")
+    return predecessors, distances
+
+
+def dijkstra(network, n0, verbose=False):
+    """Heap-based Dijkstra; supports mixed labels without comparing them."""
+    predecessors, distances = _initial(network, n0)
+    edges = _edges(network)
+    if any(cost < 0 or not isfinite(cost) for _, _, cost in edges):
+        raise ValueError("Dijkstra requires finite nonnegative edge costs")
+    serial = count()
+    queue = [(0., next(serial), n0)]
+    while queue:
+        distance, _, u = heappop(queue)
+        if distance != distances[u]:
+            continue
+        for v, arc in network.arcs.get(u, {}).items():
+            if v == 0:
+                continue
+            candidate = distance + arc.cost
+            if candidate < distances[v]:
+                distances[v], predecessors[v] = candidate, u
+                heappush(queue, (candidate, next(serial), v))
+        if verbose:
+            print(distances)
+    return predecessors, distances

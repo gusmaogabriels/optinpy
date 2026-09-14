@@ -1,274 +1,273 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Jul 01 11:20:34 2017
+"""Native constrained solvers with JAX derivatives and linear algebra.
 
-@author: GABRIS46
+Active sets and continuation use Python orchestration. These two legacy APIs
+are eager solvers, not whole-solve jit/vmap or differentiable layers.
 """
-from ..finitediff import jacobian as _jacobian, hessian as _hessian
-from ..linesearch import xstep as _xstep, backtracking as _backtracking, interp23 as _interp23, unimodality as _unimodality, golden_section as _golden_section
-from .. import np as _np
-from .. import scipy as _sp
-from ..nonlinear import unconstrained
+import math
 
-class constrained(object):
-    
-    def __init__(self,parameters,unconstrained):
-        self.eps = _np.finfo(_np.float64).eps
-        self.resolution = _np.finfo(_np.float64).resolution
+import jax
+import jax.numpy as jnp
+from jax import lax
+
+from ..finitediff.finitediff import as_vector, jacobian
+from ..linesearch import backtracking
+from .unconstrained import compile_minimizer
+
+
+def _constraints(A, b, x, name):
+    A = jnp.empty((0, x.size), dtype=x.dtype) if A is None else jnp.asarray(A, dtype=x.dtype)
+    b = jnp.empty((0,), dtype=x.dtype) if b is None else jnp.asarray(b, dtype=x.dtype)
+    if A.size == 0 and b.size == 0:
+        return jnp.empty((0, x.size), dtype=x.dtype), jnp.empty((0,), dtype=x.dtype)
+    if A.ndim != 2 or A.shape[1] != x.size or b.shape != (A.shape[0],):
+        raise ValueError(f"{name} must have shape (m, len(x)) and its RHS shape (m,)")
+    if not bool(jnp.all(jnp.isfinite(A)) & jnp.all(jnp.isfinite(b))):
+        raise ValueError("Linear constraint coefficients must be finite")
+    return A, b
+
+
+@jax.jit
+def _violation(x, A, b, Aeq, beq):
+    return jnp.maximum(jnp.max(jnp.maximum(A @ x - b, 0), initial=0),
+                       jnp.max(jnp.abs(Aeq @ x - beq), initial=0))
+
+
+@jax.jit
+def _feasible(x, A, b, Aeq, beq, tol, max_steps):
+    """Dykstra projections onto halfspaces/hyperplanes to find a feasible point."""
+    rows, rhs = jnp.concatenate((A, Aeq)), jnp.concatenate((b, beq))
+    corrections = jnp.zeros_like(rows)
+    if rows.shape[0] == 0:
+        return x
+
+    def cond(s):
+        y, _, i = s
+        return (_violation(y, A, b, Aeq, beq) > tol) & (i < max_steps)
+
+    def cycle(s):
+        def project(i, carry):
+            y, corrections = carry
+            z = y + corrections[i]
+            residual = jnp.vdot(rows[i], z) - rhs[i]
+            residual = jnp.where(i < A.shape[0], jnp.maximum(residual, 0), residual)
+            denom = jnp.vdot(rows[i], rows[i])
+            y = z - residual / jnp.where(denom > 0, denom, 1) * rows[i]
+            return y, corrections.at[i].set(z - y)
+        y, corrections = lax.fori_loop(0, rows.shape[0], project, s[:2])
+        return y, corrections, s[2] + 1
+
+    return lax.while_loop(cond, cycle, (x, corrections, jnp.asarray(0)))[0]
+
+
+@jax.jit
+def _working_set(Ak):
+    """One SVD supplies both the nullspace projection and KKT multipliers."""
+    u, singular, vh = jnp.linalg.svd(Ak, full_matrices=True)
+    cutoff = jnp.finfo(Ak.dtype).eps * max(Ak.shape) * singular[0]
+    rank = jnp.sum(singular > cutoff)
+    tangent = vh.T * (jnp.arange(Ak.shape[1]) >= rank)
+    # Match JAX pinv's default relative cutoff for the multiplier solve.
+    keep = singular > 10 * cutoff
+    reciprocal = jnp.where(keep, 1 / jnp.where(keep, singular, 1.), 0.)
+    multiplier_map = -(u[:, :singular.size] * reciprocal) @ vh[:singular.size]
+    return tangent, multiplier_map
+
+
+@jax.jit
+def _project_gradient(g, tangent, multiplier_map):
+    d = -tangent @ (tangent.T @ g)
+    return d, multiplier_map @ g, jnp.linalg.norm(d)
+
+
+@jax.jit
+def _active_mask(A, b, x, tol):
+    return jnp.abs(A @ x - b) <= tol
+
+
+@jax.jit
+def _step_limit(A, b, x, d, active):
+    denom = A @ d
+    eligible = (denom > jnp.finfo(x.dtype).eps) & ~active
+    ratios = jnp.where(eligible, (b - A @ x) / jnp.where(eligible, denom, 1.), jnp.inf)
+    return jnp.minimum(1., jnp.min(ratios, initial=jnp.inf))
+
+
+class constrained:
+    def __init__(self, parameters, unconstrained):
         self.params = parameters
-        self.__unconstrained = unconstrained
-        self._ls_algorithms = {'backtracking':_backtracking,
-                    'interp23':_interp23,
-                    'unimodality':_unimodality,
-                    'golden-section':_golden_section}
-    
-        self._con_algorithms = {'projected-gradient':self._proj_gradient
-                        }
+        self.unconstrained = unconstrained
 
-    def _proj_gradient(self,fun,x0,d0,g0,Q0,A_,I,J,K,*args,**kwargs):
-        '''
-            projected gradient (linear convergence)
-            ..fun as callable object; must be a function of x0 and return a single number
-            ..x0 as a numeric array; point from which to start
-        '''
-        #print('### proj grad')
-        #print('x0', x0)
-        g = _jacobian(fun,x0,**self.params['jacobian'])
-        if len(I|K) == 0:
-            return -g, g, []
+    def fmincon(self, fun, x0, A=None, b=None, Aeq=None, beq=None,
+                threshold=1e-6, vectorized=False, *, max_iter=None,
+                constraint_tol=1e-7, feasibility_max_iter=2000):
+        """Projected gradient with a working set for Ax<=b and Aeq x=beq.
+
+        Finds a feasible start by bounded projections. Status 4 means phase I
+        failed to find feasibility within its budget, not a proof of infeasibility.
+        No implicit nonnegativity bound is imposed on x.
+        """
+        if self.params["fmincon"]["method"] != "projected-gradient":
+            raise ValueError("fmincon supports method='projected-gradient'")
+        if threshold <= 0 or constraint_tol <= 0 or feasibility_max_iter < 1:
+            raise ValueError("Tolerances and feasibility_max_iter must be positive")
+        max_iter = self.params["fmincon"]["params"]["projected-gradient"]["max_iter"] if max_iter is None else max_iter
+        if max_iter < 0 or int(max_iter) != max_iter:
+            raise ValueError("max_iter must be a nonnegative integer")
+        x = as_vector(x0)
+        if not bool(jnp.all(jnp.isfinite(x))):
+            raise ValueError("x0 must be finite")
+        A, b = _constraints(A, b, x, "A")
+        Aeq, beq = _constraints(Aeq, beq, x, "Aeq")
+        tol = math.sqrt(threshold)
+        x = _feasible(x, A, b, Aeq, beq, constraint_tol, int(feasibility_max_iter))
+        objective = jax.jit(fun)
+        jac_options = dict(self.params["jacobian"])
+        derivative = (jax.value_and_grad(fun) if jac_options.get('algorithm', 'autodiff') == 'autodiff'
+                      else lambda y: (fun(y), jacobian(fun, y, **jac_options)))
+        value_gradient = jax.jit(derivative)
+        line_step = jax.jit(lambda y, d, cap, g, f: backtracking(
+            fun, y, d, alpha=cap, gradient=g, value=f))
+        active = {i for i, flag in enumerate(_active_mask(A, b, x, constraint_tol).tolist()) if flag}
+        xs, fs = ([x], [objective(x)]) if vectorized else ([], [])
+        previous_set, factors = None, None
+        status, iters, lsiters = 1, 0, 0
+        projected_norm = jnp.asarray(jnp.inf, dtype=x.dtype)
+        if float(_violation(x, A, b, Aeq, beq)) > constraint_tol:
+            status = 4
         else:
-            pass
-        Ak = A_[[i for i in I|K]]
-        #print('Ak') 
-        #print(Ak)
-        P = _np.identity(len(x0),_np.float64)-Ak.T.dot(_np.linalg.inv(Ak.dot(Ak.T))).dot(Ak)
-        d = -P.dot(g)
-        #print('d', d)
-        #print(' g', g)
-        if d.dot(d) < self.params['fmincon']['params']['projected-gradient']['threshold'] or kwargs['alpha'] < self.resolution:
-            if len(I) >0:
-                #AkI = Ak#Ak[range(len(I)),:]
-                ##print AkI
-                ##print g
-                lambdas = -_np.linalg.inv((Ak.dot(Ak.T))).dot(Ak).dot(g)
-                #print 'lambdas', lambdas
-                lambdas = lambdas[range(len(I))]
-                if _np.min(lambdas) < 0.0: # check whether lagrange multipliers are less than 0 for any inequality constraint. If so, remove the constraint from the active set.
-                    #pos, = _np.where(lambdas<0.0)
-                    pos, = _np.where(lambdas==_np.min(lambdas))
-                    js = [list(I)[i] for i in pos]
-                    #print 0, I, J, K, pos
-                    J |= set(js)
-                    I ^= set(js)
-                    #print 1, I, J, K
-                    #print '### proj grad end in'
-                    return self._proj_gradient(fun,x0,d0,g0,Q0,A_,I,J,K,alpha=_np.inf)
-                else:
-                    pass
-            else:
-                pass
-        #print '### proj grad end out'
-        return d, g, []
-    
-    def fmincon(self,fun,x0,A=[],b=[],Aeq=[],beq=[],threshold=1e-6,vectorized=False,**kwargs):
-        '''
-            Minimum Constrained Optimization
-            ..fun as callable object; must be a function of x0 and return a single number
-            ..x0 as a numeric array; point from which to start
-            ..threshold as a numeric value; threshold at which to stop the iterations
-            .. A as a matrix of size n×m holding the coefficient of inequality constraints A×x <= b
-            .. b as an array of size n of the RHS of the inequality constraints
-            .. Aeq as a matrix of size n×m holding the coefficient of equality constraints Aeq×x = beq
-            .. beq as an array of size n of the RHS of the equality constraints
-            ..**kwargs = initial_hessian : as matrix (default = identity)
-            .. see unconstrained.params for further details on the methods that are being used
-        '''
-        A = _np.array(A,_np.float64)
-        Aeq = _np.array(Aeq,_np.float64)
-        b = _np.array(b,_np.float64)
-        beq = _np.array(beq,_np.float64)
-        if all([i==None for i in (A,Aeq,b,beq)]):
-            raise Exception('For unconstrained problem, use optinpy.unconstrained.*')
-        else:
-            pass
-        alg = self._ls_algorithms[self.params['linesearch']['method']]
-        ls_kwargs = self.params['linesearch']['params'][self.params['linesearch']['method']]
-        self.params['fmincon']['params'][self.params['fmincon']['method']]['threshold'] = threshold
-        ### FIND FEASIBLE INITIAL POINT
-        if len(Aeq) == 0:
-            A_ = A
-            A_lp = _np.concatenate((A,_np.identity(_np.shape(A)[0])),axis=1)
-            b_lp = b
-            I0 = set(range(len(A)))
-            _ = _np.shape(A)[0]
-            K = set([])
-        elif len(A) == 0:
-            A_ = Aeq
-            A_lp = _np.concatenate((Aeq,_np.zeros(_np.shape(Aeq)[0])),axis=1)
-            b_lp = beq
-            I0 = set([])
-            _ = _np.shape(Aeq)[0]
-            K = set(range(_))
-        else:
-            A_ = _np.concatenate((A,Aeq),axis=0)
-            A_lp = _np.concatenate((_np.concatenate((A,_np.identity(_np.shape(A)[0])),axis=1),\
-                                     _np.concatenate((Aeq,_np.zeros([_np.shape(Aeq)[0],_np.shape(A)[0]])),axis=1)),axis=0)
-            b_lp = _np.concatenate((b,beq))
-            I0 = set(range(len(A)))
-            _ = _np.shape(A)[0]
-            K = set(range(_np.shape(A)[0],_np.shape(A)[0]+_np.shape(Aeq)[0]))
-        g = _jacobian(fun,x0,**self.params['jacobian'])
-        res = _sp.optimize.linprog(_np.concatenate((-g,_np.zeros(_))),A_ub=None,b_ub=None,A_eq=A_lp,b_eq=b_lp,options={'disp':True})
-        if not res['success']:
-            raise Exception('A feasible initial point could not be found.')
-        else:
-            pass
-        I = set(_np.where([_np.abs(i)<self.eps for i in res['x'][len(x0):len(x0)+_np.shape(A)[0]]])[0].tolist())
-        J = I0^I
-        #print A_
-        def amax(alpha,x0,d,A_,b,I,J,K):
-            if len(J) == 0 and len(K) == 0 :
-                return alpha
-            else:
-                alpha_ = (_np.array(b[list(J)])-_np.array(A_[list(J)]).dot(x0))*(_np.array(A_[list(J)]).dot(d))**-1.0
-                #print '### amax'
-                #print 'x :', x0
-                #print 'alphas Max_in:', alpha_
-                alpha_[_np.where(alpha_<= self.eps)[0]] = _np.inf
-                if _np.min(alpha_)-alpha < self.eps:
-                    pos, = _np.where(_np.abs(alpha_-_np.min(alpha_))<self.eps)
-                    js = [list(J)[i] for i in pos]
-                    #print 2, I, J, K
-                    #print js
-                    J ^= set(js)
-                    I |= set(js)
-                    #print 3, I, J, K
-                    #print '### amax end clipped'
-                    return _np.min(alpha_)            
-                else:
-                    #print '### amax end unclipped'
-                    return alpha
-        if res['success']:
-            x0 = _np.array(res['x'][0:len(x0)],_np.float64)
-            #print x0
-            #print I, J
-            d, g, Q = self._con_algorithms[self.params['fmincon']['method']](fun,x0,[],[],[],A_,I,J,K,iters=0,alpha=_np.inf)
-            if kwargs.has_key('max_iter'):
-                max_iter = kwargs['max_iter']
-            else:
-                max_iter = self.params['fmincon']['params'][self.params['fmincon']['method']]['max_iter']
-            if vectorized:
-                x_vec = [x0]
-            else:
-                pass
-            x = x0
-            #print I, J
-            #print '\n'
-            iters = 0
-            lsiters = 0
-            alpha = _np.inf
-            while _np.dot(d,d) > threshold and iters < max_iter:
-                ls = alg(fun,x,d,**ls_kwargs)
-                #print '\n####ITERATION {}\n'.format(iters)
-                #print 'd: ',d
-                #print 'x0: ',x
-                #print 'Ax0:',_np.dot(A_,x)
-                #print 'Sets: ', I, J, K
-                alpha = ls['alpha']
-                #print 'alpha Inicial', alpha
-                alpha = amax(alpha,x,d,A,b,I,J,K)
-                #print 'alpha Final', alpha, I, J
-                lsiters += ls['iterations']
-                #Q = _hessian(fun,x0,**params['hessian'])
-                #alpha = g.T.dot(g)/(g.T.dot(Q).dot(g))
-                x = _xstep(x,d,alpha)            
-                #print 'x1: ',x
-                #print 'Ax1:',_np.dot(A_,x), 'IJK 1', I, J, K
-                if vectorized:
-                    x_vec += [x]
-                else:
-                    pass
-                d, g, _ =self. _con_algorithms[self.params['fmincon']['method']](fun,x,d,g,Q,A_,I,J,K,iters=iters,alpha=alpha)
-                if len(I|K) > 0:
-                    _A = _np.array([A_[i] for i in I|K],_np.float64)
-                    #print 'lambdas',-_np.linalg.inv((_A.dot(_A.T))).dot(_A).dot(g)
-                iters += 1
-                #print 'Sets finais: ', I, J, K
-                #print '\n'
-                if alpha == 0:
+            for _ in range(int(max_iter) + 1):
+                fx, g = value_gradient(x)
+                if not bool(jnp.isfinite(fx) & jnp.all(jnp.isfinite(g))):
+                    status = 3
                     break
-            if vectorized:
-                return {'x':x_vec, 'f':[fun(x) for x in x_vec], 'iterations':iters, 'ls_iterations':lsiters}#, 'parameters' : params.copy()}
+                # Remove inequalities with negative KKT multipliers when stuck.
+                for _ in range(len(active) + 1):
+                    indices = sorted(active)
+                    key = tuple(indices)
+                    if key != previous_set:
+                        Ak = jnp.concatenate((A[jnp.asarray(indices, dtype=jnp.int32)], Aeq), axis=0)
+                        factors = _working_set(Ak) if Ak.shape[0] else None
+                        active_rows = jnp.zeros(A.shape[0], dtype=bool).at[jnp.asarray(indices, dtype=jnp.int32)].set(True)
+                        previous_set = key
+                    if factors is not None:
+                        d, multipliers, projected_norm = _project_gradient(g, *factors)
+                    else:
+                        multipliers, d = jnp.empty((0,), dtype=x.dtype), -g
+                        projected_norm = jnp.linalg.norm(d)
+                    if float(projected_norm) <= tol and indices and float(jnp.min(multipliers[:len(indices)])) < -tol:
+                        active.remove(indices[int(jnp.argmin(multipliers[:len(indices)]))])
+                    else:
+                        break
+                if float(projected_norm) <= tol:
+                    status = 0
+                    break
+                if iters >= max_iter:
+                    break
+                cap = _step_limit(A, b, x, d, active_rows)
+                ls = line_step(x, d, cap, g, fx)
+                lsiters += int(ls["iterations"])
+                if not bool(ls["success"]) or bool(jnp.all(ls["x"] == x)):
+                    status = 2
+                    break
+                x = ls["x"]
+                active.update(i for i, flag in enumerate(_active_mask(A, b, x, constraint_tol).tolist()) if flag)
+                iters += 1
+                if vectorized:
+                    xs.append(x)
+                    fs.append(ls['f'])
+        violation = _violation(x, A, b, Aeq, beq)
+        success = status == 0 and float(violation) <= constraint_tol
+        return {"x": jnp.stack(xs) if vectorized else x,
+                "f": jnp.stack(fs) if vectorized else objective(x),
+                "iterations": iters, "ls_iterations": lsiters, "success": success,
+                "status": status if not (status == 0 and not success) else 4,
+                "constraint_violation": violation, "projected_gradient_norm": projected_norm}
+
+    def fminnlcon(self, fun, x0, g, c=1., beta=10., threshold=1e-6,
+                  vectorized=False, *, max_iter=None, inner_max_iter=1000, inner_options=None):
+        """Quadratic penalty or reciprocal/log barrier for g_i(x)<=0.
+
+        Barrier methods require a strictly feasible starting point. Outer and
+        inner iteration counts are bounded. Nonlinear solves are local and
+        experimental. Success checks feasibility, stationarity, and complementarity.
+        ``inner_options`` overrides the inner ``minimize`` method, line search,
+        derivatives and other options. Defaults retain modified Newton. Inner
+        derivative/direction callbacks receive ``(x, weight)`` / ``(x, g, weight)``.
+        """
+        method = self.params["fminnlcon"]["method"]
+        if method not in ("penalty", "barrier", "log-barrier"):
+            raise ValueError(f"Unknown nonlinear constraint method: {method}")
+        if c <= 0 or beta <= 1 or threshold <= 0:
+            raise ValueError("Require c>0, beta>1, and threshold>0")
+        max_iter = self.params["fminnlcon"]["params"][method]["max_iter"] if max_iter is None else max_iter
+        if max_iter < 0 or int(max_iter) != max_iter or inner_max_iter < 0:
+            raise ValueError("Iteration budgets must be nonnegative integers")
+        constraints = tuple(g)
+        x = as_vector(x0)
+        values = lambda y: jnp.stack([jnp.asarray(fn(y)) for fn in constraints]) if constraints else jnp.empty((0,), dtype=y.dtype)
+        gx = values(x)
+        if gx.ndim != 1:
+            raise ValueError("Each inequality constraint must return a scalar")
+        if not bool(jnp.all(jnp.isfinite(gx))):
+            raise ValueError("Initial constraint values must be finite")
+        if method != "penalty" and not bool(jnp.all(gx < 0)):
+            raise ValueError("Barrier methods require a strictly feasible x0")
+        tol = math.sqrt(threshold)
+        xs, fs, cs, errors = ([x], [fun(x)], [c], []) if vectorized else ([], [], [], [])
+        status, total, lsiters, outer = 1, 0, 0, 0
+        error = jnp.asarray(jnp.inf, dtype=x.dtype)
+
+        def weighted(y, weight):
+            residual = values(y)
+            if method == "penalty":
+                return fun(y) + weight / 2 * jnp.sum(jnp.maximum(residual, 0) ** 2)
+            safe = jnp.minimum(residual, -jnp.finfo(y.dtype).tiny)
+            term = -jnp.log(-safe) if method == "log-barrier" else -1 / safe
+            return jnp.where(jnp.all(residual < 0), fun(y) + jnp.sum(term) / weight, jnp.inf)
+
+        inner_settings = dict(method="modified-newton", tol=tol * 0.1, max_iter=int(inner_max_iter))
+        inner_settings.update(inner_options or {})
+        inner_solve = compile_minimizer(weighted, **inner_settings)
+
+        @jax.jit
+        def kkt_error(y, weight):
+            gx, pullback = jax.vjp(values, y)
+            if method == "penalty":
+                multipliers = weight * jnp.maximum(gx, 0)
+            elif method == "log-barrier":
+                multipliers = -1 / (weight * gx)
             else:
-                return {'x':x, 'f':fun(x), 'iterations':iters, 'ls_iterations':lsiters}#, 'parameters' : params.copy()}
-        else:
-            raise Exception('Could not determine an initial feasible point.')
-            
-    def fminnlcon(self,fun,x0,g,c,beta,threshold=1e-6,vectorized=False,**kwargs):
-        '''
-            Minimum (Non Linearly) Constrained Optimization
-              The weighted function is minimized using the defined algorithm for unconstrained optimization in .unconstrained
-            ..fun as callable object; must be a function of x0 and return a single number
-            ..x0 as a numeric array; point from which to start
-            ..g as an array of callable inequality constraints functions
-            ..c as numeric, initial constraint weight
-            ..beta as numeric (>1) as the factor by which c growths after each iteration
-            ..threshold as a numeric value; threshold at which to stop the iterations
-            ..**kwargs = initial_hessian : as matrix (default = identity)
-            .. see unconstrained.params for further details on the methods that are being used
-        '''
-        if self.params['fminnlcon']['method'] == 'penalty':
-            P = lambda x : _np.sum([_np.max([0.,_(x)]) for _  in g])
-            f = lambda x : fun(x)+c*P(x)
-            chck = lambda x : c*P(x)
-        elif self.params['fminnlcon']['method'] == 'log-barrier':
-            B = lambda x : -_np.sum([_np.log(-_(x)) for _ in g]) # g(x) <= 0
-            f = lambda x : fun(x)+(1./c)*B(x)
-            chck = lambda x : (1./c)*B(x)
-        elif self.params['fminnlcon']['method'] == 'barrier':
-            B = lambda x : -_np.sum([1./_(x) for _ in g]) # g(x) <= 0
-            f = lambda x : fun(x)+(1./c)*B(x)
-            chck = lambda x : (1./c)*B(x)   
-        else:
-            raise Exception('The fminnlcon method ({}) has not been identified.'.format(self.params['fminnlcon']['method']))
-        x = x0
-        if vectorized:
-            x_vec = [x0]
-            c_vec = [c]
-            err_vec =[chck(x)]
-        else:
-            pass
-        iters = 0
-        inner_iters = 0
-        lsiters = 0
-        print chck(x)
-        #print P(x)
-        while chck(x) > threshold:
-            print 'f(x) = ', f(x)#,'P(x) = ', P(x)
-            sol = self.__unconstrained.fminunc(f,x,threshold)
-            print sol
-            x = sol['x']
-            print 'x',x
-            print 'f(x)',f(x)
-            #print 'P(x)',P(x)
-            print 'chck',chck(x)
-            c *= beta
+                multipliers = 1 / (weight * gx ** 2)
+            # KKT needs J.T @ multipliers, not the full constraint Jacobian.
+            stationarity = jax.grad(fun)(y) + pullback(multipliers)[0]
+            violation = jnp.max(jnp.maximum(gx, 0), initial=0)
+            complementarity = jnp.max(jnp.abs(multipliers * gx), initial=0)
+            return jnp.maximum(violation, jnp.maximum(jnp.linalg.norm(stationarity), complementarity))
+
+        for outer in range(1, int(max_iter) + 1):
+            weight = jnp.asarray(c, dtype=x.dtype)
+            sol = inner_solve(x, weight)
+            x = sol["x"]
+            total += int(sol["iterations"])
+            lsiters += int(sol["ls_iterations"])
+            error = kkt_error(x, weight)
             if vectorized:
-                x_vec += [x]
-                c_vec += [c]
-                err_vec += [chck(x)]
-            else:
-                pass
-            iters += 1
-            inner_iters += sol['iterations']
-            lsiters += sol['ls_iterations']
-        if vectorized:
-            print x_vec
-            return {'x':x_vec, 'f':[fun(x) for x in x_vec], 'c': c_vec, 'err' : err_vec, 'iterations':iters,'inner_iterations':inner_iters,'ls_iterations':lsiters}#, 'parameters' : params.copy()}
-        else:
-            return {'x':x, 'f':fun(x),'c':c,'iterations':iters,'inner_iterations':inner_iters,'ls_iterations':lsiters}#, 'parameters' : params.copy()}
-        
-        
-        
-        
-        
+                xs.append(x)
+                fs.append(fun(x))
+                cs.append(c)
+                errors.append(error)
+            if bool(jnp.isfinite(error)) and float(error) <= tol:
+                status = 0
+                break
+            if not bool(jnp.isfinite(error)) or int(sol["status"]) == 3:
+                status = 3
+                break
+            if outer < max_iter:
+                c *= beta
+        return {"x": jnp.stack(xs) if vectorized else x,
+                "f": jnp.asarray(fs) if vectorized else fun(x),
+                "c": jnp.asarray(cs) if vectorized else c,
+                "err": jnp.asarray(errors) if vectorized else error,
+                "iterations": outer, "inner_iterations": total, "ls_iterations": lsiters,
+                "constraint_violation": jnp.max(jnp.maximum(values(x), 0), initial=0),
+                "success": status == 0, "status": status}

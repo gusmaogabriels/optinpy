@@ -1,0 +1,55 @@
+name: Publish package
+
+# Publishing is an explicit release action, never a side effect of a branch push.
+on:
+  workflow_dispatch:
+    inputs:
+      registry:
+        description: Package registry
+        required: true
+        type: choice
+        default: testpypi
+        options: [testpypi, pypi]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Require a version tag matching package metadata
+        run: |
+          python - <<'PY'
+          import os, tomllib
+          with open('pyproject.toml', 'rb') as f:
+              version = tomllib.load(f)['project']['version']
+          assert os.environ['GITHUB_REF'] == f'refs/tags/v{version}', 'Run this workflow on the matching version tag'
+          PY
+  verify:
+    needs: validate-tag
+    uses: ./.github/workflows/ci.yml
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.registry }}
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: distributions
+          path: dist
+      - name: Publish to TestPyPI
+        if: inputs.registry == 'testpypi'
+        uses: pypa/gh-action-pypi-publish@106e0b0b7c337fa67ed433972f777c6357f78598 # v1.13.0
+        with:
+          repository-url: https://test.pypi.org/legacy/
+      - name: Publish to PyPI
+        if: inputs.registry == 'pypi'
+        uses: pypa/gh-action-pypi-publish@106e0b0b7c337fa67ed433972f777c6357f78598 # v1.13.0
