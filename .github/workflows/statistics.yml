@@ -1,0 +1,43 @@
+name: Distribution statistics
+
+on:
+  schedule:
+    - cron: '23 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: distribution-statistics
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          path: source
+          persist-credentials: false
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: distribution-statistics
+          path: statistics
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Snapshot public release counters
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python source/.github/scripts/distribution_stats.py --repository "$GITHUB_REPOSITORY" --output statistics
+      - name: Retain the observation history
+        working-directory: statistics
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md latest.json observations
+          git commit -m 'Record distribution statistics'
+          git push origin HEAD:distribution-statistics
