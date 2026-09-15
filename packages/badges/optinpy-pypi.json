@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "label": "PyPI downloads (30d)",
+  "message": "unavailable",
+  "color": "#777",
+  "namedLogo": "pypi",
+  "logoColor": "white",
+  "style": "flat"
+}
