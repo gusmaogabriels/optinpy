@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="20" role="img" aria-label="PyPI 30d reported: 4 (partial). Reported days: 3 in the source window 2026-08-15 through 2026-09-13. Missing days are unknown. Known mirrors excluded; repeats and automation included.">
+<title>PyPI 30d reported: 4 (partial). Reported days: 3 in the source window 2026-08-15 through 2026-09-13. Missing days are unknown. Known mirrors excluded; repeats and automation included.</title>
+<rect width="220" height="20" rx="3" fill="#9f6000"/>
+<path d="M3 0H131V20H3Q0 20 0 17V3Q0 0 3 0" fill="#555"/>
+<g fill="#fff" text-anchor="middle" font-family="DejaVu Sans Mono,monospace" font-size="11">
+<text x="65.5" y="14">PyPI 30d reported</text>
+<text x="175.5" y="14">4 (partial)</text>
+</g>
+</svg>
