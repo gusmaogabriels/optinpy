@@ -1,0 +1,472 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-09-15T03:59:10.021835+00:00",
+  "packages": [
+    {
+      "id": "optinpy",
+      "pypi_package": "optinpy",
+      "repository": "gusmaogabriels/optinpy",
+      "pypi_downloads": {
+        "status": "no_data",
+        "package": "optinpy",
+        "source": "https://pypistats.org/api/packages/optinpy/overall?mirrors=false",
+        "mirrors": "excluded",
+        "last_attempt_at": "2026-09-15T03:18:29.051729+00:00",
+        "fetched_at": null,
+        "data_through": null,
+        "daily": [],
+        "windows": null,
+        "error": "not_found"
+      }
+    },
+    {
+      "id": "mkin4py",
+      "pypi_package": "mkin4py",
+      "repository": "gusmaogabriels/mkin4py",
+      "pypi_downloads": {
+        "status": "available",
+        "package": "mkin4py",
+        "source": "https://pypistats.org/api/packages/mkin4py/overall?mirrors=false",
+        "mirrors": "excluded",
+        "last_attempt_at": "2026-09-15T03:59:10.021835+00:00",
+        "fetched_at": "2026-09-15T03:59:10.021835+00:00",
+        "data_through": "2026-09-09",
+        "daily": [
+          {
+            "date": "2026-03-18",
+            "downloads": 1
+          },
+          {
+            "date": "2026-03-19",
+            "downloads": 3
+          },
+          {
+            "date": "2026-03-20",
+            "downloads": 1
+          },
+          {
+            "date": "2026-03-21",
+            "downloads": 2
+          },
+          {
+            "date": "2026-03-22",
+            "downloads": 2
+          },
+          {
+            "date": "2026-03-23",
+            "downloads": 2
+          },
+          {
+            "date": "2026-03-24",
+            "downloads": 2
+          },
+          {
+            "date": "2026-03-25",
+            "downloads": 1
+          },
+          {
+            "date": "2026-03-26",
+            "downloads": 2
+          },
+          {
+            "date": "2026-03-27",
+            "downloads": 5
+          },
+          {
+            "date": "2026-03-28",
+            "downloads": 3
+          },
+          {
+            "date": "2026-03-29",
+            "downloads": 2
+          },
+          {
+            "date": "2026-03-30",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-01",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-02",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-08",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-10",
+            "downloads": 2
+          },
+          {
+            "date": "2026-04-11",
+            "downloads": 2
+          },
+          {
+            "date": "2026-04-13",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-20",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-05",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-06",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-10",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-16",
+            "downloads": 2
+          },
+          {
+            "date": "2026-05-18",
+            "downloads": 2
+          },
+          {
+            "date": "2026-06-04",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-05",
+            "downloads": 4
+          },
+          {
+            "date": "2026-06-06",
+            "downloads": 6
+          },
+          {
+            "date": "2026-06-10",
+            "downloads": 3
+          },
+          {
+            "date": "2026-06-13",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-18",
+            "downloads": 2
+          },
+          {
+            "date": "2026-06-21",
+            "downloads": 2
+          },
+          {
+            "date": "2026-06-23",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-29",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-30",
+            "downloads": 3
+          },
+          {
+            "date": "2026-07-14",
+            "downloads": 1
+          },
+          {
+            "date": "2026-07-16",
+            "downloads": 1
+          },
+          {
+            "date": "2026-07-20",
+            "downloads": 1
+          },
+          {
+            "date": "2026-07-24",
+            "downloads": 1
+          },
+          {
+            "date": "2026-07-25",
+            "downloads": 1
+          },
+          {
+            "date": "2026-08-04",
+            "downloads": 1
+          },
+          {
+            "date": "2026-08-06",
+            "downloads": 1
+          },
+          {
+            "date": "2026-08-09",
+            "downloads": 1
+          },
+          {
+            "date": "2026-09-09",
+            "downloads": 1
+          }
+        ],
+        "windows": {
+          "1": {
+            "start_date": "2026-09-09",
+            "end_date": "2026-09-09",
+            "reported_downloads": 1,
+            "reported_days": 1
+          },
+          "7": {
+            "start_date": "2026-09-03",
+            "end_date": "2026-09-09",
+            "reported_downloads": 1,
+            "reported_days": 1
+          },
+          "30": {
+            "start_date": "2026-08-11",
+            "end_date": "2026-09-09",
+            "reported_downloads": 1,
+            "reported_days": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "xl2py",
+      "pypi_package": "xl2py",
+      "repository": "gusmaogabriels/xl2py",
+      "pypi_downloads": {
+        "status": "available",
+        "package": "xl2py",
+        "source": "https://pypistats.org/api/packages/xl2py/overall?mirrors=false",
+        "mirrors": "excluded",
+        "last_attempt_at": "2026-09-15T03:59:10.021835+00:00",
+        "fetched_at": "2026-09-15T03:59:10.021835+00:00",
+        "data_through": "2026-09-13",
+        "daily": [
+          {
+            "date": "2026-03-18",
+            "downloads": 2
+          },
+          {
+            "date": "2026-03-19",
+            "downloads": 6
+          },
+          {
+            "date": "2026-03-20",
+            "downloads": 2
+          },
+          {
+            "date": "2026-03-21",
+            "downloads": 4
+          },
+          {
+            "date": "2026-03-22",
+            "downloads": 4
+          },
+          {
+            "date": "2026-03-23",
+            "downloads": 4
+          },
+          {
+            "date": "2026-03-24",
+            "downloads": 4
+          },
+          {
+            "date": "2026-03-25",
+            "downloads": 2
+          },
+          {
+            "date": "2026-03-26",
+            "downloads": 4
+          },
+          {
+            "date": "2026-03-27",
+            "downloads": 6
+          },
+          {
+            "date": "2026-03-28",
+            "downloads": 6
+          },
+          {
+            "date": "2026-03-29",
+            "downloads": 2
+          },
+          {
+            "date": "2026-03-30",
+            "downloads": 2
+          },
+          {
+            "date": "2026-04-01",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-03",
+            "downloads": 2
+          },
+          {
+            "date": "2026-04-10",
+            "downloads": 2
+          },
+          {
+            "date": "2026-04-11",
+            "downloads": 2
+          },
+          {
+            "date": "2026-04-13",
+            "downloads": 4
+          },
+          {
+            "date": "2026-04-15",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-16",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-20",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-25",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-30",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-01",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-05",
+            "downloads": 2
+          },
+          {
+            "date": "2026-05-18",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-22",
+            "downloads": 2
+          },
+          {
+            "date": "2026-05-28",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-29",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-05",
+            "downloads": 9
+          },
+          {
+            "date": "2026-06-06",
+            "downloads": 9
+          },
+          {
+            "date": "2026-06-20",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-23",
+            "downloads": 2
+          },
+          {
+            "date": "2026-06-26",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-29",
+            "downloads": 2
+          },
+          {
+            "date": "2026-06-30",
+            "downloads": 3
+          },
+          {
+            "date": "2026-07-12",
+            "downloads": 1
+          },
+          {
+            "date": "2026-07-19",
+            "downloads": 1
+          },
+          {
+            "date": "2026-07-22",
+            "downloads": 2
+          },
+          {
+            "date": "2026-07-23",
+            "downloads": 2
+          },
+          {
+            "date": "2026-07-30",
+            "downloads": 2
+          },
+          {
+            "date": "2026-08-04",
+            "downloads": 3
+          },
+          {
+            "date": "2026-08-05",
+            "downloads": 5
+          },
+          {
+            "date": "2026-08-06",
+            "downloads": 3
+          },
+          {
+            "date": "2026-08-07",
+            "downloads": 1
+          },
+          {
+            "date": "2026-08-09",
+            "downloads": 3
+          },
+          {
+            "date": "2026-09-11",
+            "downloads": 1
+          },
+          {
+            "date": "2026-09-12",
+            "downloads": 1
+          },
+          {
+            "date": "2026-09-13",
+            "downloads": 2
+          }
+        ],
+        "windows": {
+          "1": {
+            "start_date": "2026-09-13",
+            "end_date": "2026-09-13",
+            "reported_downloads": 2,
+            "reported_days": 1
+          },
+          "7": {
+            "start_date": "2026-09-07",
+            "end_date": "2026-09-13",
+            "reported_downloads": 4,
+            "reported_days": 3
+          },
+          "30": {
+            "start_date": "2026-08-15",
+            "end_date": "2026-09-13",
+            "reported_downloads": 4,
+            "reported_days": 3
+          }
+        }
+      }
+    }
+  ],
+  "local_cli_usage": {
+    "status": "not_observed"
+  },
+  "scope": "Daily PyPI downloads excluding known mirrors; includes automation and repeat downloads. Not users, installs or local runs.",
+  "github_metrics_status": "available"
+}
