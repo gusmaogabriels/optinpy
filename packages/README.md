@@ -8,4 +8,6 @@ PyPI Stats updates once daily and retains 180 days. Known mirrors are excluded; 
 
 Check each package's `status`, `data_through`, `fetched_at` and `last_attempt_at`. Missing dates are unknown; explicit dated zeros are zero. A 404 is `no_data`, not zero downloads. Errors retain earlier data as `stale` when possible. Compute windows from dated rows; never add overlapping windows or snapshots. Use the newest observation per package/date and preserve gaps and revisions.
 
+`pypi_recent` separately retains the source's explicit last-day/week/month totals. The badges prefer these totals when available, so sparse daily rows are not treated as an incomplete monthly total. The endpoint does not supply exact period dates: none are inferred. Each endpoint is cached once per UTC day. A failed request retains the prior aggregate as stale; a 404 is not zero.
+
 Sources: https://pypistats.org/api/ and https://pypistats.org/faqs .
