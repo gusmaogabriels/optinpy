@@ -16,6 +16,11 @@ _github_spec = importlib.util.spec_from_file_location(
 github_packages = importlib.util.module_from_spec(_github_spec)
 _github_spec.loader.exec_module(github_packages)
 
+_badge_spec = importlib.util.spec_from_file_location(
+    "package_badges", Path(__file__).with_name("package_badges.py"))
+package_badges = importlib.util.module_from_spec(_badge_spec)
+_badge_spec.loader.exec_module(package_badges)
+
 MAX_BYTES = 1024 * 1024
 REPOSITORY = "gusmaogabriels/optinpy"
 
@@ -213,6 +218,7 @@ def run(registry, destination, *, now=None, fetch_pypi=distribution.pypi_json, f
         legacy_snapshot["pypi_downloads"] = next(row["pypi_downloads"] for row in aggregate["packages"] if row["id"] == "optinpy")
         distribution.save(legacy_snapshot, destination, previous=legacy_metrics)
     save_packages(aggregate, destination / "packages")
+    package_badges.save(aggregate, destination / "packages/badges")
     return aggregate
 
 

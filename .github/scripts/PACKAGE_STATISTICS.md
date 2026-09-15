@@ -7,6 +7,7 @@ GitHub Actions statistics job, writing public data to `distribution-statistics`:
 - `packages/latest.json`: the multi-package aggregate consumed by the website.
 - `packages/observations/`: append-only snapshots, retaining data beyond the source's
   180-day window and making later revisions inspectable.
+- `packages/badges/`: SVG download snapshots linked from each package README.
 - Root `latest.json` / `observations/`: the existing Optinpy release-download/star
   feed, with Optinpy's PyPI result reused from the central observation.
 
@@ -42,6 +43,14 @@ package/date. Package ownership must be verified before adding registry entries:
 the PyPI name `kinn`, for example, belongs to an unrelated project and is excluded.
 
 ## Checks
+
+The badge renderer uses only the collected snapshot and makes no requests. GitHub
+badges sum uploaded wheels and source packages, excluding checksums. PyPI badges
+recompute the reported 30-day source window from dated rows and label partial
+coverage explicitly. Unknown data stays `no data` or `unavailable`, never zero;
+retained failures and source dates over two days old are labelled stale. SVG
+accessible descriptions contain observation dates or source windows. All badges
+link to the dashboard for dates and coverage, and are refreshed by the same job.
 
 ```sh
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_package_stats.py tests/test_distribution_stats.py
