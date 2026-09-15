@@ -1,6 +1,6 @@
 """Optinpy: native optimization algorithms with JAX numerical kernels."""
 __author__ = {"Gabriel S. Gusmao": "gusmaogabriels@gmail.com"}
-__version__ = "2.0.0a1"
+__version__ = "2.0.0a2"
 
 # NumPy is retained for the legacy graph/simplex interfaces. Numerical
 # optimization, differentiation, and line searches import JAX directly.
