@@ -62,6 +62,16 @@ def test_cli_usage_report_does_not_count_itself(tmp_path, monkeypatch, capsys):
         assert data['runs'] == 1 and data['counts'][0]['command'] == 'methods'
 
 
+def test_database_handles_are_released_for_removal(tmp_path, monkeypatch):
+    path = tmp_path/'counts.sqlite3'
+    monkeypatch.setenv('OPTINPY_USAGE_DB', str(path))
+    _usage._record('optinpy', 'test', 'solve', 0, .1)
+    assert _usage.report('optinpy')['runs'] == 1
+    # Windows refuses removal while a SQLite file handle remains open.
+    path.unlink()
+    assert not path.exists()
+
+
 def test_concurrent_cli_processes_and_readonly_reporting(tmp_path, monkeypatch):
     path = tmp_path/'counts.sqlite3'
     monkeypatch.setenv('OPTINPY_USAGE_DB', str(path))

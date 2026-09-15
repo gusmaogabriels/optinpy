@@ -156,7 +156,7 @@ optinpy usage --json
 PowerShell: `$env:OPTINPY_USAGE_DB = "$HOME/optinpy-usage.sqlite3"`.
 The JSON report contains daily invocation counts by version, command and exit
 code, plus command duration excluding interpreter startup and imports. It stores
-no objective names, arguments, file paths, model contents or identifiers. Nothing
+no objective names, arguments, file paths, model contents or user/device identifiers. Nothing
 is transmitted. `usage` does not count itself; concurrent processes update counts
 transactionally. Unset the environment variable to stop recording, or remove the
 selected database to clear it. Storage failures preserve solver output and exit

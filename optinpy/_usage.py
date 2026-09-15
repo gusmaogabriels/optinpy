@@ -1,4 +1,5 @@
 """Opt-in local CLI counts. No network, arguments, paths or model data stored."""
+from contextlib import closing
 from datetime import datetime, timezone
 import json
 import math
@@ -34,13 +35,18 @@ def _record(package, version, command, exit_code, seconds):
         os.close(fd)
     if not path.is_file() or path.is_symlink():
         raise OSError('usage database must be a regular file')
-    with sqlite3.connect(path, timeout=1.) as connection:
-        connection.execute(_SCHEMA)
-        connection.execute("""INSERT INTO cli_usage VALUES (?, ?, ?, ?, ?, 1, ?)
-            ON CONFLICT(package, version, day, command, exit_code) DO UPDATE SET
-            runs = runs + 1, command_seconds = command_seconds + excluded.command_seconds""",
-            (package, version, datetime.now(timezone.utc).date().isoformat(), command,
-             exit_code, seconds if math.isfinite(seconds) else 0.))
+    # Serialize writers before reading/changing the schema. The sqlite context
+    # manager commits transactions but does not close the connection itself.
+    with closing(sqlite3.connect(path, timeout=5.)) as connection:
+        with connection:
+            connection.execute('BEGIN IMMEDIATE')
+            connection.execute(_SCHEMA)
+            connection.execute("""INSERT INTO cli_usage VALUES (?, ?, ?, ?, ?, 1, ?)
+                ON CONFLICT(package, version, day, command, exit_code) DO UPDATE SET
+                runs = runs + 1, command_seconds = command_seconds + excluded.command_seconds""",
+                (package, version, datetime.now(timezone.utc).date().isoformat(), command,
+                 exit_code, seconds if math.isfinite(seconds) else 0.))
+
 
 
 def report(package):
@@ -53,7 +59,7 @@ def report(package):
         return result
     if not path.is_file() or path.is_symlink():
         raise OSError('usage database must be a regular file')
-    with sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True, timeout=1.) as connection:
+    with closing(sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True, timeout=5.)) as connection:
         if connection.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='cli_usage'").fetchone() is None:
             return result
         rows = connection.execute("""SELECT version, day, command, exit_code, runs, command_seconds
