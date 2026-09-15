@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "packages": [
+    {"id": "optinpy", "pypi_package": "optinpy", "repository": "gusmaogabriels/optinpy"},
+    {"id": "mkin4py", "pypi_package": "mkin4py", "repository": "gusmaogabriels/mkin4py"},
+    {"id": "xl2py", "pypi_package": "xl2py", "repository": "gusmaogabriels/xl2py"}
+  ]
+}
