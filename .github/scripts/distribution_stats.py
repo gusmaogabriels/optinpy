@@ -62,7 +62,7 @@ def pypi_downloads(package, previous=None, *, now=None, fetch=pypi_json):
     except (ValueError, KeyError, TypeError):
         reason = "invalid_response"
     # Keep prior observations visibly stale; an outage or a new package is not zero downloads.
-    if previous and previous.get("fetched_at"):
+    if previous and previous.get("fetched_at") and previous.get("daily") and previous.get("data_through"):
         result = {**previous, "status": "stale", "last_attempt_at": now.isoformat()}
     else:
         result["status"] = "no_data" if reason == "not_found" else "unavailable"
@@ -137,11 +137,15 @@ def compare(snapshot, previous):
             "removed_asset_ids": sorted(set(prior) - current_ids)}
 
 
-def save(snapshot, destination):
+_READ_PREVIOUS = object()
+
+
+def save(snapshot, destination, *, previous=_READ_PREVIOUS):
     destination = Path(destination)
     history = destination / "observations"
     latest = destination / "latest.json"
-    previous = json.loads(latest.read_text()) if latest.exists() else None
+    if previous is _READ_PREVIOUS:
+        previous = json.loads(latest.read_text()) if latest.exists() else None
     if previous and previous["repository"] != snapshot["repository"]:
         raise ValueError("refusing to mix repositories in one history")
     snapshot["changes"] = compare(snapshot, previous)
