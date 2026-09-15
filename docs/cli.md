@@ -1,19 +1,19 @@
 # Local command-line interface
 
 Install Optinpy on your own computer with Python 3.11 or newer. The JAX version
-is available as the `2.0.0a1` alpha prerelease. Install its published wheel:
+is available as the `2.0.0a2` alpha prerelease on [PyPI](https://pypi.org/project/optinpy/2.0.0a2/):
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install "https://github.com/gusmaogabriels/optinpy/releases/download/v2.0.0a1/optinpy-2.0.0a1-py3-none-any.whl"
+python -m pip install "optinpy==2.0.0a2"
 optinpy --help
 ```
 
 On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1`. From an
 existing checkout, `python -m pip install -e .` also installs the `optinpy`
 command. `python -m optinpy` exposes the same interface. Source archives and checksums
-are attached to the [release](https://github.com/gusmaogabriels/optinpy/releases/tag/v2.0.0a1).
+are attached to the [release](https://github.com/gusmaogabriels/optinpy/releases/tag/v2.0.0a2).
 
 The CLI executes locally using Optinpy's own Python API. It has no server,
 account, hosted solver or network API. Objectives, problem files and results

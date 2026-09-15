@@ -21,7 +21,7 @@ def invoke(capsys, *args):
 def test_module_entrypoint():
     process = subprocess.run([sys.executable, "-m", "optinpy", "--version"],
                              capture_output=True, text=True, check=True)
-    assert process.stdout.strip() == "optinpy 2.0.0a1"
+    assert process.stdout.strip() == "optinpy 2.0.0a2"
     process = subprocess.run([sys.executable, "-m", "optinpy", "methods", "--json"],
                              capture_output=True, text=True, check=True)
     catalog = json.loads(process.stdout)

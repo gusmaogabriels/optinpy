@@ -23,9 +23,11 @@ Requires Python 3.11+. Install the alpha release on your own computer:
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
-python -m pip install "https://github.com/gusmaogabriels/optinpy/releases/download/v2.0.0a1/optinpy-2.0.0a1-py3-none-any.whl"
+python -m pip install "optinpy==2.0.0a2"
 optinpy --help
 ```
+
+The alpha release is available on [PyPI](https://pypi.org/project/optinpy/2.0.0a2/).
 
 For development, run these commands from the cloned repository directory.
 
