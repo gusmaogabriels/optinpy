@@ -131,6 +131,7 @@ def _parser():
         prog="optinpy", description="Composable optimization algorithms implemented in JAX.")
     parser.add_argument("--version", action="version", version=f"optinpy {__version__}")
     commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser('usage', help='show opt-in local CLI counts').add_argument('--json', action='store_true')
     catalog = commands.add_parser("methods", help="list available algorithms")
     catalog.add_argument("--json", action="store_true", help="emit a machine-readable catalog")
 
@@ -225,7 +226,7 @@ def _run(args):
             "dtype": args.dtype, "elapsed_seconds": elapsed, "result": _plain(result)}
 
 
-def main(argv=None):
+def _main(argv=None):
     """Return 0 on success, 1 on an unsuccessful result, or 2 for invalid input."""
     parser = _parser()
     args = parser.parse_args(argv)
@@ -261,3 +262,9 @@ def main(argv=None):
             print(f"{key}: {value}")
         print(f"elapsed_seconds (includes JIT and synchronization): {payload['elapsed_seconds']:.6f}")
     return 0 if payload["result"]["success"] else 1
+
+
+def main(argv=None):
+    from ._usage import run
+    return run(_main, argv, package='optinpy', version=__version__,
+               commands={'methods', 'minimize', 'line-search', 'differentiate', 'simplex'})

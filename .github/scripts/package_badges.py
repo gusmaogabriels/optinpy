@@ -43,7 +43,17 @@ def observations(snapshot):
         result[f"{identity}-github"] = dict(label="GitHub downloads", message=message, detail=detail, color=color)
 
         pypi = entry["pypi_downloads"]
-        if pypi["status"] in ("available", "stale") and pypi["daily"]:
+        recent = entry.get('pypi_recent') or {}
+        label = 'PyPI downloads (30d)'
+        if recent.get('status') in ('available', 'stale') and recent.get('counts') is not None:
+            label = 'PyPI downloads/month'
+            fetched = datetime.fromisoformat(recent['fetched_at']).date()
+            stale = recent['status'] == 'stale' or (today-fetched).days > 2
+            message = f"{recent['counts']['last_month']:,}" + (' (stale)' if stale else '')
+            detail = (f"Source-reported last-month total fetched {recent['fetched_at']}. "
+                      'Exact period dates are not provided. Known mirrors excluded; repeats and automation included.')
+            color = '#9f6000' if stale else '#007ec6'
+        elif pypi["status"] in ("available", "stale") and pypi["daily"]:
             end = date.fromisoformat(pypi["data_through"])
             start = end - timedelta(days=29)
             rows = [row for row in pypi["daily"] if start <= date.fromisoformat(row["date"]) <= end]
@@ -60,7 +70,7 @@ def observations(snapshot):
         else:
             message = "no data" if pypi["status"] == "no_data" else "unavailable"
             detail, color = "No usable PyPI download observation; this is not a zero count.", "#777"
-        result[f"{identity}-pypi"] = dict(label="PyPI downloads (30d)", message=message, detail=detail, color=color)
+        result[f"{identity}-pypi"] = dict(label=label, message=message, detail=detail, color=color)
     return result
 
 
