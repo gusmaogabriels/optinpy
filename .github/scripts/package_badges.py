@@ -1,6 +1,7 @@
 """Render README download snapshots from the existing collector; no network calls."""
 from datetime import date, datetime, timedelta
 from html import escape
+import json
 from pathlib import Path
 
 
@@ -21,7 +22,7 @@ def svg(label, message, detail, *, color="#007ec6"):
     )
 
 
-def render(snapshot):
+def observations(snapshot):
     """Keep missing counts unknown, package assets separate, and partial PyPI explicit."""
     today = datetime.fromisoformat(snapshot["observed_at"]).date()
     result = {}
@@ -39,7 +40,7 @@ def render(snapshot):
         else:
             message, color = "unavailable", "#777"
             detail = "No successful GitHub download observation; this is not a zero count."
-        result[f"{identity}-github.svg"] = svg("GitHub download snapshot", message, detail, color=color)
+        result[f"{identity}-github"] = dict(label="GitHub downloads", message=message, detail=detail, color=color)
 
         pypi = entry["pypi_downloads"]
         if pypi["status"] in ("available", "stale") and pypi["daily"]:
@@ -59,12 +60,31 @@ def render(snapshot):
         else:
             message = "no data" if pypi["status"] == "no_data" else "unavailable"
             detail, color = "No usable PyPI download observation; this is not a zero count.", "#777"
-        result[f"{identity}-pypi.svg"] = svg("PyPI 30d reported", message, detail, color=color)
+        result[f"{identity}-pypi"] = dict(label="PyPI downloads (30d)", message=message, detail=detail, color=color)
+    return result
+
+
+def render(snapshot):
+    """Preserve existing SVG URLs for links from older README versions."""
+    return {name + ".svg": svg(**value) for name, value in observations(snapshot).items()}
+
+
+def endpoints(snapshot):
+    """Use the standard Shields renderer with only already-public download data."""
+    result = {}
+    for name, value in observations(snapshot).items():
+        badge = {"schemaVersion": 1, "label": value["label"], "message": value["message"],
+                 "color": value["color"], "namedLogo": "github" if name.endswith("-github") else "pypi",
+                 "logoColor": "white", "style": "flat"}
+        if badge["message"] == "no data":
+            badge["message"] = "unavailable"
+        result[name + ".json"] = json.dumps(badge, indent=2) + "\n"
     return result
 
 
 def save(snapshot, destination):
     output = render(snapshot)
+    output.update(endpoints(snapshot))
     destination = Path(destination)
     destination.mkdir(parents=True, exist_ok=True)
     for name, body in output.items():

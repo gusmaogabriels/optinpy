@@ -2,6 +2,7 @@
 from copy import deepcopy
 from datetime import date, timedelta
 import importlib.util
+import json
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
@@ -37,13 +38,13 @@ def fields(svg):
 
 def test_github_counts_only_package_assets_and_preserves_observation_date(snapshot):
     text, detail = fields(badges.render(snapshot)["example-github.svg"])
-    assert text == ["GitHub download snapshot", "5"]
+    assert text == ["GitHub downloads", "5"]
     assert "2026-09-15T09:00:00+00:00" in detail
 
 
 def test_pypi_recomputes_window_and_labels_missing_days(snapshot):
     text, detail = fields(badges.render(snapshot)["example-pypi.svg"])
-    assert text == ["PyPI 30d reported", "4 (partial)"]
+    assert text == ["PyPI downloads (30d)", "4 (partial)"]
     assert "Reported days: 1" in detail
     assert "2026-08-16 through 2026-09-14" in detail
 
@@ -97,8 +98,25 @@ def test_save_keeps_each_package_separate_and_updates_existing_files(snapshot, t
     snapshot["packages"].append(second)
     badges.save(snapshot, tmp_path)
     assert len(list(tmp_path.glob("*.svg"))) == 4
+    assert len(list(tmp_path.glob("*.json"))) == 4
     assert fields((tmp_path / "another-github.svg").read_text())[0][-1] == "0"
     snapshot["packages"][0]["github_release_downloads"]["assets"][0]["download_count"] = 7
     badges.save(snapshot, tmp_path)
     assert fields((tmp_path / "example-github.svg").read_text())[0][-1] == "10"
     assert not list(tmp_path.glob("*.tmp"))
+
+
+def test_shields_endpoints_match_counts_without_analytics_links(snapshot):
+    payloads = {name: json.loads(body) for name, body in badges.endpoints(snapshot).items()}
+    github = payloads["example-github.json"]
+    pypi = payloads["example-pypi.json"]
+    assert github["message"] == "5" and github["namedLogo"] == "github"
+    assert pypi["message"] == "4 (partial)" and pypi["namedLogo"] == "pypi"
+    for payload in payloads.values():
+        assert payload["schemaVersion"] == 1 and payload["style"] == "flat"
+        assert "analytics" not in json.dumps(payload) and "link" not in payload
+
+
+def test_shields_unknown_is_unavailable_not_zero(snapshot):
+    snapshot["packages"][0]["pypi_downloads"] = {"status": "no_data", "daily": []}
+    assert json.loads(badges.endpoints(snapshot)["example-pypi.json"])["message"] == "unavailable"
