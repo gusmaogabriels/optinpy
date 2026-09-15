@@ -1,5 +1,10 @@
 # optinpy
 
+[![GitHub download snapshot](https://raw.githubusercontent.com/gusmaogabriels/optinpy/distribution-statistics/packages/badges/optinpy-github.svg)](https://www.gabrielgusmao.com/tools/analytics_dashboard.html#packageDownloads)
+[![Reported PyPI downloads](https://raw.githubusercontent.com/gusmaogabriels/optinpy/distribution-statistics/packages/badges/optinpy-pypi.svg)](https://www.gabrielgusmao.com/tools/analytics_dashboard.html#packageDownloads)
+
+[Download counts, dates, and coverage](https://www.gabrielgusmao.com/tools/analytics_dashboard.html#packageDownloads).
+
 ## Contents
 
 - [Install and run](#install-and-run)
