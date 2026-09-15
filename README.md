@@ -1,9 +1,7 @@
 # optinpy
 
-[![GitHub download snapshot](https://raw.githubusercontent.com/gusmaogabriels/optinpy/distribution-statistics/packages/badges/optinpy-github.svg)](https://www.gabrielgusmao.com/tools/analytics_dashboard.html#packageDownloads)
-[![Reported PyPI downloads](https://raw.githubusercontent.com/gusmaogabriels/optinpy/distribution-statistics/packages/badges/optinpy-pypi.svg)](https://www.gabrielgusmao.com/tools/analytics_dashboard.html#packageDownloads)
-
-[Download counts, dates, and coverage](https://www.gabrielgusmao.com/tools/analytics_dashboard.html#packageDownloads).
+[![GitHub downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgusmaogabriels%2Foptinpy%2Fdistribution-statistics%2Fpackages%2Fbadges%2Foptinpy-github.json)](https://github.com/gusmaogabriels/optinpy/releases)
+[![PyPI downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgusmaogabriels%2Foptinpy%2Fdistribution-statistics%2Fpackages%2Fbadges%2Foptinpy-pypi.json)](https://pypistats.org/packages/optinpy)
 
 ## Contents
 
