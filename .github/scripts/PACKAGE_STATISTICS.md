@@ -55,3 +55,90 @@ this workflow-only change.
 
 Sources: [PyPI Stats API](https://pypistats.org/api/),
 [mirror and CI limitations](https://pypistats.org/faqs).
+
+## GitHub release downloads
+
+```json
+{
+  "status": "available",
+  "repository": "gusmaogabriels/optinpy",
+  "source": "https://api.github.com/repos/gusmaogabriels/optinpy/releases",
+  "observed_at": "2026-09-16T07:23:00+00:00",
+  "last_attempt_at": "2026-09-16T07:23:00+00:00",
+  "assets": [
+    {
+      "asset_id": 123,
+      "release_id": 456,
+      "tag": "v2.0.0a1",
+      "prerelease": true,
+      "name": "example.whl",
+      "download_count": 7,
+      "kind": "package"
+    }
+  ],
+  "changes": {
+    "previous_observed_at": null,
+    "current_observed_at": "2026-09-16T07:23:00+00:00",
+    "assets": [
+      {
+        "asset_id": 123,
+        "name": "example.whl",
+        "kind": "package",
+        "status": "baseline",
+        "download_increase": null
+      }
+    ],
+    "removed_asset_ids": []
+  }
+}
+```
+
+The example above is illustrative, not a real download observation. Counts are
+cumulative counters for **currently uploaded assets on public, non-draft releases**.
+Pre-releases are included and labelled. Only `.whl` and `.tar.gz` assets have
+`kind: "package"`; checksum and other assets have `kind: "other"`. GitHub's
+automatically generated source archives are not uploaded release assets and are
+not included. These counters cannot establish users, successful installations,
+agent adoption or local executions. Repeat, CI and test downloads may be included.
+
+Changes compare **stable asset IDs** between successful observations, independently
+of each package's PyPI source dates. A new asset is a `baseline` with a null
+increase; its entire cumulative counter is not reported as new usage. For an
+existing asset, `observed` gives a nonnegative increase over the stated observation
+interval. A decreased counter is `counter_decreased` with a null increase.
+Replacements get new IDs; the previous IDs appear in `removed_asset_ids`. Do not
+sum cumulative snapshots, baseline counters, removed assets, or GitHub counts with
+PyPI windows. A current asset subtotal excludes deleted assets and can decrease.
+
+`available` with `assets: []` means the repository was successfully observed and
+had no qualifying uploaded assets. On a repository collection failure, valid
+prior data becomes `stale`: `observed_at`, assets and their original change interval
+remain unchanged while `last_attempt_at` advances. Without valid prior data,
+`unavailable` uses null `observed_at`, `assets` and `changes`. Both failure states
+include only the bounded category `error: "collection_failed"`, never remote
+diagnostics. Missing data is not an observed zero. Consumers should also mark an
+old successful observation stale if the workflow stops updating.
+
+Every repository is isolated: a timeout or malformed response for one does not
+erase another repository's data or PyPI observations. The collector calls the
+existing GitHub distribution reader once per repository (repository information
+and paginated release assets). The Optinpy result is reused in its legacy root
+`latest.json` feed, including existing stars and asset history, with no second
+Optinpy request. The outer compatibility field `github_metrics_status` still
+describes that legacy Optinpy feed only. Per-package status is authoritative for
+the new view; no per-package star series is added.
+
+## Bounds and retained data
+
+Each repository is limited to 100 current assets, 100 current change records and
+100 removed IDs. IDs must be positive safe integers; counters, increases and the
+sum of current counters must be nonnegative safe integers (`<= 2**53 - 1`). Asset
+names and tags must be nonempty printable text of at most 255 characters and 512
+UTF-8 bytes. Kinds are checked against the filename. Unknown fields are dropped
+from published objects. Malformed retained data is not reused as a baseline.
+
+The public aggregate is capped at 1 MiB before either latest file is replaced.
+Inputs or totals exceeding bounds fail visibly rather than being truncated into
+misleading counts. Consumers should validate this schema and impose the same
+response-size limit. Larger future registries require a reviewed format or limit
+change before their aggregate exceeds this cap.

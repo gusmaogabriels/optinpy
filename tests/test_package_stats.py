@@ -190,3 +190,177 @@ def test_output_for_another_repository_is_not_overwritten(tmp_path):
     with pytest.raises(ValueError, match="another repository"):
         stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=lambda _: pytest.fail("network request"), fetch_github=github)
     assert (tmp_path / "latest.json").read_text() == previous
+
+
+def asset(identity=1, count=10, name="example.whl", **overrides):
+    return {"id": identity, "state": "uploaded", "name": name, "download_count": count, **overrides}
+
+
+def repository_fetch(count=10, *, overrides=None, failures=(), calls=None):
+    """All responses are fixtures: no public API or GitHub token is used in tests."""
+    def request(path, **kwargs):
+        if calls is not None:
+            calls.append(path)
+        repository = "/".join(path.split("/")[1:3])
+        if repository in failures:
+            raise subprocess.TimeoutExpired("gh", 60)
+        if "releases" not in path:
+            return {"stargazers_count": 7}
+        uploaded = (overrides or {}).get(repository, [asset(count=count)])
+        return [{"id": 100, "tag_name": "v2.0.0a1", "prerelease": True,
+                 "draft": False, "assets": uploaded}]
+    return request
+
+
+def github_rows(report):
+    return {row["id"]: row["github_release_downloads"] for row in report["packages"]}
+
+
+def test_github_each_repo_collected_once_and_optinpy_result_reused_in_legacy(tmp_path):
+    calls, pypi_calls = [], []
+    def pypi(url):
+        pypi_calls.append(url)
+        return fetch(url)
+    report = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=pypi,
+                       fetch_github=repository_fetch(calls=calls))
+    for entry in REGISTRY["packages"]:
+        assert calls.count(f"repos/{entry['repository']}") == 1
+        assert calls.count(f"repos/{entry['repository']}/releases?per_page=100") == 1
+    assert len(calls) == 6 and len(pypi_calls) == 3
+    legacy = json.loads((tmp_path / "latest.json").read_text())
+    assert legacy["assets"] == github_rows(report)["optinpy"]["assets"]
+    assert legacy["stars"] == 7
+    stats.run(REGISTRY, tmp_path, now=NOW.replace(hour=23), fetch_pypi=pypi,
+              fetch_github=repository_fetch(calls=calls))
+    assert len(pypi_calls) == 3
+
+
+def test_github_first_asset_observation_is_baseline_not_a_download_increase(tmp_path):
+    report = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=fetch, fetch_github=repository_fetch(count=90))
+    for repository in github_rows(report).values():
+        assert repository["status"] == "available"
+        assert repository["assets"][0]["download_count"] == 90
+        assert repository["changes"]["previous_observed_at"] is None
+        assert repository["changes"]["assets"][0]["status"] == "baseline"
+        assert repository["changes"]["assets"][0]["download_increase"] is None
+        assert repository["observed_at"] == repository["last_attempt_at"] == NOW.isoformat()
+
+
+def test_github_cutover_compares_optinpy_against_existing_legacy_observation(tmp_path):
+    old = stats.distribution.collect(stats.REPOSITORY, fetch=repository_fetch(count=10),
+                                     observed_at=NOW.replace(day=15).isoformat())
+    stats.distribution.save(old, tmp_path)
+    report = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=fetch, fetch_github=repository_fetch(count=13))
+    rows = github_rows(report)
+    assert rows["optinpy"]["changes"]["assets"][0]["download_increase"] == 3
+    assert rows["mkin4py"]["changes"]["assets"][0]["status"] == "baseline"
+    assert rows["xl2py"]["changes"]["previous_observed_at"] is None
+
+
+def test_github_repo_failure_isolated_and_recovery_compares_last_success(tmp_path):
+    first = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=fetch, fetch_github=repository_fetch(count=10))
+    before = github_rows(first)["mkin4py"]
+    second = stats.run(REGISTRY, tmp_path, now=NOW.replace(day=17), fetch_pypi=fetch,
+                       fetch_github=repository_fetch(count=15, failures=("gusmaogabriels/mkin4py",)))
+    rows = github_rows(second)
+    assert rows["optinpy"]["status"] == rows["xl2py"]["status"] == "available"
+    assert rows["mkin4py"] == {**before, "status": "stale", "last_attempt_at": NOW.replace(day=17).isoformat(), "error": "collection_failed"}
+    assert all(row["pypi_downloads"]["status"] == "available" for row in second["packages"])
+    recovered = stats.run(REGISTRY, tmp_path, now=NOW.replace(day=18), fetch_pypi=fetch, fetch_github=repository_fetch(count=25))
+    changes = github_rows(recovered)["mkin4py"]["changes"]
+    assert changes["previous_observed_at"] == NOW.isoformat()
+    assert changes["assets"][0]["download_increase"] == 15
+
+
+def test_github_first_failure_is_unavailable_with_unknown_assets(tmp_path):
+    report = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=fetch,
+                       fetch_github=repository_fetch(failures=("gusmaogabriels/xl2py",)))
+    value = github_rows(report)["xl2py"]
+    assert value == {"status": "unavailable", "repository": "gusmaogabriels/xl2py",
+                     "source": "https://api.github.com/repos/gusmaogabriels/xl2py/releases",
+                     "observed_at": None, "last_attempt_at": NOW.isoformat(),
+                     "assets": None, "changes": None, "error": "collection_failed"}
+
+
+def test_github_decreases_replacements_removals_and_checksums_stay_separate(tmp_path):
+    repository = "gusmaogabriels/mkin4py"
+    first = [asset(1, 10, "a.whl"), asset(2, 20, "b.tar.gz"), asset(3, 7, "SHA256SUMS.txt")]
+    stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=fetch, fetch_github=repository_fetch(overrides={repository: first}))
+    second = [asset(1, 8, "a.whl"), asset(4, 3, "b.tar.gz"), asset(3, 11, "SHA256SUMS.txt")]
+    report = stats.run(REGISTRY, tmp_path, now=NOW.replace(day=17), fetch_pypi=fetch,
+                       fetch_github=repository_fetch(overrides={repository: second}))
+    value = github_rows(report)["mkin4py"]
+    changes = {row["asset_id"]: row for row in value["changes"]["assets"]}
+    assert changes[1]["status"] == "counter_decreased" and changes[1]["download_increase"] is None
+    assert changes[4]["status"] == "baseline" and changes[4]["download_increase"] is None
+    assert changes[3]["kind"] == "other" and changes[3]["download_increase"] == 4
+    assert value["changes"]["removed_asset_ids"] == [2]
+    assert sum(row["download_count"] for row in value["assets"] if row["kind"] == "package") == 11
+
+
+def test_github_no_release_or_no_uploaded_assets_is_successful_empty_observation(tmp_path):
+    def empty(path, **kwargs):
+        if "releases" not in path:
+            return {"stargazers_count": 0}
+        if "mkin4py" in path:
+            return [{"id": 2, "draft": True, "assets": [asset()]},
+                    {"id": 3, "draft": False, "assets": [asset(state="starter")]}]
+        return []
+    report = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=fetch, fetch_github=empty)
+    for value in github_rows(report).values():
+        assert value["status"] == "available" and value["assets"] == []
+        assert value["changes"]["assets"] == [] and value["changes"]["removed_asset_ids"] == []
+
+
+@pytest.mark.parametrize("field,value", [
+    ("id", False), ("id", 0), ("id", 2**53), ("download_count", True),
+    ("download_count", -1), ("download_count", 2**53), ("name", None),
+    ("name", "unsafe\n.whl"), ("name", "x" * 256), ("name", "☃" * 171),
+])
+def test_invalid_github_asset_values_are_isolated_per_repository(tmp_path, field, value):
+    bad = asset(**{field: value})
+    report = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=fetch,
+                       fetch_github=repository_fetch(overrides={"gusmaogabriels/mkin4py": [bad]}))
+    rows = github_rows(report)
+    assert rows["mkin4py"]["status"] == "unavailable"
+    assert rows["optinpy"]["status"] == rows["xl2py"]["status"] == "available"
+
+
+@pytest.mark.parametrize("bad_assets", [
+    [asset(), asset()],
+    [asset(index + 1) for index in range(101)],
+    [asset(1, 2**53 - 1), asset(2, 1)],
+])
+def test_duplicate_oversized_or_unsafe_total_assets_are_rejected_without_truncation(tmp_path, bad_assets):
+    report = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=fetch,
+                       fetch_github=repository_fetch(overrides={"gusmaogabriels/xl2py": bad_assets}))
+    value = github_rows(report)["xl2py"]
+    assert value["status"] == "unavailable" and value["assets"] is None
+
+
+@pytest.mark.parametrize("mutate", [
+    lambda value: value.update(source="https://example.invalid/releases"),
+    lambda value: value.update(observed_at="2099-01-01T00:00:00+00:00"),
+    lambda value: value["assets"][0].update(kind="other"),
+    lambda value: value["changes"]["assets"][0].update(status="observed", download_increase=-1),
+    lambda value: value["changes"].update(removed_asset_ids=[1]),
+])
+def test_malformed_github_cache_is_not_reused_as_stale_or_a_delta_baseline(tmp_path, mutate):
+    stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=fetch, fetch_github=repository_fetch())
+    latest = tmp_path / "packages/latest.json"
+    previous = json.loads(latest.read_text())
+    mutate(previous["packages"][1]["github_release_downloads"])
+    latest.write_text(json.dumps(previous))
+    report = stats.run(REGISTRY, tmp_path, now=NOW.replace(day=17), fetch_pypi=fetch,
+                       fetch_github=repository_fetch(failures=("gusmaogabriels/mkin4py",)))
+    assert github_rows(report)["mkin4py"]["status"] == "unavailable"
+    assert github_rows(report)["optinpy"]["status"] == "available"
+
+
+def test_aggregate_size_limit_preserves_both_previous_latest_files(tmp_path, monkeypatch):
+    stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=fetch, fetch_github=repository_fetch())
+    before = {name: (tmp_path / name).read_bytes() for name in ("latest.json", "packages/latest.json")}
+    monkeypatch.setattr(stats, "MAX_BYTES", 1024)
+    with pytest.raises(ValueError, match="aggregate exceeds"):
+        stats.run(REGISTRY, tmp_path, now=NOW.replace(day=17), fetch_pypi=fetch, fetch_github=repository_fetch())
+    assert all((tmp_path / name).read_bytes() == body for name, body in before.items())

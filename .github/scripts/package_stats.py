@@ -5,12 +5,16 @@ import importlib.util
 import json
 from pathlib import Path
 import re
-import subprocess
 
 _spec = importlib.util.spec_from_file_location(
     "distribution_stats", Path(__file__).with_name("distribution_stats.py"))
 distribution = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(distribution)
+
+_github_spec = importlib.util.spec_from_file_location(
+    "github_package_stats", Path(__file__).with_name("github_package_stats.py"))
+github_packages = importlib.util.module_from_spec(_github_spec)
+_github_spec.loader.exec_module(github_packages)
 
 MAX_BYTES = 1024 * 1024
 REPOSITORY = "gusmaogabriels/optinpy"
@@ -144,6 +148,8 @@ def save_packages(snapshot, destination):
     history.mkdir(parents=True, exist_ok=True)
     stamp = datetime.fromisoformat(snapshot["observed_at"]).strftime("%Y%m%dT%H%M%S%fZ")
     body = json.dumps(snapshot, indent=2, ensure_ascii=False) + "\n"
+    if len(body.encode("utf-8")) > MAX_BYTES:
+        raise ValueError("package aggregate exceeds size limit")
     # Never overwrite history, including a repeated explicit observation timestamp.
     with (history / f"{stamp}.json").open("x", encoding="utf-8") as stream:
         stream.write(body)
@@ -155,6 +161,12 @@ def save_packages(snapshot, destination):
         "One GitHub Actions job owns collection for the reviewed `.github/package-registry.json`. "
         "`latest.json` is a public aggregate; `observations/` retains dated snapshots. "
         "Optinpy's legacy root feed reuses the same observation, with no second PyPI request.\n\n"
+        "Each package also has a separate `github_release_downloads` observation. "
+        "These are cumulative counters for uploaded assets, with .whl/.tar.gz packages "
+        "separated from checksum/other files. They must not be added to PyPI windows. "
+        "First asset observations are baselines; later changes compare stable asset IDs "
+        "and explicitly flag decreases/removals. Failed repository requests retain valid "
+        "prior observations as stale, or remain unavailable without a prior observation.\n\n"
         "PyPI Stats updates once daily and retains 180 days. Known mirrors are excluded; "
         "CI and repeated downloads remain included. These are downloads, not users, "
         "successful installations, or CLI executions. No local telemetry is collected.\n\n"
@@ -173,17 +185,31 @@ def run(registry, destination, *, now=None, fetch_pypi=distribution.pypi_json, f
     legacy = read_cache(destination / "latest.json")
     legacy_metrics = previous_metrics(legacy)
     aggregate = collect_packages(registry, previous, legacy, now=now, fetch=fetch_pypi)
-    try:
-        snapshot = distribution.collect(REPOSITORY, fetch=fetch_github, observed_at=aggregate["observed_at"])
-    except (RuntimeError, ValueError, KeyError, TypeError, OSError, subprocess.TimeoutExpired):
-        # Public GitHub API failure must not discard independent PyPI observations.
-        # Keep the previous legacy file/time; no fabricated current zero counters.
-        aggregate["github_metrics_status"] = "unavailable"
-    else:
-        snapshot["pypi_downloads"] = next(row["pypi_downloads"] for row in aggregate["packages"] if row["id"] == "optinpy")
-        # Supply the separately recovered cache; do not reread malformed JSON.
-        distribution.save(snapshot, destination, previous=legacy_metrics)
-        aggregate["github_metrics_status"] = "available"
+    observed = datetime.fromisoformat(aggregate["observed_at"])
+    previous_rows = previous.get("packages", []) if previous and previous.get("schema_version") == 1 else []
+    if not isinstance(previous_rows, list):
+        previous_rows = []
+    legacy_snapshot = None
+    for entry in aggregate["packages"]:
+        candidates = [github_packages.prior(row.get("github_release_downloads"), entry["repository"], observed)
+                      for row in previous_rows if isinstance(row, dict)
+                      and all(row.get(key) == entry[key] for key in ("id", "pypi_package", "repository"))]
+        if entry["id"] == "optinpy":
+            candidates.append(github_packages.legacy_prior(legacy_metrics, REPOSITORY, observed, distribution))
+        candidates = [candidate for candidate in candidates if candidate is not None]
+        cached = max(candidates, key=lambda value: datetime.fromisoformat(value["observed_at"])) if candidates else None
+        entry["github_release_downloads"], snapshot = github_packages.collect(
+            entry, cached, now=observed, distribution=distribution, fetch=fetch_github)
+        if entry["id"] == "optinpy":
+            legacy_snapshot = snapshot
+    # This compatibility status continues to describe the legacy Optinpy feed only.
+    aggregate["github_metrics_status"] = "available" if legacy_snapshot is not None else "unavailable"
+    # Serialize/size-check the aggregate before replacing either latest file.
+    if len((json.dumps(aggregate, indent=2, ensure_ascii=False) + "\n").encode("utf-8")) > MAX_BYTES:
+        raise ValueError("package aggregate exceeds size limit")
+    if legacy_snapshot is not None:
+        legacy_snapshot["pypi_downloads"] = next(row["pypi_downloads"] for row in aggregate["packages"] if row["id"] == "optinpy")
+        distribution.save(legacy_snapshot, destination, previous=legacy_metrics)
     save_packages(aggregate, destination / "packages")
     return aggregate
 
