@@ -123,8 +123,22 @@ def legacy_prior(value, repository, now, distribution):
 def collect(entry, previous, *, now, distribution, fetch):
     repository = entry["repository"]
     attempted = now.isoformat()
+    def public_read(path, **kwargs):
+        value = fetch(path, **kwargs)
+        if path == f"repos/{repository}/releases?per_page=100":
+            if not isinstance(value, list):
+                raise ValueError("invalid GitHub release list")
+            for release in value:
+                if type(release["draft"]) is not bool:
+                    raise ValueError("invalid GitHub draft flag")
+                if release["draft"]:
+                    continue
+                if not isinstance(release["assets"], list) or any(
+                        not isinstance(item["state"], str) for item in release["assets"]):
+                    raise ValueError("invalid GitHub asset states")
+        return value
     try:
-        snapshot = distribution.collect(repository, fetch=fetch, observed_at=attempted)
+        snapshot = distribution.collect(repository, fetch=public_read, observed_at=attempted)
         snapshot["assets"] = assets(snapshot["assets"])
         integer(snapshot["stars"])
         observation = {"status": "available", "repository": repository, "source": source(repository),

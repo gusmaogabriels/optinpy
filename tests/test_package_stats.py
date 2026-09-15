@@ -364,3 +364,17 @@ def test_aggregate_size_limit_preserves_both_previous_latest_files(tmp_path, mon
     with pytest.raises(ValueError, match="aggregate exceeds"):
         stats.run(REGISTRY, tmp_path, now=NOW.replace(day=17), fetch_pypi=fetch, fetch_github=repository_fetch())
     assert all((tmp_path / name).read_bytes() == body for name, body in before.items())
+
+
+@pytest.mark.parametrize("draft,state", [("false", "uploaded"), (0, "uploaded"), (False, None)])
+def test_malformed_release_filter_flags_do_not_look_like_empty_success(tmp_path, draft, state):
+    healthy = repository_fetch()
+    def malformed(path, **kwargs):
+        response = healthy(path, **kwargs)
+        if "mkin4py/releases" in path:
+            response[0]["draft"] = draft
+            response[0]["assets"][0]["state"] = state
+        return response
+    report = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=fetch, fetch_github=malformed)
+    assert github_rows(report)["mkin4py"]["status"] == "unavailable"
+    assert github_rows(report)["optinpy"]["status"] == "available"

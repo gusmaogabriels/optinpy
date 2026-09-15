@@ -204,6 +204,8 @@ def run(registry, destination, *, now=None, fetch_pypi=distribution.pypi_json, f
             legacy_snapshot = snapshot
     # This compatibility status continues to describe the legacy Optinpy feed only.
     aggregate["github_metrics_status"] = "available" if legacy_snapshot is not None else "unavailable"
+    aggregate["scope"] = ("Separate PyPI daily downloads excluding known mirrors and cumulative GitHub release-asset counters. "
+                          "Includes automation and repeats; do not combine sources or infer users, installs or local runs.")
     # Serialize/size-check the aggregate before replacing either latest file.
     if len((json.dumps(aggregate, indent=2, ensure_ascii=False) + "\n").encode("utf-8")) > MAX_BYTES:
         raise ValueError("package aggregate exceeds size limit")
