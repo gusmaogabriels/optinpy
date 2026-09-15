@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "repository": "gusmaogabriels/optinpy",
+  "observed_at": "2026-09-15T01:35:01.821482+00:00",
+  "stars": 49,
+  "assets": [
+    {
+      "asset_id": 564614421,
+      "release_id": 388810270,
+      "tag": "v2.0.0a1",
+      "prerelease": true,
+      "name": "optinpy-2.0.0a1-py3-none-any.whl",
+      "download_count": 0,
+      "kind": "package"
+    },
+    {
+      "asset_id": 564614422,
+      "release_id": 388810270,
+      "tag": "v2.0.0a1",
+      "prerelease": true,
+      "name": "SHA256SUMS.txt",
+      "download_count": 0,
+      "kind": "other"
+    },
+    {
+      "asset_id": 564614423,
+      "release_id": 388810270,
+      "tag": "v2.0.0a1",
+      "prerelease": true,
+      "name": "optinpy-2.0.0a1.tar.gz",
+      "download_count": 0,
+      "kind": "package"
+    }
+  ],
+  "scope": "Public GitHub release-asset downloads and expressed interest; includes automation and test downloads",
+  "local_cli_usage": {
+    "status": "not_observed"
+  },
+  "pypi_downloads": {
+    "status": "not_collected"
+  },
+  "source_clones": {
+    "status": "not_collected"
+  },
+  "changes": {
+    "previous_observed_at": null,
+    "current_observed_at": "2026-09-15T01:35:01.821482+00:00",
+    "assets": [
+      {
+        "asset_id": 564614421,
+        "name": "optinpy-2.0.0a1-py3-none-any.whl",
+        "kind": "package",
+        "status": "baseline",
+        "download_increase": null
+      },
+      {
+        "asset_id": 564614422,
+        "name": "SHA256SUMS.txt",
+        "kind": "other",
+        "status": "baseline",
+        "download_increase": null
+      },
+      {
+        "asset_id": 564614423,
+        "name": "optinpy-2.0.0a1.tar.gz",
+        "kind": "package",
+        "status": "baseline",
+        "download_increase": null
+      }
+    ],
+    "removed_asset_ids": []
+  }
+}
