@@ -155,3 +155,19 @@ Inputs or totals exceeding bounds fail visibly rather than being truncated into
 misleading counts. Consumers should validate this schema and impose the same
 response-size limit. Larger future registries require a reviewed format or limit
 change before their aggregate exceeds this cap.
+# Explicit rolling PyPI totals
+
+The CLI collector also records `pypi_recent` from the official
+[`/recent` endpoint](https://pypistats.org/api/). It is independent of
+`pypi_downloads`: the original daily arrays, windows and historical observations
+remain intact for existing consumers. Each endpoint is fetched at most once per
+UTC day, including unsuccessful attempts; the first run after adding this source
+can populate `/recent` while reusing an already-cached `/overall` observation.
+
+The README badges prefer the source's `last_month` count and use the label
+“PyPI downloads/month”. The endpoint does not provide exact period dates, so no
+date range or daily coverage is invented. Explicit zero remains zero; missing or
+invalid responses never become zero. Retained totals after a failed request are
+marked stale. When no recent total exists, the badge falls back to the original
+dated-row window with its existing partial/stale labels. Public badge links stay
+on GitHub releases and PyPI Stats.

@@ -21,6 +21,11 @@ _badge_spec = importlib.util.spec_from_file_location(
 package_badges = importlib.util.module_from_spec(_badge_spec)
 _badge_spec.loader.exec_module(package_badges)
 
+_recent_spec = importlib.util.spec_from_file_location(
+    'pypi_recent', Path(__file__).with_name('pypi_recent.py'))
+pypi_recent = importlib.util.module_from_spec(_recent_spec)
+_recent_spec.loader.exec_module(pypi_recent)
+
 MAX_BYTES = 1024 * 1024
 REPOSITORY = "gusmaogabriels/optinpy"
 
@@ -124,7 +129,8 @@ def prior_observation(value, entry, now):
         return None
 
 
-def collect_packages(registry, previous=None, bootstrap=None, *, now=None, fetch=distribution.pypi_json):
+def collect_packages(registry, previous=None, bootstrap=None, *, now=None,
+                     fetch=distribution.pypi_json, fetch_recent=None):
     entries = registry_entries(registry)
     now = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
     previous_rows = previous.get("packages", []) if isinstance(previous, dict) and previous.get("schema_version") == 1 else []
@@ -141,7 +147,16 @@ def collect_packages(registry, previous=None, bootstrap=None, *, now=None, fetch
         candidates = [checked for value in candidates if (checked := prior_observation(value, entry, now)) is not None]
         cached = max(candidates, key=lambda value: datetime.fromisoformat(value["last_attempt_at"])) if candidates else None
         observed = distribution.pypi_downloads(entry["pypi_package"], cached, now=now, fetch=fetch)
-        packages.append({**entry, "pypi_downloads": observed})
+        row = {**entry, "pypi_downloads": observed}
+        if fetch_recent is not None:
+            recent_candidates = [pypi_recent.prior(value.get('pypi_recent'), entry['pypi_package'], now)
+                for value in previous_rows if isinstance(value, dict)
+                and all(value.get(key) == item for key, item in entry.items())]
+            recent_candidates = [value for value in recent_candidates if value is not None]
+            cached_recent = max(recent_candidates, key=lambda value: datetime.fromisoformat(value['last_attempt_at'])) if recent_candidates else None
+            row['pypi_recent'] = pypi_recent.collect(entry['pypi_package'], cached_recent,
+                                                   now=now, fetch=fetch_recent)
+        packages.append(row)
     return {"schema_version": 1, "observed_at": now.isoformat(), "packages": packages,
             "local_cli_usage": {"status": "not_observed"},
             "scope": "Daily PyPI downloads excluding known mirrors; includes automation and repeat downloads. Not users, installs or local runs."}
@@ -180,16 +195,23 @@ def save_packages(snapshot, destination):
         "not zero downloads. Errors retain earlier data as `stale` when possible. "
         "Compute windows from dated rows; never add overlapping windows or snapshots. "
         "Use the newest observation per package/date and preserve gaps and revisions.\n\n"
+        "`pypi_recent` separately retains the source's explicit last-day/week/month totals. "
+        "The badges prefer these totals when available, so sparse daily rows are not "
+        "treated as an incomplete monthly total. The endpoint does not supply exact "
+        "period dates: none are inferred. Each endpoint is cached once per UTC day. "
+        "A failed request retains the prior aggregate as stale; a 404 is not zero.\n\n"
         "Sources: https://pypistats.org/api/ and https://pypistats.org/faqs .\n",
         encoding="utf-8")
 
 
-def run(registry, destination, *, now=None, fetch_pypi=distribution.pypi_json, fetch_github=distribution.github):
+def run(registry, destination, *, now=None, fetch_pypi=distribution.pypi_json,
+        fetch_github=distribution.github, fetch_recent=None):
     destination = Path(destination)
     previous = read_cache(destination / "packages/latest.json")
     legacy = read_cache(destination / "latest.json")
     legacy_metrics = previous_metrics(legacy)
-    aggregate = collect_packages(registry, previous, legacy, now=now, fetch=fetch_pypi)
+    aggregate = collect_packages(registry, previous, legacy, now=now,
+                                  fetch=fetch_pypi, fetch_recent=fetch_recent)
     observed = datetime.fromisoformat(aggregate["observed_at"])
     previous_rows = previous.get("packages", []) if previous and previous.get("schema_version") == 1 else []
     if not isinstance(previous_rows, list):
@@ -227,6 +249,6 @@ if __name__ == "__main__":
     parser.add_argument("--registry", type=Path, default=Path(__file__).parents[1] / "package-registry.json")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    report = run(read_json(args.registry), args.output)
+    report = run(read_json(args.registry), args.output, fetch_recent=distribution.pypi_json)
     print("Recorded package download states: " + ", ".join(
         row["id"] + "=" + row["pypi_downloads"]["status"] for row in report["packages"]))
