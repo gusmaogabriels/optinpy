@@ -140,3 +140,25 @@ imports, objective-file loading, input parsing and JSON formatting. Each CLI
 invocation is a new process; this value is **not** a warm-execution benchmark.
 Measure whole-process time externally if you need all startup costs. For warm
 execution, retain a compiled callable through the [Python API](warm-execution.md).
+
+## Opt-in local usage counts
+
+The source checkout adds local usage accounting after the existing 2.0.0a2 release.
+Install the checkout with `python -m pip install -e .` to use it. Choose a database
+path to enable counting:
+
+```bash
+export OPTINPY_USAGE_DB="$HOME/optinpy-usage.sqlite3"
+optinpy methods --json
+optinpy usage --json
+```
+
+PowerShell: `$env:OPTINPY_USAGE_DB = "$HOME/optinpy-usage.sqlite3"`.
+The JSON report contains daily invocation counts by version, command and exit
+code, plus command duration excluding interpreter startup and imports. It stores
+no objective names, arguments, file paths, model contents or identifiers. Nothing
+is transmitted. `usage` does not count itself; concurrent processes update counts
+transactionally. Unset the environment variable to stop recording, or remove the
+selected database to clear it. Storage failures preserve solver output and exit
+codes. These are local invocation counts; public download statistics and MCP
+request counts remain separate and do not automatically receive these records.
