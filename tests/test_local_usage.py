@@ -85,3 +85,50 @@ def test_concurrent_cli_processes_and_readonly_reporting(tmp_path, monkeypatch):
     result = _usage.report('optinpy')
     assert result['runs'] == 60
     assert result['counts'][0]['command_seconds'] == pytest.approx(.6)
+
+
+@pytest.mark.parametrize('lock', ['writer', 'reader'])
+@pytest.mark.parametrize('expires', [False, True])
+def test_contention_commits_once_or_rolls_back(tmp_path, monkeypatch, lock, expires):
+    """Exercise real busy BEGIN and busy COMMIT, including budget exhaustion."""
+    from contextlib import closing
+    path = tmp_path/'counts.sqlite3'
+    monkeypatch.setenv('OPTINPY_USAGE_DB', str(path))
+    _usage._record('optinpy', 'test', 'solve', 0, .1)
+    clock = [0.]
+    waits = []
+    monkeypatch.setattr(_usage, 'perf_counter', lambda: clock[0])
+    with closing(sqlite3.connect(path, isolation_level=None, timeout=0.)) as blocker:
+        blocker.execute('BEGIN IMMEDIATE' if lock == 'writer' else 'BEGIN')
+        blocker.execute('SELECT * FROM cli_usage').fetchall()
+        def release_or_advance(seconds):
+            waits.append(seconds)
+            clock[0] += seconds
+            if not expires:
+                blocker.rollback()
+        monkeypatch.setattr(_usage, 'sleep', release_or_advance)
+        if expires:
+            with pytest.raises(sqlite3.OperationalError) as error:
+                _usage._record('optinpy', 'test', 'solve', 0, .2)
+            assert error.value.sqlite_errorcode == sqlite3.SQLITE_BUSY
+            assert clock[0] == pytest.approx(5.)
+        else:
+            _usage._record('optinpy', 'test', 'solve', 0, .2)
+        assert waits  # The real SQLite lock forced the retry path.
+        blocker.rollback()
+    result = _usage.report('optinpy')
+    assert result['runs'] == (1 if expires else 2)
+    assert result['counts'][0]['command_seconds'] == pytest.approx(.1 if expires else .3)
+    # The failed writer must release all handles/locks for the next invocation.
+    _usage._record('optinpy', 'test', 'solve', 0, .1)
+    assert _usage.report('optinpy')['runs'] == (2 if expires else 3)
+
+
+def test_sql_errors_are_not_retried(tmp_path, monkeypatch):
+    from contextlib import closing
+    def unexpected_wait(_):
+        pytest.fail('non-lock errors must not be retried')
+    monkeypatch.setattr(_usage, 'sleep', unexpected_wait)
+    with closing(sqlite3.connect(tmp_path/'bad.sqlite3')) as connection:
+        with pytest.raises(sqlite3.OperationalError, match='syntax'):
+            _usage._transaction_step(connection, 'NOT SQL', _usage.perf_counter() + 5.)

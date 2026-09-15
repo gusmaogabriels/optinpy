@@ -7,7 +7,8 @@ import os
 from pathlib import Path
 import sqlite3
 import sys
-from time import perf_counter
+from random import uniform
+from time import perf_counter, sleep
 
 
 _SCHEMA = """CREATE TABLE IF NOT EXISTS cli_usage (
@@ -35,18 +36,39 @@ def _record(package, version, command, exit_code, seconds):
         os.close(fd)
     if not path.is_file() or path.is_symlink():
         raise OSError('usage database must be a regular file')
-    # Serialize writers before reading/changing the schema. The sqlite context
-    # manager commits transactions but does not close the connection itself.
-    with closing(sqlite3.connect(path, timeout=5.)) as connection:
-        with connection:
-            connection.execute('BEGIN IMMEDIATE')
+    # Retry lock acquisition and COMMIT independently: the increment is never
+    # replayed. Explicit transactions also let a busy COMMIT retain its pending
+    # write until readers release their locks. Keep one bounded wait budget.
+    deadline = perf_counter() + 5.
+    with closing(sqlite3.connect(path, timeout=0., isolation_level=None)) as connection:
+        try:
+            _transaction_step(connection, 'BEGIN IMMEDIATE', deadline)
             connection.execute(_SCHEMA)
             connection.execute("""INSERT INTO cli_usage VALUES (?, ?, ?, ?, ?, 1, ?)
                 ON CONFLICT(package, version, day, command, exit_code) DO UPDATE SET
                 runs = runs + 1, command_seconds = command_seconds + excluded.command_seconds""",
                 (package, version, datetime.now(timezone.utc).date().isoformat(), command,
                  exit_code, seconds if math.isfinite(seconds) else 0.))
+            _transaction_step(connection, 'COMMIT', deadline)
+        finally:
+            if connection.in_transaction:
+                connection.rollback()
 
+
+def _transaction_step(connection, statement, deadline):
+    delay = .01
+    while True:
+        try:
+            connection.execute(statement)
+            return
+        except sqlite3.OperationalError as error:
+            remaining = deadline - perf_counter()
+            if (getattr(error, 'sqlite_errorcode', 0) & 255) != sqlite3.SQLITE_BUSY or remaining <= 0:
+                raise
+            # SQLite's identical busy schedules can repeatedly collide across
+            # processes. Jitter gives waiting writers separate retry slots.
+            sleep(min(remaining, uniform(delay / 2., delay)))
+            delay = min(.2, delay * 2.)
 
 
 def report(package):
