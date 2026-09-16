@@ -1,5 +1,5 @@
 """Render README download snapshots from the existing collector; no network calls."""
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from html import escape
 import json
 from pathlib import Path
@@ -22,8 +22,42 @@ def svg(label, message, detail, *, color="#007ec6"):
     )
 
 
+def daily_month(pypi, package, today):
+    """Sum a fresh PyPIStats event series; zero-download days have no rows.
+
+    Upstream update_recent_stats sums this same table over 30 days ending
+    yesterday: https://github.com/psf/pypistats.org/blob/main/pypistats/tasks/pypi.py
+    The cutoff follows its normal daily schedule, not the last nonzero event.
+    """
+    if (not package or pypi.get("package") != package
+            or pypi.get("source") != f"https://pypistats.org/api/packages/{package}/overall?mirrors=false"
+            or pypi.get("mirrors") != "excluded"
+            or pypi.get("status") != "available" or not pypi.get("daily")):
+        return None
+    try:
+        fetched = datetime.fromisoformat(pypi["fetched_at"])
+    except (KeyError, TypeError, ValueError):
+        return None
+    if fetched.tzinfo is None:
+        return None
+    fetched_day = fetched.astimezone(timezone.utc).date()
+    if not 0 <= (today - fetched_day).days <= 2:
+        return None
+    end = fetched_day - timedelta(days=1)
+    start = end - timedelta(days=29)
+    count = sum(row["downloads"] for row in pypi["daily"]
+                if start <= date.fromisoformat(row["date"]) <= end)
+    return dict(
+        label="PyPI downloads/month", message=f"{count:,}", color="#007ec6",
+        detail=(f"Sum of PyPIStats daily records fetched {pypi['fetched_at']}, {start} through {end}. "
+                "Cutoff inferred from the source's normal previous-UTC-day update schedule; "
+                "upstream reporting delays are not detectable from sparse rows. "
+                "Zero-download dates are omitted by this endpoint. "
+                "Known mirrors excluded; repeats and automation included."))
+
+
 def observations(snapshot):
-    """Keep missing counts unknown, package assets separate, and partial PyPI explicit."""
+    """Keep unavailable counts unknown and respect each source's reporting format."""
     today = datetime.fromisoformat(snapshot["observed_at"]).date()
     result = {}
     for entry in snapshot["packages"]:
@@ -44,8 +78,12 @@ def observations(snapshot):
 
         pypi = entry["pypi_downloads"]
         recent = entry.get('pypi_recent') or {}
+        daily = daily_month(pypi, entry.get('pypi_package'), today)
+        has_recent = recent.get('status') in ('available', 'stale') and recent.get('counts') is not None
+        recent_stale = has_recent and (recent['status'] == 'stale' or
+                                      (today - datetime.fromisoformat(recent['fetched_at']).date()).days > 2)
         label = 'PyPI downloads (30d)'
-        if recent.get('status') in ('available', 'stale') and recent.get('counts') is not None:
+        if has_recent and (not recent_stale or daily is None):
             label = 'PyPI downloads/month'
             fetched = datetime.fromisoformat(recent['fetched_at']).date()
             stale = recent['status'] == 'stale' or (today-fetched).days > 2
@@ -53,6 +91,9 @@ def observations(snapshot):
             detail = (f"Source-reported last-month total fetched {recent['fetched_at']}. "
                       'Exact period dates are not provided. Known mirrors excluded; repeats and automation included.')
             color = '#9f6000' if stale else '#007ec6'
+        elif daily is not None:
+            result[f"{identity}-pypi"] = daily
+            continue
         elif pypi["status"] in ("available", "stale") and pypi["daily"]:
             end = date.fromisoformat(pypi["data_through"])
             start = end - timedelta(days=29)

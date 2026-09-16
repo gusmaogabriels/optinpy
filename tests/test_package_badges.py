@@ -157,3 +157,68 @@ def test_shields_partial_stale_badge_is_compact_and_preserves_recorded_count(sna
     payload = json.loads(badges.endpoints(snapshot)["example-pypi.json"])
     assert payload["label"] == "PyPI downloads" and payload["message"] == "unavailable"
     assert fields(badges.render(snapshot)["example-pypi.svg"])[0][-1] == "4 (partial, stale)"
+
+
+@pytest.fixture
+def sparse_pypistats(snapshot):
+    snapshot["observed_at"] = "2026-09-16T16:46:05+00:00"
+    row = snapshot["packages"][0]
+    row["pypi_package"] = "example"
+    row["pypi_recent"] = {"status": "unavailable", "counts": None, "error": "rate_limited"}
+    row["pypi_downloads"].update(
+        package="example", source="https://pypistats.org/api/packages/example/overall?mirrors=false",
+        mirrors="excluded", fetched_at="2026-09-16T12:38:00+00:00",
+        data_through="2026-09-09", daily=[{"date": "2026-09-09", "downloads": 1}])
+    return snapshot
+
+
+def test_sparse_success_recovers_monthly_badge_after_recent_rate_limit(sparse_pypistats):
+    original = deepcopy(sparse_pypistats)
+    payload = json.loads(badges.endpoints(sparse_pypistats)["example-pypi.json"])
+    assert payload["label"] == "PyPI downloads/month" and payload["message"] == "1"
+    text, detail = fields(badges.render(sparse_pypistats)["example-pypi.svg"])
+    assert text[-1] == "1"
+    assert "2026-08-17 through 2026-09-15" in detail
+    assert "inferred" in detail and "Zero-download dates are omitted" in detail
+    assert sparse_pypistats == original
+
+
+def test_sparse_month_uses_fetch_window_not_last_download(sparse_pypistats):
+    daily = sparse_pypistats["packages"][0]["pypi_downloads"]
+    daily["daily"] = [{"date": "2026-08-16", "downloads": 1000},
+                      {"date": "2026-08-17", "downloads": 2},
+                      {"date": "2026-09-15", "downloads": 3},
+                      {"date": "2026-09-16", "downloads": 1000}]
+    assert badges.observations(sparse_pypistats)["example-pypi"]["message"] == "5"
+    # No reported events in the window is a reported zero, given a successful series.
+    daily["daily"] = daily["daily"][:1]
+    assert badges.observations(sparse_pypistats)["example-pypi"]["message"] == "0"
+
+
+@pytest.mark.parametrize("change", [
+    {"status": "stale"}, {"status": "unavailable"}, {"status": "no_data"}, {"daily": []},
+    {"fetched_at": "2026-09-12T12:38:00+00:00"}, {"fetched_at": None},
+    {"fetched_at": "invalid"}, {"fetched_at": "2026-09-16T12:38:00"},
+    {"fetched_at": "2026-09-17T12:38:00+00:00"}, {"source": "other"},
+    {"package": "another"}, {"mirrors": "included"},
+])
+def test_sparse_fallback_requires_fresh_success_with_correct_provenance(sparse_pypistats, change):
+    sparse_pypistats["packages"][0]["pypi_downloads"].update(change)
+    assert json.loads(badges.endpoints(sparse_pypistats)["example-pypi.json"])["message"] == "unavailable"
+
+
+@pytest.mark.parametrize("state,expected", [("fresh", "9"), ("failed", "1"), ("aged", "1")])
+def test_prefer_fresh_recent_then_fresh_daily(sparse_pypistats, state, expected):
+    sparse_pypistats["packages"][0]["pypi_recent"] = {
+        "status": "stale" if state == "failed" else "available", "counts": {"last_month": 9},
+        "fetched_at": "2026-09-12T09:00:00+00:00" if state == "aged" else "2026-09-16T09:00:00+00:00"}
+    assert json.loads(badges.endpoints(sparse_pypistats)["example-pypi.json"])["message"] == expected
+
+
+def test_cached_daily_window_does_not_slide_or_refresh_its_timestamp(sparse_pypistats):
+    sparse_pypistats["observed_at"] = "2026-09-18T10:00:00+00:00"
+    observation = badges.observations(sparse_pypistats)["example-pypi"]
+    assert observation["message"] == "1"
+    assert "2026-08-17 through 2026-09-15" in observation["detail"]
+    sparse_pypistats["observed_at"] = "2026-09-19T10:00:00+00:00"
+    assert json.loads(badges.endpoints(sparse_pypistats)["example-pypi.json"])["message"] == "unavailable"
