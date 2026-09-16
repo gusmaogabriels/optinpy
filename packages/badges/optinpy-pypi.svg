@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="213" height="20" role="img" aria-label="PyPI downloads (30d): no data. No usable PyPI download observation; this is not a zero count.">
-<title>PyPI downloads (30d): no data. No usable PyPI download observation; this is not a zero count.</title>
-<rect width="213" height="20" rx="3" fill="#777"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="185" height="20" role="img" aria-label="PyPI downloads/month: 153. Source-reported last-month total fetched 2026-09-16T12:38:00.250182+00:00. Exact period dates are not provided. Known mirrors excluded; repeats and automation included.">
+<title>PyPI downloads/month: 153. Source-reported last-month total fetched 2026-09-16T12:38:00.250182+00:00. Exact period dates are not provided. Known mirrors excluded; repeats and automation included.</title>
+<rect width="185" height="20" rx="3" fill="#007ec6"/>
 <path d="M3 0H152V20H3Q0 20 0 17V3Q0 0 3 0" fill="#555"/>
 <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans Mono,monospace" font-size="11">
-<text x="76" y="14">PyPI downloads (30d)</text>
-<text x="182.5" y="14">no data</text>
+<text x="76" y="14">PyPI downloads/month</text>
+<text x="168.5" y="14">153</text>
 </g>
 </svg>
