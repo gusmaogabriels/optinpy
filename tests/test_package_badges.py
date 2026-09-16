@@ -106,12 +106,13 @@ def test_save_keeps_each_package_separate_and_updates_existing_files(snapshot, t
     assert not list(tmp_path.glob("*.tmp"))
 
 
-def test_shields_endpoints_match_counts_without_analytics_links(snapshot):
+def test_shields_endpoints_withhold_partial_totals_without_analytics_links(snapshot):
     payloads = {name: json.loads(body) for name, body in badges.endpoints(snapshot).items()}
     github = payloads["example-github.json"]
     pypi = payloads["example-pypi.json"]
     assert github["message"] == "5" and github["namedLogo"] == "github"
-    assert pypi["message"] == "4 (partial)" and pypi["namedLogo"] == "pypi"
+    assert pypi["message"] == "unavailable" and pypi["namedLogo"] == "pypi"
+    assert pypi["label"] == "PyPI downloads" and pypi["color"] == "#777"
     for payload in payloads.values():
         assert payload["schemaVersion"] == 1 and payload["style"] == "flat"
         assert "analytics" not in json.dumps(payload) and "link" not in payload
@@ -120,3 +121,39 @@ def test_shields_endpoints_match_counts_without_analytics_links(snapshot):
 def test_shields_unknown_is_unavailable_not_zero(snapshot):
     snapshot["packages"][0]["pypi_downloads"] = {"status": "no_data", "daily": []}
     assert json.loads(badges.endpoints(snapshot)["example-pypi.json"])["message"] == "unavailable"
+
+
+@pytest.mark.parametrize("source", ["daily", "recent"])
+@pytest.mark.parametrize("state", ["fresh", "failed", "aged"])
+@pytest.mark.parametrize("count", [0, 1234])
+def test_shields_monthly_totals_require_complete_current_data(snapshot, source, state, count):
+    row = snapshot["packages"][0]
+    if source == "recent":
+        row["pypi_recent"] = {
+            "status": "stale" if state == "failed" else "available",
+            "fetched_at": "2026-09-15T09:00:00+00:00",
+            "counts": {"last_month": count},
+        }
+    else:
+        end = date(2026, 9, 14)
+        row["pypi_downloads"]["daily"] = [
+            {"date": str(end - timedelta(days=i)), "downloads": count if i == 0 else 0}
+            for i in range(30)
+        ]
+        row["pypi_downloads"]["status"] = "stale" if state == "failed" else "available"
+    if state == "aged":
+        snapshot["observed_at"] = "2026-09-20T10:00:00+00:00"
+    original = deepcopy(snapshot)
+    payload = json.loads(badges.endpoints(snapshot)["example-pypi.json"])
+    assert payload["message"] == (f"{count:,}" if state == "fresh" else "unavailable")
+    if state != "fresh":
+        assert payload["label"] == "PyPI downloads" and payload["color"] == "#777"
+        assert "stale" in fields(badges.render(snapshot)["example-pypi.svg"])[0][-1]
+    assert snapshot == original
+
+
+def test_shields_partial_stale_badge_is_compact_and_preserves_recorded_count(snapshot):
+    snapshot["observed_at"] = "2026-09-20T10:00:00+00:00"
+    payload = json.loads(badges.endpoints(snapshot)["example-pypi.json"])
+    assert payload["label"] == "PyPI downloads" and payload["message"] == "unavailable"
+    assert fields(badges.render(snapshot)["example-pypi.svg"])[0][-1] == "4 (partial, stale)"
