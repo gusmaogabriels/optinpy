@@ -33,7 +33,7 @@ def github(path, **kwargs):
 
 def test_confirmed_registry_and_no_local_usage_claim():
     report = stats.collect_packages(REGISTRY, now=NOW, fetch=fetch)
-    assert [row["id"] for row in report["packages"]] == ["optinpy", "mkin4py", "xl2py"]
+    assert [row["id"] for row in report["packages"]] == ["optinpy", "mkin4py", "xl2py", "kinn"]
     assert report["local_cli_usage"] == {"status": "not_observed"}
 
 
@@ -44,10 +44,10 @@ def test_each_package_is_requested_once_and_cached_for_same_utc_day():
         return fetch(url)
     first = stats.collect_packages(REGISTRY, now=NOW, fetch=counted)
     second = stats.collect_packages(REGISTRY, first, now=NOW.replace(hour=23), fetch=counted)
-    assert len(calls) == 3
+    assert len(calls) == len(REGISTRY["packages"])
     assert [row["pypi_downloads"] for row in second["packages"]] == [row["pypi_downloads"] for row in first["packages"]]
     stats.collect_packages(REGISTRY, second, now=NOW.replace(day=17), fetch=counted)
-    assert len(calls) == 6
+    assert len(calls) == 2 * len(REGISTRY["packages"])
 
 
 def test_package_failures_do_not_discard_other_packages_or_become_zero():
@@ -56,7 +56,7 @@ def test_package_failures_do_not_discard_other_packages_or_become_zero():
             raise HTTPError(url, 404, "No data", {}, None)
         if "/xl2py/" in url:
             raise HTTPError(url, 429, "Rate limit", {}, None)
-        return payload("mkin4py", 0)
+        return payload(url.split("/packages/")[1].split("/")[0], 0)
     rows = {row["id"]: row["pypi_downloads"] for row in stats.collect_packages(REGISTRY, now=NOW, fetch=mixed)["packages"]}
     assert rows["optinpy"]["status"] == "no_data" and rows["optinpy"]["windows"] is None
     assert rows["xl2py"]["status"] == "unavailable" and rows["xl2py"]["windows"] is None
@@ -72,7 +72,8 @@ def test_cutover_reuses_legacy_optinpy_attempt_even_when_404():
         calls.append(url)
         return fetch(url)
     report = stats.collect_packages(REGISTRY, bootstrap=legacy, now=NOW.replace(hour=9), fetch=counted)
-    assert len(calls) == 2 and not any("/optinpy/" in url for url in calls)
+    assert len(calls) == len(REGISTRY["packages"]) - 1
+    assert not any("/optinpy/" in url for url in calls)
     assert report["packages"][0]["pypi_downloads"]["status"] == "no_data"
 
 
@@ -121,7 +122,7 @@ def test_combined_run_preserves_legacy_github_metrics_and_uses_one_pypi_observat
     report = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=counted, fetch_github=github)
     legacy = json.loads((tmp_path / "latest.json").read_text())
     aggregate = json.loads((tmp_path / "packages/latest.json").read_text())
-    assert len(calls) == 3
+    assert len(calls) == len(REGISTRY["packages"])
     assert legacy["stars"] == 7 and legacy["assets"] == []
     assert legacy["pypi_downloads"] == report["packages"][0]["pypi_downloads"]
     assert aggregate == report
@@ -153,7 +154,7 @@ def test_github_timeout_or_schema_error_keeps_pypi_data(tmp_path, failure):
         raise failure
     report = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=fetch, fetch_github=failed)
     assert report["github_metrics_status"] == "unavailable"
-    assert len(json.loads((tmp_path / "packages/latest.json").read_text())["packages"]) == 3
+    assert len(json.loads((tmp_path / "packages/latest.json").read_text())["packages"]) == len(REGISTRY["packages"])
 
 
 @pytest.mark.parametrize("broken", ["latest.json", "packages/latest.json"])
@@ -226,13 +227,14 @@ def test_github_each_repo_collected_once_and_optinpy_result_reused_in_legacy(tmp
     for entry in REGISTRY["packages"]:
         assert calls.count(f"repos/{entry['repository']}") == 1
         assert calls.count(f"repos/{entry['repository']}/releases?per_page=100") == 1
-    assert len(calls) == 6 and len(pypi_calls) == 3
+    assert len(calls) == 2 * len(REGISTRY["packages"])
+    assert len(pypi_calls) == len(REGISTRY["packages"])
     legacy = json.loads((tmp_path / "latest.json").read_text())
     assert legacy["assets"] == github_rows(report)["optinpy"]["assets"]
     assert legacy["stars"] == 7
     stats.run(REGISTRY, tmp_path, now=NOW.replace(hour=23), fetch_pypi=pypi,
               fetch_github=repository_fetch(calls=calls))
-    assert len(pypi_calls) == 3
+    assert len(pypi_calls) == len(REGISTRY["packages"])
 
 
 def test_github_first_asset_observation_is_baseline_not_a_download_increase(tmp_path):
@@ -378,3 +380,84 @@ def test_malformed_release_filter_flags_do_not_look_like_empty_success(tmp_path,
     report = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=fetch, fetch_github=malformed)
     assert github_rows(report)["mkin4py"]["status"] == "unavailable"
     assert github_rows(report)["optinpy"]["status"] == "available"
+
+
+def kinnlib_pypi_fixture(url):
+    """The KINN project uses kinnlib; PyPI's unrelated kinn must never be queried."""
+    package = url.split("/packages/", 1)[1].split("/", 1)[0]
+    assert package != "kinn"
+    assert package in {row["pypi_package"] for row in REGISTRY["packages"]}
+    if url.endswith("/recent"):
+        return {"package": package, "type": "recent_downloads",
+                "data": {"last_day": 1, "last_week": 5, "last_month": 12}}
+    return fetch(url)
+
+
+def test_kinn_project_uses_kinnlib_sources_and_stable_badge_identity(tmp_path):
+    calls, github_calls = [], []
+    def counted(url):
+        calls.append(url)
+        return kinnlib_pypi_fixture(url)
+    report = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=counted,
+                       fetch_recent=counted, fetch_github=repository_fetch(count=17, calls=github_calls))
+    row = next(row for row in report["packages"] if row["id"] == "kinn")
+    assert {key: row[key] for key in ("id", "pypi_package", "repository")} == {
+        "id": "kinn", "pypi_package": "kinnlib", "repository": "gusmaogabriels/kinn"}
+    assert row["pypi_downloads"]["package"] == row["pypi_recent"]["package"] == "kinnlib"
+    assert row["pypi_downloads"]["source"].endswith("/kinnlib/overall?mirrors=false")
+    assert row["pypi_recent"]["source"].endswith("/kinnlib/recent")
+    assert github_calls.count("repos/gusmaogabriels/kinn/releases?per_page=100") == 1
+    badges = tmp_path / "packages/badges"
+    assert json.loads((badges / "kinn-pypi.json").read_text())["message"] == "12"
+    assert json.loads((badges / "kinn-github.json").read_text())["message"] == "17"
+    assert not (badges / "kinnlib-pypi.json").exists()
+    assert report["schema_version"] == 1
+    stats.run(REGISTRY, tmp_path, now=NOW.replace(hour=23), fetch_pypi=counted,
+              fetch_recent=counted, fetch_github=repository_fetch())
+    assert len(calls) == 2 * len(REGISTRY["packages"])
+    assert len(set(calls)) == len(calls)
+
+
+@pytest.mark.parametrize("code,status", [(404, "no_data"), (429, "unavailable"), (503, "unavailable")])
+def test_unobserved_kinnlib_downloads_remain_unknown_and_cached(tmp_path, code, status):
+    calls = []
+    def missing(url):
+        calls.append(url)
+        kinnlib_pypi_fixture(url)  # Reject accidental requests for the unrelated project.
+        if "/kinnlib/" in url:
+            raise HTTPError(url, code, "No observation", {}, None)
+        return kinnlib_pypi_fixture(url)
+    report = stats.run(REGISTRY, tmp_path, now=NOW, fetch_pypi=missing,
+                       fetch_recent=missing, fetch_github=repository_fetch())
+    row = next(row for row in report["packages"] if row["id"] == "kinn")
+    assert row["pypi_downloads"]["status"] == row["pypi_recent"]["status"] == status
+    assert row["pypi_downloads"]["windows"] is None and row["pypi_downloads"]["daily"] == []
+    assert row["pypi_recent"]["counts"] is None
+    assert json.loads((tmp_path / "packages/badges/kinn-pypi.json").read_text())["message"] == "unavailable"
+    stats.run(REGISTRY, tmp_path, now=NOW.replace(hour=23), fetch_pypi=missing,
+              fetch_recent=missing, fetch_github=repository_fetch())
+    assert len(calls) == 2 * len(REGISTRY["packages"])
+
+
+@pytest.mark.parametrize("rename_registry_field", [False, True])
+def test_kinnlib_does_not_reuse_unrelated_kinn_counts(rename_registry_field):
+    previous = stats.collect_packages(REGISTRY, now=NOW, fetch=kinnlib_pypi_fixture,
+                                     fetch_recent=kinnlib_pypi_fixture)
+    row = next(row for row in previous["packages"] if row["id"] == "kinn")
+    if rename_registry_field:
+        row["pypi_package"] = "kinn"
+    for key in ("pypi_downloads", "pypi_recent"):
+        row[key]["package"] = "kinn"
+        row[key]["source"] = row[key]["source"].replace("/kinnlib/", "/kinn/")
+    calls = []
+    def wrong_response(url):
+        calls.append(url)
+        result = kinnlib_pypi_fixture(url)
+        result["package"] = "kinn"
+        return result
+    report = stats.collect_packages(REGISTRY, previous, now=NOW,
+                                    fetch=wrong_response, fetch_recent=wrong_response)
+    row = next(row for row in report["packages"] if row["id"] == "kinn")
+    assert len(calls) == 2 and all("/kinnlib/" in url for url in calls)
+    assert row["pypi_downloads"]["status"] == row["pypi_recent"]["status"] == "unavailable"
+    assert row["pypi_downloads"]["windows"] is None and row["pypi_recent"]["counts"] is None
