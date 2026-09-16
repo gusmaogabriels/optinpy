@@ -419,7 +419,7 @@ def test_kinn_project_uses_kinnlib_sources_and_stable_badge_identity(tmp_path):
 
 
 @pytest.mark.parametrize("code,status", [(404, "no_data"), (429, "unavailable"), (503, "unavailable")])
-def test_unobserved_kinnlib_downloads_remain_unknown_and_cached(tmp_path, code, status):
+def test_unobserved_kinnlib_downloads_remain_unknown_with_bounded_retries(tmp_path, code, status):
     calls = []
     def missing(url):
         calls.append(url)
@@ -434,9 +434,15 @@ def test_unobserved_kinnlib_downloads_remain_unknown_and_cached(tmp_path, code, 
     assert row["pypi_downloads"]["windows"] is None and row["pypi_downloads"]["daily"] == []
     assert row["pypi_recent"]["counts"] is None
     assert json.loads((tmp_path / "packages/badges/kinn-pypi.json").read_text())["message"] == "unavailable"
-    stats.run(REGISTRY, tmp_path, now=NOW.replace(hour=23), fetch_pypi=missing,
+    stats.run(REGISTRY, tmp_path, now=NOW.replace(minute=24), fetch_pypi=missing,
               fetch_recent=missing, fetch_github=repository_fetch())
     assert len(calls) == 2 * len(REGISTRY["packages"])
+    stats.run(REGISTRY, tmp_path, now=NOW.replace(hour=23), fetch_pypi=missing,
+              fetch_recent=missing, fetch_github=repository_fetch())
+    assert len(calls) == 2 * len(REGISTRY["packages"]) + (code != 404)
+    if code != 404:
+        assert calls[-1] == "https://pypistats.org/api/packages/kinnlib/recent"
+    assert json.loads((tmp_path / "packages/badges/kinn-pypi.json").read_text())["message"] == "unavailable"
 
 
 @pytest.mark.parametrize("rename_registry_field", [False, True])

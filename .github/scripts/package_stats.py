@@ -198,7 +198,10 @@ def save_packages(snapshot, destination):
         "`pypi_recent` separately retains the source's explicit last-day/week/month totals. "
         "The badges prefer these totals when available, so sparse daily rows are not "
         "treated as an incomplete monthly total. The endpoint does not supply exact "
-        "period dates: none are inferred. Each endpoint is cached once per UTC day. "
+        "period dates: none are inferred. Successful results are cached for the UTC day. "
+        "Temporary failures of the recent-totals endpoint can retry on a later collection "
+        "after at least one hour, honoring longer Retry-After delays. "
+        "Collection is scheduled at 07:23, 13:23 and 19:23 UTC. "
         "A failed request retains the prior aggregate as stale; a 404 is not zero.\n\n"
         "Sources: https://pypistats.org/api/ and https://pypistats.org/faqs .\n",
         encoding="utf-8")
