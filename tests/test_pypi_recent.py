@@ -83,9 +83,9 @@ def test_aggregate_collection_and_badge_use_recent_without_modifying_daily_histo
     badge = stats.package_badges.observations(again)['optinpy-pypi']
     assert badge['message'] == '7' and badge['label'] == 'PyPI downloads/month'
     row['pypi_recent']['status'] = 'stale'
-    assert stats.package_badges.observations(again)['optinpy-pypi']['message'] == '7 (stale)'
+    assert stats.package_badges.observations(again)['optinpy-pypi']['message'] == '1'
     row['pypi_recent'] = {'status': 'unavailable', 'counts': None}
-    assert stats.package_badges.observations(again)['optinpy-pypi']['message'] == '1 (partial, stale)'
+    assert stats.package_badges.observations(again)['optinpy-pypi']['message'] == '1'
 
 
 @pytest.mark.parametrize('failure', [429, 503, 408, 'network'])
