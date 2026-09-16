@@ -1,7 +1,10 @@
 # optinpy
 
+[![CI](https://img.shields.io/github/actions/workflow/status/gusmaogabriels/optinpy/ci.yml?branch=master&event=push&label=CI)](https://github.com/gusmaogabriels/optinpy/actions/workflows/ci.yml)
+[![PyPI version](https://img.shields.io/pypi/v/optinpy?label=PyPI&color=blue)](https://pypi.org/project/optinpy/)
+[![License](https://img.shields.io/badge/license-GPL--3.0-blue)](./LICENSE)
 [![GitHub downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgusmaogabriels%2Foptinpy%2Fdistribution-statistics%2Fpackages%2Fbadges%2Foptinpy-github.json)](https://github.com/gusmaogabriels/optinpy/releases)
-[![PyPI downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgusmaogabriels%2Foptinpy%2Fdistribution-statistics%2Fpackages%2Fbadges%2Foptinpy-pypi.json)](https://pypistats.org/packages/optinpy)
+[![PyPI downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgusmaogabriels%2Foptinpy%2Fdistribution-statistics%2Fpackages%2Fbadges%2Foptinpy-pypi.json)](https://pypistats.org/packages/optinpy "Monthly total shown only when complete and current; otherwise unavailable. View the public source.")
 
 ## Contents
 

@@ -80,7 +80,7 @@ def render(snapshot):
 
 
 def endpoints(snapshot):
-    """Use the standard Shields renderer with only already-public download data."""
+    """Show current totals compactly; retain historical detail in the feed and SVGs."""
     result = {}
     for name, value in observations(snapshot).items():
         badge = {"schemaVersion": 1, "label": value["label"], "message": value["message"],
@@ -88,6 +88,12 @@ def endpoints(snapshot):
                  "logoColor": "white", "style": "flat"}
         if badge["message"] == "no data":
             badge["message"] = "unavailable"
+        if name.endswith("-pypi"):
+            if any(flag in badge["message"] for flag in ("partial", "stale")):
+                badge["message"] = "unavailable"
+            if badge["message"] == "unavailable":
+                badge["label"] = "PyPI downloads"
+                badge["color"] = "#777"
         result[name + ".json"] = json.dumps(badge, indent=2) + "\n"
     return result
 
