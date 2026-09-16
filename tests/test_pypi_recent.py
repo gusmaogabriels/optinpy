@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta, timezone
+from email.utils import format_datetime
 import importlib.util
+import json
 from pathlib import Path
 from urllib.error import HTTPError
 
@@ -84,3 +86,110 @@ def test_aggregate_collection_and_badge_use_recent_without_modifying_daily_histo
     assert stats.package_badges.observations(again)['optinpy-pypi']['message'] == '7 (stale)'
     row['pypi_recent'] = {'status': 'unavailable', 'counts': None}
     assert stats.package_badges.observations(again)['optinpy-pypi']['message'] == '1 (partial, stale)'
+
+
+@pytest.mark.parametrize('failure', [429, 503, 408, 'network'])
+def test_temporary_failure_retries_after_cooldown_then_caches_success(failure):
+    calls = []
+    def fetch(url):
+        calls.append(url)
+        if len(calls) == 1:
+            if failure == 'network':
+                raise OSError('untrusted remote detail')
+            raise HTTPError(url, failure, 'untrusted remote detail', {}, None)
+        return payload(last_month=1)
+    failed = recent.collect('optinpy', now=NOW, fetch=fetch)
+    assert failed['counts'] is None and failed['status'] == 'unavailable'
+    assert 'untrusted remote detail' not in str(failed)
+    assert recent.collect('optinpy', failed, now=NOW+timedelta(minutes=59), fetch=fetch) == failed
+    assert len(calls) == 1
+    recovered = recent.collect('optinpy', failed, now=NOW+timedelta(hours=1), fetch=fetch)
+    assert recovered['status'] == 'available' and recovered['counts']['last_month'] == 1
+    assert 'retry_at' not in recovered and 'error' not in recovered
+    assert recent.collect('optinpy', recovered, now=NOW+timedelta(hours=8), fetch=fetch) == recovered
+    assert len(calls) == 2
+
+
+@pytest.mark.parametrize('header', ['7200', format_datetime(NOW+timedelta(hours=2), usegmt=True)])
+def test_server_retry_after_is_respected_across_utc_midnight(header):
+    # Move this failure close to midnight; the UTC-day cache must not shorten the delay.
+    now = NOW.replace(hour=23)
+    if not header.isdigit():
+        header = format_datetime(now+timedelta(hours=2), usegmt=True)
+    calls = []
+    def fail(url):
+        calls.append(url)
+        raise HTTPError(url, 429, 'rate limit', {'Retry-After': header}, None)
+    failed = recent.collect('optinpy', now=now, fetch=fail)
+    assert failed['retry_at'] == (now+timedelta(hours=2)).isoformat()
+    assert recent.collect('optinpy', failed, now=now+timedelta(hours=1), fetch=fail) == failed
+    assert len(calls) == 1
+    def recover(url):
+        calls.append(url)
+        return payload()
+    assert recent.collect('optinpy', failed, now=now+timedelta(hours=2), fetch=recover)['status'] == 'available'
+    assert len(calls) == 2
+
+
+@pytest.mark.parametrize('header', ['', 'nonsense', '-1', '60', '9'*100,
+                                    format_datetime(NOW-timedelta(days=1), usegmt=True)])
+def test_invalid_or_short_retry_after_keeps_minimum_cooldown(header):
+    def fail(url):
+        raise HTTPError(url, 429, 'rate limit', {'Retry-After': header}, None)
+    failed = recent.collect('optinpy', now=NOW, fetch=fail)
+    assert failed['retry_at'] == (NOW+timedelta(hours=1)).isoformat()
+
+
+@pytest.mark.parametrize('code', [403, 404])
+def test_non_transient_http_failures_remain_cached_for_utc_day(code):
+    calls = []
+    def fail(url):
+        calls.append(url)
+        raise HTTPError(url, code, 'unavailable', {}, None)
+    failed = recent.collect('optinpy', now=NOW, fetch=fail)
+    assert 'retry_at' not in failed
+    assert recent.collect('optinpy', failed, now=NOW+timedelta(hours=8), fetch=fail) == failed
+    assert len(calls) == 1
+
+
+def test_retry_failure_preserves_old_counts_and_starts_a_new_cooldown():
+    original = recent.collect('optinpy', now=NOW-timedelta(days=1), fetch=lambda _: payload())
+    def fail(url):
+        raise HTTPError(url, 503, 'unavailable', {}, None)
+    first = recent.collect('optinpy', original, now=NOW, fetch=fail)
+    second = recent.collect('optinpy', first, now=NOW+timedelta(hours=1), fetch=fail)
+    assert first['status'] == second['status'] == 'stale'
+    assert second['counts'] == original['counts'] and second['fetched_at'] == original['fetched_at']
+    assert second['retry_at'] == (NOW+timedelta(hours=2)).isoformat()
+
+
+def test_legacy_rate_limit_cache_recovers_monthly_badge_without_refetching_successes():
+    registry = {'schema_version': 1, 'packages': [
+        {'id': name, 'pypi_package': name, 'repository': f'gusmaogabriels/{name}'}
+        for name in ('optinpy', 'mkin4py')]}
+    daily_calls, recent_calls = [], []
+    def daily(url):
+        daily_calls.append(url)
+        name = url.split('/')[-2]
+        return {'package': name, 'type': 'overall_downloads', 'data': [
+            {'date': '2026-09-09', 'category': 'without_mirrors', 'downloads': 1}]}
+    def initial(url):
+        recent_calls.append(url)
+        name = url.split('/')[-2]
+        if name == 'mkin4py':
+            raise HTTPError(url, 429, 'rate limit', {}, None)
+        return payload(name)
+    first = stats.collect_packages(registry, now=NOW, fetch=daily, fetch_recent=initial)
+    first['packages'][1]['pypi_recent'].pop('retry_at')  # Snapshot from the old collector.
+    def recover(url):
+        recent_calls.append(url)
+        return payload(url.split('/')[-2], last_month=1)
+    again = stats.collect_packages(registry, first, now=NOW+timedelta(hours=2),
+                                   fetch=daily, fetch_recent=recover)
+    assert len(daily_calls) == 2 and len(recent_calls) == 3
+    assert again['packages'][0]['pypi_recent'] == first['packages'][0]['pypi_recent']
+    for before, after in zip(first['packages'], again['packages']):
+        assert after['pypi_downloads'] == before['pypi_downloads']
+        after['github_release_downloads'] = {'status': 'unavailable', 'assets': None}
+    badge = json.loads(stats.package_badges.endpoints(again)['mkin4py-pypi.json'])
+    assert badge['label'] == 'PyPI downloads/month' and badge['message'] == '1'
