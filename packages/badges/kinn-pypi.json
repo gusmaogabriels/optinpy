@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "label": "PyPI downloads",
-  "message": "unavailable",
-  "color": "#777",
+  "label": "PyPI downloads/month",
+  "message": "72",
+  "color": "#007ec6",
   "namedLogo": "pypi",
   "logoColor": "white",
   "style": "flat"

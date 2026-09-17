@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "label": "GitHub downloads",
-  "message": "2",
-  "color": "#007ec6",
+  "message": "2 (stale)",
+  "color": "#9f6000",
   "namedLogo": "github",
   "logoColor": "white",
   "style": "flat"
