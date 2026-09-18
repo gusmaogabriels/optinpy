@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="185" height="20" role="img" aria-label="PyPI downloads/month: 206. Sum of PyPIStats daily records fetched 2026-09-18T12:15:31.844686+00:00, 2026-08-19 through 2026-09-17. Cutoff inferred from the source&#x27;s normal previous-UTC-day update schedule; upstream reporting delays are not detectable from sparse rows. Zero-download dates are omitted by this endpoint. Known mirrors excluded; repeats and automation included.">
-<title>PyPI downloads/month: 206. Sum of PyPIStats daily records fetched 2026-09-18T12:15:31.844686+00:00, 2026-08-19 through 2026-09-17. Cutoff inferred from the source&#x27;s normal previous-UTC-day update schedule; upstream reporting delays are not detectable from sparse rows. Zero-download dates are omitted by this endpoint. Known mirrors excluded; repeats and automation included.</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="185" height="20" role="img" aria-label="PyPI downloads/month: 206. Source-reported last-month total fetched 2026-09-18T21:43:40.980677+00:00. Exact period dates are not provided. Known mirrors excluded; repeats and automation included.">
+<title>PyPI downloads/month: 206. Source-reported last-month total fetched 2026-09-18T21:43:40.980677+00:00. Exact period dates are not provided. Known mirrors excluded; repeats and automation included.</title>
 <rect width="185" height="20" rx="3" fill="#007ec6"/>
 <path d="M3 0H152V20H3Q0 20 0 17V3Q0 0 3 0" fill="#555"/>
 <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans Mono,monospace" font-size="11">
