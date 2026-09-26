@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="171" height="20" role="img" aria-label="PyPI downloads/month: 1. Source-reported last-month total fetched 2026-09-25T12:48:18.570105+00:00. Exact period dates are not provided. Known mirrors excluded; repeats and automation included.">
-<title>PyPI downloads/month: 1. Source-reported last-month total fetched 2026-09-25T12:48:18.570105+00:00. Exact period dates are not provided. Known mirrors excluded; repeats and automation included.</title>
-<rect width="171" height="20" rx="3" fill="#007ec6"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="178" height="20" role="img" aria-label="PyPI downloads/month: 83. Source-reported last-month total fetched 2026-09-26T12:16:02.712843+00:00. Exact period dates are not provided. Known mirrors excluded; repeats and automation included.">
+<title>PyPI downloads/month: 83. Source-reported last-month total fetched 2026-09-26T12:16:02.712843+00:00. Exact period dates are not provided. Known mirrors excluded; repeats and automation included.</title>
+<rect width="178" height="20" rx="3" fill="#007ec6"/>
 <path d="M3 0H152V20H3Q0 20 0 17V3Q0 0 3 0" fill="#555"/>
 <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans Mono,monospace" font-size="11">
 <text x="76" y="14">PyPI downloads/month</text>
-<text x="161.5" y="14">1</text>
+<text x="165" y="14">83</text>
 </g>
 </svg>
