@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "gusmaogabriels/optinpy",
-  "observed_at": "2026-10-11T14:06:21.632391+00:00",
+  "observed_at": "2026-10-11T22:57:39.567285+00:00",
   "stars": 49,
   "assets": [
     {
@@ -166,8 +166,8 @@
     "status": "not_collected"
   },
   "changes": {
-    "previous_observed_at": "2026-10-10T22:37:13.716977+00:00",
-    "current_observed_at": "2026-10-11T14:06:21.632391+00:00",
+    "previous_observed_at": "2026-10-11T14:06:21.632391+00:00",
+    "current_observed_at": "2026-10-11T22:57:39.567285+00:00",
     "assets": [
       {
         "asset_id": 564614421,
@@ -188,7 +188,7 @@
         "name": "optinpy-2.0.0a1.tar.gz",
         "kind": "package",
         "status": "observed",
-        "download_increase": 1
+        "download_increase": 0
       },
       {
         "asset_id": 564699118,
