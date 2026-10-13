@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "repository": "gusmaogabriels/optinpy",
+  "observed_at": "2026-10-13T01:23:50.101571+00:00",
+  "stars": 49,
+  "assets": [
+    {
+      "asset_id": 564614421,
+      "release_id": 388810270,
+      "tag": "v2.0.0a1",
+      "prerelease": true,
+      "name": "optinpy-2.0.0a1-py3-none-any.whl",
+      "download_count": 2,
+      "kind": "package"
+    },
+    {
+      "asset_id": 564614422,
+      "release_id": 388810270,
+      "tag": "v2.0.0a1",
+      "prerelease": true,
+      "name": "SHA256SUMS.txt",
+      "download_count": 0,
+      "kind": "other"
+    },
+    {
+      "asset_id": 564614423,
+      "release_id": 388810270,
+      "tag": "v2.0.0a1",
+      "prerelease": true,
+      "name": "optinpy-2.0.0a1.tar.gz",
+      "download_count": 1,
+      "kind": "package"
+    },
+    {
+      "asset_id": 564699118,
+      "release_id": 388829437,
+      "tag": "v2.0.0a2",
+      "prerelease": true,
+      "name": "optinpy-2.0.0a2-py3-none-any.whl",
+      "download_count": 1,
+      "kind": "package"
+    },
+    {
+      "asset_id": 564699119,
+      "release_id": 388829437,
+      "tag": "v2.0.0a2",
+      "prerelease": true,
+      "name": "optinpy-2.0.0a2.tar.gz",
+      "download_count": 1,
+      "kind": "package"
+    },
+    {
+      "asset_id": 564699120,
+      "release_id": 388829437,
+      "tag": "v2.0.0a2",
+      "prerelease": true,
+      "name": "SHA256SUMS.txt",
+      "download_count": 1,
+      "kind": "other"
+    }
+  ],
+  "scope": "Public distribution downloads and expressed interest; includes automation and test downloads",
+  "local_cli_usage": {
+    "status": "not_observed"
+  },
+  "pypi_downloads": {
+    "status": "available",
+    "package": "optinpy",
+    "source": "https://pypistats.org/api/packages/optinpy/overall?mirrors=false",
+    "mirrors": "excluded",
+    "last_attempt_at": "2026-10-13T01:23:50.101571+00:00",
+    "fetched_at": "2026-10-13T01:23:50.101571+00:00",
+    "data_through": "2026-10-12",
+    "daily": [
+      {
+        "date": "2026-09-15",
+        "downloads": 153
+      },
+      {
+        "date": "2026-09-16",
+        "downloads": 17
+      },
+      {
+        "date": "2026-09-17",
+        "downloads": 36
+      },
+      {
+        "date": "2026-09-18",
+        "downloads": 47
+      },
+      {
+        "date": "2026-09-19",
+        "downloads": 2
+      },
+      {
+        "date": "2026-09-22",
+        "downloads": 2
+      },
+      {
+        "date": "2026-09-23",
+        "downloads": 1
+      },
+      {
+        "date": "2026-09-25",
+        "downloads": 8
+      },
+      {
+        "date": "2026-09-26",
+        "downloads": 1
+      },
+      {
+        "date": "2026-09-29",
+        "downloads": 2
+      },
+      {
+        "date": "2026-10-01",
+        "downloads": 18
+      },
+      {
+        "date": "2026-10-02",
+        "downloads": 1
+      },
+      {
+        "date": "2026-10-03",
+        "downloads": 1
+      },
+      {
+        "date": "2026-10-04",
+        "downloads": 2
+      },
+      {
+        "date": "2026-10-05",
+        "downloads": 3
+      },
+      {
+        "date": "2026-10-06",
+        "downloads": 1
+      },
+      {
+        "date": "2026-10-09",
+        "downloads": 2
+      },
+      {
+        "date": "2026-10-12",
+        "downloads": 2
+      }
+    ],
+    "windows": {
+      "1": {
+        "start_date": "2026-10-12",
+        "end_date": "2026-10-12",
+        "reported_downloads": 2,
+        "reported_days": 1
+      },
+      "7": {
+        "start_date": "2026-10-06",
+        "end_date": "2026-10-12",
+        "reported_downloads": 5,
+        "reported_days": 3
+      },
+      "30": {
+        "start_date": "2026-09-13",
+        "end_date": "2026-10-12",
+        "reported_downloads": 299,
+        "reported_days": 18
+      }
+    }
+  },
+  "source_clones": {
+    "status": "not_collected"
+  },
+  "changes": {
+    "previous_observed_at": "2026-10-12T16:46:26.767420+00:00",
+    "current_observed_at": "2026-10-13T01:23:50.101571+00:00",
+    "assets": [
+      {
+        "asset_id": 564614421,
+        "name": "optinpy-2.0.0a1-py3-none-any.whl",
+        "kind": "package",
+        "status": "observed",
+        "download_increase": 0
+      },
+      {
+        "asset_id": 564614422,
+        "name": "SHA256SUMS.txt",
+        "kind": "other",
+        "status": "observed",
+        "download_increase": 0
+      },
+      {
+        "asset_id": 564614423,
+        "name": "optinpy-2.0.0a1.tar.gz",
+        "kind": "package",
+        "status": "observed",
+        "download_increase": 0
+      },
+      {
+        "asset_id": 564699118,
+        "name": "optinpy-2.0.0a2-py3-none-any.whl",
+        "kind": "package",
+        "status": "observed",
+        "download_increase": 0
+      },
+      {
+        "asset_id": 564699119,
+        "name": "optinpy-2.0.0a2.tar.gz",
+        "kind": "package",
+        "status": "observed",
+        "download_increase": 0
+      },
+      {
+        "asset_id": 564699120,
+        "name": "SHA256SUMS.txt",
+        "kind": "other",
+        "status": "observed",
+        "download_increase": 0
+      }
+    ],
+    "removed_asset_ids": []
+  }
+}
