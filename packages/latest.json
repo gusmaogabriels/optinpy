@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "observed_at": "2026-10-13T15:06:08.363413+00:00",
+  "observed_at": "2026-10-13T23:17:59.287037+00:00",
   "packages": [
     {
       "id": "optinpy",
@@ -127,8 +127,8 @@
         "status": "available",
         "repository": "gusmaogabriels/optinpy",
         "source": "https://api.github.com/repos/gusmaogabriels/optinpy/releases",
-        "observed_at": "2026-10-13T15:06:08.363413+00:00",
-        "last_attempt_at": "2026-10-13T15:06:08.363413+00:00",
+        "observed_at": "2026-10-13T23:17:59.287037+00:00",
+        "last_attempt_at": "2026-10-13T23:17:59.287037+00:00",
         "assets": [
           {
             "asset_id": 564614421,
@@ -186,8 +186,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-10-13T01:23:50.101571+00:00",
-          "current_observed_at": "2026-10-13T15:06:08.363413+00:00",
+          "previous_observed_at": "2026-10-13T15:06:08.363413+00:00",
+          "current_observed_at": "2026-10-13T23:17:59.287037+00:00",
           "assets": [
             {
               "asset_id": 564614421,
@@ -457,8 +457,8 @@
         "status": "available",
         "repository": "gusmaogabriels/mkin4py",
         "source": "https://api.github.com/repos/gusmaogabriels/mkin4py/releases",
-        "observed_at": "2026-10-13T15:06:08.363413+00:00",
-        "last_attempt_at": "2026-10-13T15:06:08.363413+00:00",
+        "observed_at": "2026-10-13T23:17:59.287037+00:00",
+        "last_attempt_at": "2026-10-13T23:17:59.287037+00:00",
         "assets": [
           {
             "asset_id": 564838573,
@@ -516,8 +516,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-10-13T01:23:50.101571+00:00",
-          "current_observed_at": "2026-10-13T15:06:08.363413+00:00",
+          "previous_observed_at": "2026-10-13T15:06:08.363413+00:00",
+          "current_observed_at": "2026-10-13T23:17:59.287037+00:00",
           "assets": [
             {
               "asset_id": 564838573,
@@ -545,21 +545,21 @@
               "name": "mkin4py-2.0.0-py3-none-any.whl",
               "kind": "package",
               "status": "observed",
-              "download_increase": 3
+              "download_increase": 0
             },
             {
               "asset_id": 588855424,
               "name": "SHA256SUMS.txt",
               "kind": "other",
               "status": "observed",
-              "download_increase": 1
+              "download_increase": 0
             },
             {
               "asset_id": 588855425,
               "name": "mkin4py-2.0.0.tar.gz",
               "kind": "package",
               "status": "observed",
-              "download_increase": 3
+              "download_increase": 0
             }
           ],
           "removed_asset_ids": []
@@ -768,7 +768,7 @@
         "repository": "gusmaogabriels/xl2py",
         "source": "https://api.github.com/repos/gusmaogabriels/xl2py/releases",
         "observed_at": "2026-09-16T22:12:56.130860+00:00",
-        "last_attempt_at": "2026-10-13T15:06:08.363413+00:00",
+        "last_attempt_at": "2026-10-13T23:17:59.287037+00:00",
         "assets": [
           {
             "asset_id": 564866778,
@@ -946,8 +946,8 @@
         "status": "available",
         "repository": "gusmaogabriels/kinn",
         "source": "https://api.github.com/repos/gusmaogabriels/kinn/releases",
-        "observed_at": "2026-10-13T15:06:08.363413+00:00",
-        "last_attempt_at": "2026-10-13T15:06:08.363413+00:00",
+        "observed_at": "2026-10-13T23:17:59.287037+00:00",
+        "last_attempt_at": "2026-10-13T23:17:59.287037+00:00",
         "assets": [
           {
             "asset_id": 568043531,
@@ -978,8 +978,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-10-13T01:23:50.101571+00:00",
-          "current_observed_at": "2026-10-13T15:06:08.363413+00:00",
+          "previous_observed_at": "2026-10-13T15:06:08.363413+00:00",
+          "current_observed_at": "2026-10-13T23:17:59.287037+00:00",
           "assets": [
             {
               "asset_id": 568043531,
@@ -993,7 +993,7 @@
               "name": "kinnlib-1.0.tar.gz",
               "kind": "package",
               "status": "observed",
-              "download_increase": 1
+              "download_increase": 0
             },
             {
               "asset_id": 568043533,
