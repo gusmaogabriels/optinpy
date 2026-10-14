@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "gusmaogabriels/optinpy",
-  "observed_at": "2026-10-14T18:03:00.185694+00:00",
+  "observed_at": "2026-10-14T22:19:55.245194+00:00",
   "stars": 49,
   "assets": [
     {
@@ -174,8 +174,8 @@
     "status": "not_collected"
   },
   "changes": {
-    "previous_observed_at": "2026-10-14T12:54:17.961450+00:00",
-    "current_observed_at": "2026-10-14T18:03:00.185694+00:00",
+    "previous_observed_at": "2026-10-14T18:03:00.185694+00:00",
+    "current_observed_at": "2026-10-14T22:19:55.245194+00:00",
     "assets": [
       {
         "asset_id": 564614421,
