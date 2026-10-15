@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "gusmaogabriels/optinpy",
-  "observed_at": "2026-10-14T22:19:55.245194+00:00",
+  "observed_at": "2026-10-15T12:41:25.079474+00:00",
   "stars": 49,
   "assets": [
     {
@@ -68,9 +68,9 @@
     "package": "optinpy",
     "source": "https://pypistats.org/api/packages/optinpy/overall?mirrors=false",
     "mirrors": "excluded",
-    "last_attempt_at": "2026-10-14T12:54:17.961450+00:00",
-    "fetched_at": "2026-10-14T12:54:17.961450+00:00",
-    "data_through": "2026-10-13",
+    "last_attempt_at": "2026-10-15T12:41:25.079474+00:00",
+    "fetched_at": "2026-10-15T12:41:25.079474+00:00",
+    "data_through": "2026-10-14",
     "daily": [
       {
         "date": "2026-09-15",
@@ -147,26 +147,30 @@
       {
         "date": "2026-10-13",
         "downloads": 2
+      },
+      {
+        "date": "2026-10-14",
+        "downloads": 1
       }
     ],
     "windows": {
       "1": {
-        "start_date": "2026-10-13",
-        "end_date": "2026-10-13",
-        "reported_downloads": 2,
+        "start_date": "2026-10-14",
+        "end_date": "2026-10-14",
+        "reported_downloads": 1,
         "reported_days": 1
       },
       "7": {
-        "start_date": "2026-10-07",
-        "end_date": "2026-10-13",
-        "reported_downloads": 6,
-        "reported_days": 3
+        "start_date": "2026-10-08",
+        "end_date": "2026-10-14",
+        "reported_downloads": 7,
+        "reported_days": 4
       },
       "30": {
-        "start_date": "2026-09-14",
-        "end_date": "2026-10-13",
-        "reported_downloads": 301,
-        "reported_days": 19
+        "start_date": "2026-09-15",
+        "end_date": "2026-10-14",
+        "reported_downloads": 302,
+        "reported_days": 20
       }
     }
   },
@@ -174,8 +178,8 @@
     "status": "not_collected"
   },
   "changes": {
-    "previous_observed_at": "2026-10-14T18:03:00.185694+00:00",
-    "current_observed_at": "2026-10-14T22:19:55.245194+00:00",
+    "previous_observed_at": "2026-10-14T22:19:55.245194+00:00",
+    "current_observed_at": "2026-10-15T12:41:25.079474+00:00",
     "assets": [
       {
         "asset_id": 564614421,
