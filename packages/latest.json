@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "observed_at": "2026-10-15T12:41:25.079474+00:00",
+  "observed_at": "2026-10-15T17:47:44.059986+00:00",
   "packages": [
     {
       "id": "optinpy",
@@ -135,8 +135,8 @@
         "status": "available",
         "repository": "gusmaogabriels/optinpy",
         "source": "https://api.github.com/repos/gusmaogabriels/optinpy/releases",
-        "observed_at": "2026-10-15T12:41:25.079474+00:00",
-        "last_attempt_at": "2026-10-15T12:41:25.079474+00:00",
+        "observed_at": "2026-10-15T17:47:44.059986+00:00",
+        "last_attempt_at": "2026-10-15T17:47:44.059986+00:00",
         "assets": [
           {
             "asset_id": 564614421,
@@ -194,8 +194,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-10-14T22:19:55.245194+00:00",
-          "current_observed_at": "2026-10-15T12:41:25.079474+00:00",
+          "previous_observed_at": "2026-10-15T12:41:25.079474+00:00",
+          "current_observed_at": "2026-10-15T17:47:44.059986+00:00",
           "assets": [
             {
               "asset_id": 564614421,
@@ -465,8 +465,8 @@
         "status": "available",
         "repository": "gusmaogabriels/mkin4py",
         "source": "https://api.github.com/repos/gusmaogabriels/mkin4py/releases",
-        "observed_at": "2026-10-15T12:41:25.079474+00:00",
-        "last_attempt_at": "2026-10-15T12:41:25.079474+00:00",
+        "observed_at": "2026-10-15T17:47:44.059986+00:00",
+        "last_attempt_at": "2026-10-15T17:47:44.059986+00:00",
         "assets": [
           {
             "asset_id": 564838573,
@@ -492,7 +492,7 @@
             "tag": "v2.0.0a1",
             "prerelease": true,
             "name": "mkin4py-2.0.0a1-py3-none-any.whl",
-            "download_count": 1,
+            "download_count": 2,
             "kind": "package"
           },
           {
@@ -524,8 +524,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-10-14T22:19:55.245194+00:00",
-          "current_observed_at": "2026-10-15T12:41:25.079474+00:00",
+          "previous_observed_at": "2026-10-15T12:41:25.079474+00:00",
+          "current_observed_at": "2026-10-15T17:47:44.059986+00:00",
           "assets": [
             {
               "asset_id": 564838573,
@@ -546,7 +546,7 @@
               "name": "mkin4py-2.0.0a1-py3-none-any.whl",
               "kind": "package",
               "status": "observed",
-              "download_increase": 0
+              "download_increase": 1
             },
             {
               "asset_id": 588855422,
@@ -776,7 +776,7 @@
         "repository": "gusmaogabriels/xl2py",
         "source": "https://api.github.com/repos/gusmaogabriels/xl2py/releases",
         "observed_at": "2026-09-16T22:12:56.130860+00:00",
-        "last_attempt_at": "2026-10-15T12:41:25.079474+00:00",
+        "last_attempt_at": "2026-10-15T17:47:44.059986+00:00",
         "assets": [
           {
             "asset_id": 564866778,
@@ -962,8 +962,8 @@
         "status": "available",
         "repository": "gusmaogabriels/kinn",
         "source": "https://api.github.com/repos/gusmaogabriels/kinn/releases",
-        "observed_at": "2026-10-15T12:41:25.079474+00:00",
-        "last_attempt_at": "2026-10-15T12:41:25.079474+00:00",
+        "observed_at": "2026-10-15T17:47:44.059986+00:00",
+        "last_attempt_at": "2026-10-15T17:47:44.059986+00:00",
         "assets": [
           {
             "asset_id": 568043531,
@@ -994,8 +994,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-10-14T22:19:55.245194+00:00",
-          "current_observed_at": "2026-10-15T12:41:25.079474+00:00",
+          "previous_observed_at": "2026-10-15T12:41:25.079474+00:00",
+          "current_observed_at": "2026-10-15T17:47:44.059986+00:00",
           "assets": [
             {
               "asset_id": 568043531,
