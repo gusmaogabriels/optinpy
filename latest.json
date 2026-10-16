@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "gusmaogabriels/optinpy",
-  "observed_at": "2026-10-15T22:23:55.353419+00:00",
+  "observed_at": "2026-10-16T12:28:56.651849+00:00",
   "stars": 49,
   "assets": [
     {
@@ -68,8 +68,8 @@
     "package": "optinpy",
     "source": "https://pypistats.org/api/packages/optinpy/overall?mirrors=false",
     "mirrors": "excluded",
-    "last_attempt_at": "2026-10-15T12:41:25.079474+00:00",
-    "fetched_at": "2026-10-15T12:41:25.079474+00:00",
+    "last_attempt_at": "2026-10-16T12:28:56.651849+00:00",
+    "fetched_at": "2026-10-16T12:28:56.651849+00:00",
     "data_through": "2026-10-14",
     "daily": [
       {
@@ -178,8 +178,8 @@
     "status": "not_collected"
   },
   "changes": {
-    "previous_observed_at": "2026-10-15T17:47:44.059986+00:00",
-    "current_observed_at": "2026-10-15T22:23:55.353419+00:00",
+    "previous_observed_at": "2026-10-15T22:23:55.353419+00:00",
+    "current_observed_at": "2026-10-16T12:28:56.651849+00:00",
     "assets": [
       {
         "asset_id": 564614421,
