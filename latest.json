@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "gusmaogabriels/optinpy",
-  "observed_at": "2026-10-18T21:32:52.535221+00:00",
+  "observed_at": "2026-10-19T14:43:28.085217+00:00",
   "stars": 49,
   "assets": [
     {
@@ -68,9 +68,9 @@
     "package": "optinpy",
     "source": "https://pypistats.org/api/packages/optinpy/overall?mirrors=false",
     "mirrors": "excluded",
-    "last_attempt_at": "2026-10-18T12:05:18.795386+00:00",
-    "fetched_at": "2026-10-18T12:05:18.795386+00:00",
-    "data_through": "2026-10-17",
+    "last_attempt_at": "2026-10-19T14:43:28.085217+00:00",
+    "fetched_at": "2026-10-19T14:43:28.085217+00:00",
+    "data_through": "2026-10-18",
     "daily": [
       {
         "date": "2026-09-15",
@@ -155,25 +155,29 @@
       {
         "date": "2026-10-17",
         "downloads": 1
+      },
+      {
+        "date": "2026-10-18",
+        "downloads": 5
       }
     ],
     "windows": {
       "1": {
-        "start_date": "2026-10-17",
-        "end_date": "2026-10-17",
-        "reported_downloads": 1,
+        "start_date": "2026-10-18",
+        "end_date": "2026-10-18",
+        "reported_downloads": 5,
         "reported_days": 1
       },
       "7": {
-        "start_date": "2026-10-11",
-        "end_date": "2026-10-17",
-        "reported_downloads": 6,
-        "reported_days": 4
+        "start_date": "2026-10-12",
+        "end_date": "2026-10-18",
+        "reported_downloads": 11,
+        "reported_days": 5
       },
       "30": {
-        "start_date": "2026-09-18",
-        "end_date": "2026-10-17",
-        "reported_downloads": 97,
+        "start_date": "2026-09-19",
+        "end_date": "2026-10-18",
+        "reported_downloads": 55,
         "reported_days": 18
       }
     }
@@ -182,8 +186,8 @@
     "status": "not_collected"
   },
   "changes": {
-    "previous_observed_at": "2026-10-18T16:34:27.181385+00:00",
-    "current_observed_at": "2026-10-18T21:32:52.535221+00:00",
+    "previous_observed_at": "2026-10-18T21:32:52.535221+00:00",
+    "current_observed_at": "2026-10-19T14:43:28.085217+00:00",
     "assets": [
       {
         "asset_id": 564614421,
