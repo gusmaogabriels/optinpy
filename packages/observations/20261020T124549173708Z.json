@@ -1,0 +1,1052 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-10-20T12:45:49.173708+00:00",
+  "packages": [
+    {
+      "id": "optinpy",
+      "pypi_package": "optinpy",
+      "repository": "gusmaogabriels/optinpy",
+      "pypi_downloads": {
+        "status": "available",
+        "package": "optinpy",
+        "source": "https://pypistats.org/api/packages/optinpy/overall?mirrors=false",
+        "mirrors": "excluded",
+        "last_attempt_at": "2026-10-20T12:45:49.173708+00:00",
+        "fetched_at": "2026-10-20T12:45:49.173708+00:00",
+        "data_through": "2026-10-18",
+        "daily": [
+          {
+            "date": "2026-09-15",
+            "downloads": 153
+          },
+          {
+            "date": "2026-09-16",
+            "downloads": 17
+          },
+          {
+            "date": "2026-09-17",
+            "downloads": 36
+          },
+          {
+            "date": "2026-09-18",
+            "downloads": 47
+          },
+          {
+            "date": "2026-09-19",
+            "downloads": 2
+          },
+          {
+            "date": "2026-09-22",
+            "downloads": 2
+          },
+          {
+            "date": "2026-09-23",
+            "downloads": 1
+          },
+          {
+            "date": "2026-09-25",
+            "downloads": 8
+          },
+          {
+            "date": "2026-09-26",
+            "downloads": 1
+          },
+          {
+            "date": "2026-09-29",
+            "downloads": 2
+          },
+          {
+            "date": "2026-10-01",
+            "downloads": 18
+          },
+          {
+            "date": "2026-10-02",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-03",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-04",
+            "downloads": 2
+          },
+          {
+            "date": "2026-10-05",
+            "downloads": 3
+          },
+          {
+            "date": "2026-10-06",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-09",
+            "downloads": 2
+          },
+          {
+            "date": "2026-10-12",
+            "downloads": 2
+          },
+          {
+            "date": "2026-10-13",
+            "downloads": 2
+          },
+          {
+            "date": "2026-10-14",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-17",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-18",
+            "downloads": 5
+          }
+        ],
+        "windows": {
+          "1": {
+            "start_date": "2026-10-18",
+            "end_date": "2026-10-18",
+            "reported_downloads": 5,
+            "reported_days": 1
+          },
+          "7": {
+            "start_date": "2026-10-12",
+            "end_date": "2026-10-18",
+            "reported_downloads": 11,
+            "reported_days": 5
+          },
+          "30": {
+            "start_date": "2026-09-19",
+            "end_date": "2026-10-18",
+            "reported_downloads": 55,
+            "reported_days": 18
+          }
+        }
+      },
+      "pypi_recent": {
+        "status": "available",
+        "package": "optinpy",
+        "source": "https://pypistats.org/api/packages/optinpy/recent",
+        "mirrors": "excluded",
+        "last_attempt_at": "2026-10-20T12:45:49.173708+00:00",
+        "fetched_at": "2026-10-20T12:45:49.173708+00:00",
+        "counts": {
+          "last_day": 0,
+          "last_week": 9,
+          "last_month": 294
+        },
+        "scope": "Source-reported last day/week/month aggregates; exact period dates are not supplied by this endpoint."
+      },
+      "github_release_downloads": {
+        "status": "available",
+        "repository": "gusmaogabriels/optinpy",
+        "source": "https://api.github.com/repos/gusmaogabriels/optinpy/releases",
+        "observed_at": "2026-10-20T12:45:49.173708+00:00",
+        "last_attempt_at": "2026-10-20T12:45:49.173708+00:00",
+        "assets": [
+          {
+            "asset_id": 564614421,
+            "release_id": 388810270,
+            "tag": "v2.0.0a1",
+            "prerelease": true,
+            "name": "optinpy-2.0.0a1-py3-none-any.whl",
+            "download_count": 3,
+            "kind": "package"
+          },
+          {
+            "asset_id": 564614422,
+            "release_id": 388810270,
+            "tag": "v2.0.0a1",
+            "prerelease": true,
+            "name": "SHA256SUMS.txt",
+            "download_count": 0,
+            "kind": "other"
+          },
+          {
+            "asset_id": 564614423,
+            "release_id": 388810270,
+            "tag": "v2.0.0a1",
+            "prerelease": true,
+            "name": "optinpy-2.0.0a1.tar.gz",
+            "download_count": 2,
+            "kind": "package"
+          },
+          {
+            "asset_id": 564699118,
+            "release_id": 388829437,
+            "tag": "v2.0.0a2",
+            "prerelease": true,
+            "name": "optinpy-2.0.0a2-py3-none-any.whl",
+            "download_count": 2,
+            "kind": "package"
+          },
+          {
+            "asset_id": 564699119,
+            "release_id": 388829437,
+            "tag": "v2.0.0a2",
+            "prerelease": true,
+            "name": "optinpy-2.0.0a2.tar.gz",
+            "download_count": 1,
+            "kind": "package"
+          },
+          {
+            "asset_id": 564699120,
+            "release_id": 388829437,
+            "tag": "v2.0.0a2",
+            "prerelease": true,
+            "name": "SHA256SUMS.txt",
+            "download_count": 1,
+            "kind": "other"
+          }
+        ],
+        "changes": {
+          "previous_observed_at": "2026-10-19T22:55:18.068929+00:00",
+          "current_observed_at": "2026-10-20T12:45:49.173708+00:00",
+          "assets": [
+            {
+              "asset_id": 564614421,
+              "name": "optinpy-2.0.0a1-py3-none-any.whl",
+              "kind": "package",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 564614422,
+              "name": "SHA256SUMS.txt",
+              "kind": "other",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 564614423,
+              "name": "optinpy-2.0.0a1.tar.gz",
+              "kind": "package",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 564699118,
+              "name": "optinpy-2.0.0a2-py3-none-any.whl",
+              "kind": "package",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 564699119,
+              "name": "optinpy-2.0.0a2.tar.gz",
+              "kind": "package",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 564699120,
+              "name": "SHA256SUMS.txt",
+              "kind": "other",
+              "status": "observed",
+              "download_increase": 0
+            }
+          ],
+          "removed_asset_ids": []
+        }
+      }
+    },
+    {
+      "id": "mkin4py",
+      "pypi_package": "mkin4py",
+      "repository": "gusmaogabriels/mkin4py",
+      "pypi_downloads": {
+        "status": "available",
+        "package": "mkin4py",
+        "source": "https://pypistats.org/api/packages/mkin4py/overall?mirrors=false",
+        "mirrors": "excluded",
+        "last_attempt_at": "2026-10-20T12:45:49.173708+00:00",
+        "fetched_at": "2026-10-20T12:45:49.173708+00:00",
+        "data_through": "2026-10-16",
+        "daily": [
+          {
+            "date": "2026-04-08",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-10",
+            "downloads": 2
+          },
+          {
+            "date": "2026-04-11",
+            "downloads": 2
+          },
+          {
+            "date": "2026-04-13",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-20",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-05",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-06",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-10",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-16",
+            "downloads": 2
+          },
+          {
+            "date": "2026-05-18",
+            "downloads": 2
+          },
+          {
+            "date": "2026-06-04",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-05",
+            "downloads": 4
+          },
+          {
+            "date": "2026-06-06",
+            "downloads": 6
+          },
+          {
+            "date": "2026-06-10",
+            "downloads": 3
+          },
+          {
+            "date": "2026-06-13",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-18",
+            "downloads": 2
+          },
+          {
+            "date": "2026-06-21",
+            "downloads": 2
+          },
+          {
+            "date": "2026-06-23",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-29",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-30",
+            "downloads": 3
+          },
+          {
+            "date": "2026-07-14",
+            "downloads": 1
+          },
+          {
+            "date": "2026-07-16",
+            "downloads": 1
+          },
+          {
+            "date": "2026-07-20",
+            "downloads": 1
+          },
+          {
+            "date": "2026-07-24",
+            "downloads": 1
+          },
+          {
+            "date": "2026-07-25",
+            "downloads": 1
+          },
+          {
+            "date": "2026-08-04",
+            "downloads": 1
+          },
+          {
+            "date": "2026-08-06",
+            "downloads": 1
+          },
+          {
+            "date": "2026-08-09",
+            "downloads": 1
+          },
+          {
+            "date": "2026-09-09",
+            "downloads": 1
+          },
+          {
+            "date": "2026-09-25",
+            "downloads": 82
+          },
+          {
+            "date": "2026-09-26",
+            "downloads": 10
+          },
+          {
+            "date": "2026-09-27",
+            "downloads": 6
+          },
+          {
+            "date": "2026-09-28",
+            "downloads": 2
+          },
+          {
+            "date": "2026-09-29",
+            "downloads": 2
+          },
+          {
+            "date": "2026-10-02",
+            "downloads": 2
+          },
+          {
+            "date": "2026-10-03",
+            "downloads": 4
+          },
+          {
+            "date": "2026-10-04",
+            "downloads": 5
+          },
+          {
+            "date": "2026-10-05",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-06",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-09",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-11",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-12",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-16",
+            "downloads": 2
+          }
+        ],
+        "windows": {
+          "1": {
+            "start_date": "2026-10-16",
+            "end_date": "2026-10-16",
+            "reported_downloads": 2,
+            "reported_days": 1
+          },
+          "7": {
+            "start_date": "2026-10-10",
+            "end_date": "2026-10-16",
+            "reported_downloads": 4,
+            "reported_days": 3
+          },
+          "30": {
+            "start_date": "2026-09-17",
+            "end_date": "2026-10-16",
+            "reported_downloads": 120,
+            "reported_days": 14
+          }
+        }
+      },
+      "pypi_recent": {
+        "status": "available",
+        "package": "mkin4py",
+        "source": "https://pypistats.org/api/packages/mkin4py/recent",
+        "mirrors": "excluded",
+        "last_attempt_at": "2026-10-20T12:45:49.173708+00:00",
+        "fetched_at": "2026-10-20T12:45:49.173708+00:00",
+        "counts": {
+          "last_day": 0,
+          "last_week": 2,
+          "last_month": 115
+        },
+        "scope": "Source-reported last day/week/month aggregates; exact period dates are not supplied by this endpoint."
+      },
+      "github_release_downloads": {
+        "status": "available",
+        "repository": "gusmaogabriels/mkin4py",
+        "source": "https://api.github.com/repos/gusmaogabriels/mkin4py/releases",
+        "observed_at": "2026-10-20T12:45:49.173708+00:00",
+        "last_attempt_at": "2026-10-20T12:45:49.173708+00:00",
+        "assets": [
+          {
+            "asset_id": 564838573,
+            "release_id": 388858842,
+            "tag": "v2.0.0a1",
+            "prerelease": true,
+            "name": "mkin4py-2.0.0a1.tar.gz",
+            "download_count": 2,
+            "kind": "package"
+          },
+          {
+            "asset_id": 564838575,
+            "release_id": 388858842,
+            "tag": "v2.0.0a1",
+            "prerelease": true,
+            "name": "SHA256SUMS.txt",
+            "download_count": 0,
+            "kind": "other"
+          },
+          {
+            "asset_id": 564838576,
+            "release_id": 388858842,
+            "tag": "v2.0.0a1",
+            "prerelease": true,
+            "name": "mkin4py-2.0.0a1-py3-none-any.whl",
+            "download_count": 2,
+            "kind": "package"
+          },
+          {
+            "asset_id": 588855422,
+            "release_id": 396796235,
+            "tag": "v2.0.0",
+            "prerelease": false,
+            "name": "mkin4py-2.0.0-py3-none-any.whl",
+            "download_count": 5,
+            "kind": "package"
+          },
+          {
+            "asset_id": 588855424,
+            "release_id": 396796235,
+            "tag": "v2.0.0",
+            "prerelease": false,
+            "name": "SHA256SUMS.txt",
+            "download_count": 1,
+            "kind": "other"
+          },
+          {
+            "asset_id": 588855425,
+            "release_id": 396796235,
+            "tag": "v2.0.0",
+            "prerelease": false,
+            "name": "mkin4py-2.0.0.tar.gz",
+            "download_count": 4,
+            "kind": "package"
+          }
+        ],
+        "changes": {
+          "previous_observed_at": "2026-10-19T22:55:18.068929+00:00",
+          "current_observed_at": "2026-10-20T12:45:49.173708+00:00",
+          "assets": [
+            {
+              "asset_id": 564838573,
+              "name": "mkin4py-2.0.0a1.tar.gz",
+              "kind": "package",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 564838575,
+              "name": "SHA256SUMS.txt",
+              "kind": "other",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 564838576,
+              "name": "mkin4py-2.0.0a1-py3-none-any.whl",
+              "kind": "package",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 588855422,
+              "name": "mkin4py-2.0.0-py3-none-any.whl",
+              "kind": "package",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 588855424,
+              "name": "SHA256SUMS.txt",
+              "kind": "other",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 588855425,
+              "name": "mkin4py-2.0.0.tar.gz",
+              "kind": "package",
+              "status": "observed",
+              "download_increase": 0
+            }
+          ],
+          "removed_asset_ids": []
+        }
+      }
+    },
+    {
+      "id": "xl2py",
+      "pypi_package": "xl2py",
+      "repository": "gusmaogabriels/xl2py",
+      "pypi_downloads": {
+        "status": "available",
+        "package": "xl2py",
+        "source": "https://pypistats.org/api/packages/xl2py/overall?mirrors=false",
+        "mirrors": "excluded",
+        "last_attempt_at": "2026-10-20T12:45:49.173708+00:00",
+        "fetched_at": "2026-10-20T12:45:49.173708+00:00",
+        "data_through": "2026-10-08",
+        "daily": [
+          {
+            "date": "2026-04-10",
+            "downloads": 2
+          },
+          {
+            "date": "2026-04-11",
+            "downloads": 2
+          },
+          {
+            "date": "2026-04-13",
+            "downloads": 4
+          },
+          {
+            "date": "2026-04-15",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-16",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-20",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-25",
+            "downloads": 1
+          },
+          {
+            "date": "2026-04-30",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-01",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-05",
+            "downloads": 2
+          },
+          {
+            "date": "2026-05-18",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-22",
+            "downloads": 2
+          },
+          {
+            "date": "2026-05-28",
+            "downloads": 1
+          },
+          {
+            "date": "2026-05-29",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-05",
+            "downloads": 9
+          },
+          {
+            "date": "2026-06-06",
+            "downloads": 9
+          },
+          {
+            "date": "2026-06-20",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-23",
+            "downloads": 2
+          },
+          {
+            "date": "2026-06-26",
+            "downloads": 1
+          },
+          {
+            "date": "2026-06-29",
+            "downloads": 2
+          },
+          {
+            "date": "2026-06-30",
+            "downloads": 3
+          },
+          {
+            "date": "2026-07-12",
+            "downloads": 1
+          },
+          {
+            "date": "2026-07-19",
+            "downloads": 1
+          },
+          {
+            "date": "2026-07-22",
+            "downloads": 2
+          },
+          {
+            "date": "2026-07-23",
+            "downloads": 2
+          },
+          {
+            "date": "2026-07-30",
+            "downloads": 2
+          },
+          {
+            "date": "2026-08-04",
+            "downloads": 3
+          },
+          {
+            "date": "2026-08-05",
+            "downloads": 5
+          },
+          {
+            "date": "2026-08-06",
+            "downloads": 3
+          },
+          {
+            "date": "2026-08-07",
+            "downloads": 1
+          },
+          {
+            "date": "2026-08-09",
+            "downloads": 3
+          },
+          {
+            "date": "2026-09-11",
+            "downloads": 1
+          },
+          {
+            "date": "2026-09-12",
+            "downloads": 1
+          },
+          {
+            "date": "2026-09-13",
+            "downloads": 2
+          },
+          {
+            "date": "2026-09-21",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-07",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-08",
+            "downloads": 2
+          }
+        ],
+        "windows": {
+          "1": {
+            "start_date": "2026-10-08",
+            "end_date": "2026-10-08",
+            "reported_downloads": 2,
+            "reported_days": 1
+          },
+          "7": {
+            "start_date": "2026-10-02",
+            "end_date": "2026-10-08",
+            "reported_downloads": 3,
+            "reported_days": 2
+          },
+          "30": {
+            "start_date": "2026-09-09",
+            "end_date": "2026-10-08",
+            "reported_downloads": 8,
+            "reported_days": 6
+          }
+        }
+      },
+      "pypi_recent": {
+        "status": "available",
+        "package": "xl2py",
+        "source": "https://pypistats.org/api/packages/xl2py/recent",
+        "mirrors": "excluded",
+        "last_attempt_at": "2026-10-20T12:45:49.173708+00:00",
+        "fetched_at": "2026-10-20T12:45:49.173708+00:00",
+        "counts": {
+          "last_day": 0,
+          "last_week": 0,
+          "last_month": 5
+        },
+        "scope": "Source-reported last day/week/month aggregates; exact period dates are not supplied by this endpoint."
+      },
+      "github_release_downloads": {
+        "status": "stale",
+        "repository": "gusmaogabriels/xl2py",
+        "source": "https://api.github.com/repos/gusmaogabriels/xl2py/releases",
+        "observed_at": "2026-09-16T22:12:56.130860+00:00",
+        "last_attempt_at": "2026-10-20T12:45:49.173708+00:00",
+        "assets": [
+          {
+            "asset_id": 564866778,
+            "release_id": 388864499,
+            "tag": "v3.0.0a1",
+            "prerelease": true,
+            "name": "SHA256SUMS.txt",
+            "download_count": 1,
+            "kind": "other"
+          },
+          {
+            "asset_id": 564866779,
+            "release_id": 388864499,
+            "tag": "v3.0.0a1",
+            "prerelease": true,
+            "name": "xl2py-3.0.0a1.tar.gz",
+            "download_count": 1,
+            "kind": "package"
+          },
+          {
+            "asset_id": 564866783,
+            "release_id": 388864499,
+            "tag": "v3.0.0a1",
+            "prerelease": true,
+            "name": "xl2py-3.0.0a1-py3-none-any.whl",
+            "download_count": 1,
+            "kind": "package"
+          }
+        ],
+        "changes": {
+          "previous_observed_at": "2026-09-16T17:04:39.727964+00:00",
+          "current_observed_at": "2026-09-16T22:12:56.130860+00:00",
+          "assets": [
+            {
+              "asset_id": 564866778,
+              "name": "SHA256SUMS.txt",
+              "kind": "other",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 564866779,
+              "name": "xl2py-3.0.0a1.tar.gz",
+              "kind": "package",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 564866783,
+              "name": "xl2py-3.0.0a1-py3-none-any.whl",
+              "kind": "package",
+              "status": "observed",
+              "download_increase": 0
+            }
+          ],
+          "removed_asset_ids": []
+        },
+        "error": "collection_failed"
+      }
+    },
+    {
+      "id": "kinn",
+      "pypi_package": "kinnlib",
+      "repository": "gusmaogabriels/kinn",
+      "pypi_downloads": {
+        "status": "available",
+        "package": "kinnlib",
+        "source": "https://pypistats.org/api/packages/kinnlib/overall?mirrors=false",
+        "mirrors": "excluded",
+        "last_attempt_at": "2026-10-20T12:45:49.173708+00:00",
+        "fetched_at": "2026-10-20T12:45:49.173708+00:00",
+        "data_through": "2026-10-18",
+        "daily": [
+          {
+            "date": "2026-09-16",
+            "downloads": 72
+          },
+          {
+            "date": "2026-09-17",
+            "downloads": 13
+          },
+          {
+            "date": "2026-09-18",
+            "downloads": 3
+          },
+          {
+            "date": "2026-09-19",
+            "downloads": 5
+          },
+          {
+            "date": "2026-09-20",
+            "downloads": 1
+          },
+          {
+            "date": "2026-09-22",
+            "downloads": 1
+          },
+          {
+            "date": "2026-09-25",
+            "downloads": 2
+          },
+          {
+            "date": "2026-09-26",
+            "downloads": 1
+          },
+          {
+            "date": "2026-09-28",
+            "downloads": 1
+          },
+          {
+            "date": "2026-09-30",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-02",
+            "downloads": 4
+          },
+          {
+            "date": "2026-10-04",
+            "downloads": 3
+          },
+          {
+            "date": "2026-10-05",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-06",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-10",
+            "downloads": 2
+          },
+          {
+            "date": "2026-10-11",
+            "downloads": 1
+          },
+          {
+            "date": "2026-10-13",
+            "downloads": 2
+          },
+          {
+            "date": "2026-10-14",
+            "downloads": 2
+          },
+          {
+            "date": "2026-10-16",
+            "downloads": 2
+          },
+          {
+            "date": "2026-10-18",
+            "downloads": 5
+          }
+        ],
+        "windows": {
+          "1": {
+            "start_date": "2026-10-18",
+            "end_date": "2026-10-18",
+            "reported_downloads": 5,
+            "reported_days": 1
+          },
+          "7": {
+            "start_date": "2026-10-12",
+            "end_date": "2026-10-18",
+            "reported_downloads": 11,
+            "reported_days": 4
+          },
+          "30": {
+            "start_date": "2026-09-19",
+            "end_date": "2026-10-18",
+            "reported_downloads": 35,
+            "reported_days": 17
+          }
+        }
+      },
+      "pypi_recent": {
+        "status": "available",
+        "package": "kinnlib",
+        "source": "https://pypistats.org/api/packages/kinnlib/recent",
+        "mirrors": "excluded",
+        "last_attempt_at": "2026-10-20T12:45:49.173708+00:00",
+        "fetched_at": "2026-10-20T12:45:49.173708+00:00",
+        "counts": {
+          "last_day": 0,
+          "last_week": 11,
+          "last_month": 108
+        },
+        "scope": "Source-reported last day/week/month aggregates; exact period dates are not supplied by this endpoint."
+      },
+      "github_release_downloads": {
+        "status": "available",
+        "repository": "gusmaogabriels/kinn",
+        "source": "https://api.github.com/repos/gusmaogabriels/kinn/releases",
+        "observed_at": "2026-10-20T12:45:49.173708+00:00",
+        "last_attempt_at": "2026-10-20T12:45:49.173708+00:00",
+        "assets": [
+          {
+            "asset_id": 568043531,
+            "release_id": 389504490,
+            "tag": "v1.0",
+            "prerelease": false,
+            "name": "kinnlib-1.0-py3-none-any.whl",
+            "download_count": 3,
+            "kind": "package"
+          },
+          {
+            "asset_id": 568043532,
+            "release_id": 389504490,
+            "tag": "v1.0",
+            "prerelease": false,
+            "name": "kinnlib-1.0.tar.gz",
+            "download_count": 2,
+            "kind": "package"
+          },
+          {
+            "asset_id": 568043533,
+            "release_id": 389504490,
+            "tag": "v1.0",
+            "prerelease": false,
+            "name": "SHA256SUMS",
+            "download_count": 2,
+            "kind": "other"
+          }
+        ],
+        "changes": {
+          "previous_observed_at": "2026-10-19T22:55:18.068929+00:00",
+          "current_observed_at": "2026-10-20T12:45:49.173708+00:00",
+          "assets": [
+            {
+              "asset_id": 568043531,
+              "name": "kinnlib-1.0-py3-none-any.whl",
+              "kind": "package",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 568043532,
+              "name": "kinnlib-1.0.tar.gz",
+              "kind": "package",
+              "status": "observed",
+              "download_increase": 0
+            },
+            {
+              "asset_id": 568043533,
+              "name": "SHA256SUMS",
+              "kind": "other",
+              "status": "observed",
+              "download_increase": 0
+            }
+          ],
+          "removed_asset_ids": []
+        }
+      }
+    }
+  ],
+  "local_cli_usage": {
+    "status": "not_observed"
+  },
+  "scope": "Separate PyPI daily downloads excluding known mirrors and cumulative GitHub release-asset counters. Includes automation and repeats; do not combine sources or infer users, installs or local runs.",
+  "github_metrics_status": "available"
+}
