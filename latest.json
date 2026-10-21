@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "gusmaogabriels/optinpy",
-  "observed_at": "2026-10-20T22:20:46.056458+00:00",
+  "observed_at": "2026-10-21T12:58:27.281873+00:00",
   "stars": 49,
   "assets": [
     {
@@ -46,7 +46,7 @@
       "tag": "v2.0.0a2",
       "prerelease": true,
       "name": "optinpy-2.0.0a2.tar.gz",
-      "download_count": 1,
+      "download_count": 2,
       "kind": "package"
     },
     {
@@ -68,9 +68,9 @@
     "package": "optinpy",
     "source": "https://pypistats.org/api/packages/optinpy/overall?mirrors=false",
     "mirrors": "excluded",
-    "last_attempt_at": "2026-10-20T12:45:49.173708+00:00",
-    "fetched_at": "2026-10-20T12:45:49.173708+00:00",
-    "data_through": "2026-10-18",
+    "last_attempt_at": "2026-10-21T12:58:27.281873+00:00",
+    "fetched_at": "2026-10-21T12:58:27.281873+00:00",
+    "data_through": "2026-10-20",
     "daily": [
       {
         "date": "2026-09-15",
@@ -159,25 +159,29 @@
       {
         "date": "2026-10-18",
         "downloads": 5
+      },
+      {
+        "date": "2026-10-20",
+        "downloads": 1
       }
     ],
     "windows": {
       "1": {
-        "start_date": "2026-10-18",
-        "end_date": "2026-10-18",
-        "reported_downloads": 5,
+        "start_date": "2026-10-20",
+        "end_date": "2026-10-20",
+        "reported_downloads": 1,
         "reported_days": 1
       },
       "7": {
-        "start_date": "2026-10-12",
-        "end_date": "2026-10-18",
-        "reported_downloads": 11,
-        "reported_days": 5
+        "start_date": "2026-10-14",
+        "end_date": "2026-10-20",
+        "reported_downloads": 8,
+        "reported_days": 4
       },
       "30": {
-        "start_date": "2026-09-19",
-        "end_date": "2026-10-18",
-        "reported_downloads": 55,
+        "start_date": "2026-09-21",
+        "end_date": "2026-10-20",
+        "reported_downloads": 54,
         "reported_days": 18
       }
     }
@@ -186,8 +190,8 @@
     "status": "not_collected"
   },
   "changes": {
-    "previous_observed_at": "2026-10-20T18:00:07.971041+00:00",
-    "current_observed_at": "2026-10-20T22:20:46.056458+00:00",
+    "previous_observed_at": "2026-10-20T22:20:46.056458+00:00",
+    "current_observed_at": "2026-10-21T12:58:27.281873+00:00",
     "assets": [
       {
         "asset_id": 564614421,
@@ -222,7 +226,7 @@
         "name": "optinpy-2.0.0a2.tar.gz",
         "kind": "package",
         "status": "observed",
-        "download_increase": 0
+        "download_increase": 1
       },
       {
         "asset_id": 564699120,
