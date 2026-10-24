@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "observed_at": "2026-10-23T22:15:22.189377+00:00",
+  "observed_at": "2026-10-24T12:02:30.259789+00:00",
   "packages": [
     {
       "id": "optinpy",
@@ -11,9 +11,9 @@
         "package": "optinpy",
         "source": "https://pypistats.org/api/packages/optinpy/overall?mirrors=false",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-10-23T12:39:42.343410+00:00",
-        "fetched_at": "2026-10-23T12:39:42.343410+00:00",
-        "data_through": "2026-10-22",
+        "last_attempt_at": "2026-10-24T12:02:30.259789+00:00",
+        "fetched_at": "2026-10-24T12:02:30.259789+00:00",
+        "data_through": "2026-10-23",
         "daily": [
           {
             "date": "2026-09-15",
@@ -114,25 +114,29 @@
           {
             "date": "2026-10-22",
             "downloads": 2
+          },
+          {
+            "date": "2026-10-23",
+            "downloads": 3
           }
         ],
         "windows": {
           "1": {
-            "start_date": "2026-10-22",
-            "end_date": "2026-10-22",
-            "reported_downloads": 2,
+            "start_date": "2026-10-23",
+            "end_date": "2026-10-23",
+            "reported_downloads": 3,
             "reported_days": 1
           },
           "7": {
-            "start_date": "2026-10-16",
-            "end_date": "2026-10-22",
-            "reported_downloads": 11,
-            "reported_days": 5
+            "start_date": "2026-10-17",
+            "end_date": "2026-10-23",
+            "reported_downloads": 14,
+            "reported_days": 6
           },
           "30": {
-            "start_date": "2026-09-23",
-            "end_date": "2026-10-22",
-            "reported_downloads": 56,
+            "start_date": "2026-09-24",
+            "end_date": "2026-10-23",
+            "reported_downloads": 58,
             "reported_days": 19
           }
         }
@@ -142,11 +146,11 @@
         "package": "optinpy",
         "source": "https://pypistats.org/api/packages/optinpy/recent",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-10-23T12:39:42.343410+00:00",
-        "fetched_at": "2026-10-23T12:39:42.343410+00:00",
+        "last_attempt_at": "2026-10-24T12:02:30.259789+00:00",
+        "fetched_at": "2026-10-24T12:02:30.259789+00:00",
         "counts": {
-          "last_day": 2,
-          "last_week": 9,
+          "last_day": 3,
+          "last_week": 14,
           "last_month": 294
         },
         "scope": "Source-reported last day/week/month aggregates; exact period dates are not supplied by this endpoint."
@@ -155,8 +159,8 @@
         "status": "available",
         "repository": "gusmaogabriels/optinpy",
         "source": "https://api.github.com/repos/gusmaogabriels/optinpy/releases",
-        "observed_at": "2026-10-23T22:15:22.189377+00:00",
-        "last_attempt_at": "2026-10-23T22:15:22.189377+00:00",
+        "observed_at": "2026-10-24T12:02:30.259789+00:00",
+        "last_attempt_at": "2026-10-24T12:02:30.259789+00:00",
         "assets": [
           {
             "asset_id": 564614421,
@@ -214,8 +218,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-10-23T17:53:32.481399+00:00",
-          "current_observed_at": "2026-10-23T22:15:22.189377+00:00",
+          "previous_observed_at": "2026-10-23T22:15:22.189377+00:00",
+          "current_observed_at": "2026-10-24T12:02:30.259789+00:00",
           "assets": [
             {
               "asset_id": 564614421,
@@ -273,9 +277,9 @@
         "package": "mkin4py",
         "source": "https://pypistats.org/api/packages/mkin4py/overall?mirrors=false",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-10-23T12:39:42.343410+00:00",
-        "fetched_at": "2026-10-23T12:39:42.343410+00:00",
-        "data_through": "2026-10-22",
+        "last_attempt_at": "2026-10-24T12:02:30.259789+00:00",
+        "fetched_at": "2026-10-24T12:02:30.259789+00:00",
+        "data_through": "2026-10-23",
         "daily": [
           {
             "date": "2026-04-08",
@@ -456,26 +460,30 @@
           {
             "date": "2026-10-22",
             "downloads": 1
+          },
+          {
+            "date": "2026-10-23",
+            "downloads": 1
           }
         ],
         "windows": {
           "1": {
-            "start_date": "2026-10-22",
-            "end_date": "2026-10-22",
+            "start_date": "2026-10-23",
+            "end_date": "2026-10-23",
             "reported_downloads": 1,
             "reported_days": 1
           },
           "7": {
-            "start_date": "2026-10-16",
-            "end_date": "2026-10-22",
-            "reported_downloads": 9,
+            "start_date": "2026-10-17",
+            "end_date": "2026-10-23",
+            "reported_downloads": 8,
             "reported_days": 3
           },
           "30": {
-            "start_date": "2026-09-23",
-            "end_date": "2026-10-22",
-            "reported_downloads": 127,
-            "reported_days": 16
+            "start_date": "2026-09-24",
+            "end_date": "2026-10-23",
+            "reported_downloads": 128,
+            "reported_days": 17
           }
         }
       },
@@ -484,11 +492,11 @@
         "package": "mkin4py",
         "source": "https://pypistats.org/api/packages/mkin4py/recent",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-10-23T12:39:42.343410+00:00",
-        "fetched_at": "2026-10-23T12:39:42.343410+00:00",
+        "last_attempt_at": "2026-10-24T12:02:30.259789+00:00",
+        "fetched_at": "2026-10-24T12:02:30.259789+00:00",
         "counts": {
           "last_day": 1,
-          "last_week": 2,
+          "last_week": 8,
           "last_month": 115
         },
         "scope": "Source-reported last day/week/month aggregates; exact period dates are not supplied by this endpoint."
@@ -497,8 +505,8 @@
         "status": "available",
         "repository": "gusmaogabriels/mkin4py",
         "source": "https://api.github.com/repos/gusmaogabriels/mkin4py/releases",
-        "observed_at": "2026-10-23T22:15:22.189377+00:00",
-        "last_attempt_at": "2026-10-23T22:15:22.189377+00:00",
+        "observed_at": "2026-10-24T12:02:30.259789+00:00",
+        "last_attempt_at": "2026-10-24T12:02:30.259789+00:00",
         "assets": [
           {
             "asset_id": 564838573,
@@ -556,8 +564,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-10-23T17:53:32.481399+00:00",
-          "current_observed_at": "2026-10-23T22:15:22.189377+00:00",
+          "previous_observed_at": "2026-10-23T22:15:22.189377+00:00",
+          "current_observed_at": "2026-10-24T12:02:30.259789+00:00",
           "assets": [
             {
               "asset_id": 564838573,
@@ -615,9 +623,9 @@
         "package": "xl2py",
         "source": "https://pypistats.org/api/packages/xl2py/overall?mirrors=false",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-10-23T12:39:42.343410+00:00",
-        "fetched_at": "2026-10-23T12:39:42.343410+00:00",
-        "data_through": "2026-10-20",
+        "last_attempt_at": "2026-10-24T12:02:30.259789+00:00",
+        "fetched_at": "2026-10-24T12:02:30.259789+00:00",
+        "data_through": "2026-10-23",
         "daily": [
           {
             "date": "2026-04-10",
@@ -770,24 +778,28 @@
           {
             "date": "2026-10-20",
             "downloads": 1
+          },
+          {
+            "date": "2026-10-23",
+            "downloads": 1
           }
         ],
         "windows": {
           "1": {
-            "start_date": "2026-10-20",
-            "end_date": "2026-10-20",
+            "start_date": "2026-10-23",
+            "end_date": "2026-10-23",
             "reported_downloads": 1,
             "reported_days": 1
           },
           "7": {
-            "start_date": "2026-10-14",
-            "end_date": "2026-10-20",
-            "reported_downloads": 1,
-            "reported_days": 1
+            "start_date": "2026-10-17",
+            "end_date": "2026-10-23",
+            "reported_downloads": 2,
+            "reported_days": 2
           },
           "30": {
-            "start_date": "2026-09-21",
-            "end_date": "2026-10-20",
+            "start_date": "2026-09-24",
+            "end_date": "2026-10-23",
             "reported_downloads": 5,
             "reported_days": 4
           }
@@ -798,11 +810,11 @@
         "package": "xl2py",
         "source": "https://pypistats.org/api/packages/xl2py/recent",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-10-23T12:39:42.343410+00:00",
-        "fetched_at": "2026-10-23T12:39:42.343410+00:00",
+        "last_attempt_at": "2026-10-24T12:02:30.259789+00:00",
+        "fetched_at": "2026-10-24T12:02:30.259789+00:00",
         "counts": {
-          "last_day": 0,
-          "last_week": 0,
+          "last_day": 1,
+          "last_week": 2,
           "last_month": 5
         },
         "scope": "Source-reported last day/week/month aggregates; exact period dates are not supplied by this endpoint."
@@ -812,7 +824,7 @@
         "repository": "gusmaogabriels/xl2py",
         "source": "https://api.github.com/repos/gusmaogabriels/xl2py/releases",
         "observed_at": "2026-09-16T22:12:56.130860+00:00",
-        "last_attempt_at": "2026-10-23T22:15:22.189377+00:00",
+        "last_attempt_at": "2026-10-24T12:02:30.259789+00:00",
         "assets": [
           {
             "asset_id": 564866778,
@@ -882,9 +894,9 @@
         "package": "kinnlib",
         "source": "https://pypistats.org/api/packages/kinnlib/overall?mirrors=false",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-10-23T12:39:42.343410+00:00",
-        "fetched_at": "2026-10-23T12:39:42.343410+00:00",
-        "data_through": "2026-10-22",
+        "last_attempt_at": "2026-10-24T12:02:30.259789+00:00",
+        "fetched_at": "2026-10-24T12:02:30.259789+00:00",
+        "data_through": "2026-10-23",
         "daily": [
           {
             "date": "2026-09-16",
@@ -973,26 +985,30 @@
           {
             "date": "2026-10-22",
             "downloads": 1
+          },
+          {
+            "date": "2026-10-23",
+            "downloads": 1
           }
         ],
         "windows": {
           "1": {
-            "start_date": "2026-10-22",
-            "end_date": "2026-10-22",
+            "start_date": "2026-10-23",
+            "end_date": "2026-10-23",
             "reported_downloads": 1,
             "reported_days": 1
           },
           "7": {
-            "start_date": "2026-10-16",
-            "end_date": "2026-10-22",
-            "reported_downloads": 9,
+            "start_date": "2026-10-17",
+            "end_date": "2026-10-23",
+            "reported_downloads": 8,
             "reported_days": 4
           },
           "30": {
-            "start_date": "2026-09-23",
-            "end_date": "2026-10-22",
-            "reported_downloads": 30,
-            "reported_days": 16
+            "start_date": "2026-09-24",
+            "end_date": "2026-10-23",
+            "reported_downloads": 31,
+            "reported_days": 17
           }
         }
       },
@@ -1001,11 +1017,11 @@
         "package": "kinnlib",
         "source": "https://pypistats.org/api/packages/kinnlib/recent",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-10-23T12:39:42.343410+00:00",
-        "fetched_at": "2026-10-23T12:39:42.343410+00:00",
+        "last_attempt_at": "2026-10-24T12:02:30.259789+00:00",
+        "fetched_at": "2026-10-24T12:02:30.259789+00:00",
         "counts": {
           "last_day": 1,
-          "last_week": 11,
+          "last_week": 8,
           "last_month": 108
         },
         "scope": "Source-reported last day/week/month aggregates; exact period dates are not supplied by this endpoint."
@@ -1014,8 +1030,8 @@
         "status": "available",
         "repository": "gusmaogabriels/kinn",
         "source": "https://api.github.com/repos/gusmaogabriels/kinn/releases",
-        "observed_at": "2026-10-23T22:15:22.189377+00:00",
-        "last_attempt_at": "2026-10-23T22:15:22.189377+00:00",
+        "observed_at": "2026-10-24T12:02:30.259789+00:00",
+        "last_attempt_at": "2026-10-24T12:02:30.259789+00:00",
         "assets": [
           {
             "asset_id": 568043531,
@@ -1046,8 +1062,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-10-23T17:53:32.481399+00:00",
-          "current_observed_at": "2026-10-23T22:15:22.189377+00:00",
+          "previous_observed_at": "2026-10-23T22:15:22.189377+00:00",
+          "current_observed_at": "2026-10-24T12:02:30.259789+00:00",
           "assets": [
             {
               "asset_id": 568043531,
