@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "observed_at": "2026-10-27T18:43:24.023432+00:00",
+  "observed_at": "2026-10-27T22:59:12.850593+00:00",
   "packages": [
     {
       "id": "optinpy",
@@ -163,8 +163,8 @@
         "status": "available",
         "repository": "gusmaogabriels/optinpy",
         "source": "https://api.github.com/repos/gusmaogabriels/optinpy/releases",
-        "observed_at": "2026-10-27T18:43:24.023432+00:00",
-        "last_attempt_at": "2026-10-27T18:43:24.023432+00:00",
+        "observed_at": "2026-10-27T22:59:12.850593+00:00",
+        "last_attempt_at": "2026-10-27T22:59:12.850593+00:00",
         "assets": [
           {
             "asset_id": 564614421,
@@ -222,8 +222,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-10-27T13:17:20.847883+00:00",
-          "current_observed_at": "2026-10-27T18:43:24.023432+00:00",
+          "previous_observed_at": "2026-10-27T18:43:24.023432+00:00",
+          "current_observed_at": "2026-10-27T22:59:12.850593+00:00",
           "assets": [
             {
               "asset_id": 564614421,
@@ -509,8 +509,8 @@
         "status": "available",
         "repository": "gusmaogabriels/mkin4py",
         "source": "https://api.github.com/repos/gusmaogabriels/mkin4py/releases",
-        "observed_at": "2026-10-27T18:43:24.023432+00:00",
-        "last_attempt_at": "2026-10-27T18:43:24.023432+00:00",
+        "observed_at": "2026-10-27T22:59:12.850593+00:00",
+        "last_attempt_at": "2026-10-27T22:59:12.850593+00:00",
         "assets": [
           {
             "asset_id": 564838573,
@@ -568,8 +568,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-10-27T13:17:20.847883+00:00",
-          "current_observed_at": "2026-10-27T18:43:24.023432+00:00",
+          "previous_observed_at": "2026-10-27T18:43:24.023432+00:00",
+          "current_observed_at": "2026-10-27T22:59:12.850593+00:00",
           "assets": [
             {
               "asset_id": 564838573,
@@ -828,7 +828,7 @@
         "repository": "gusmaogabriels/xl2py",
         "source": "https://api.github.com/repos/gusmaogabriels/xl2py/releases",
         "observed_at": "2026-09-16T22:12:56.130860+00:00",
-        "last_attempt_at": "2026-10-27T18:43:24.023432+00:00",
+        "last_attempt_at": "2026-10-27T22:59:12.850593+00:00",
         "assets": [
           {
             "asset_id": 564866778,
@@ -1038,8 +1038,8 @@
         "status": "available",
         "repository": "gusmaogabriels/kinn",
         "source": "https://api.github.com/repos/gusmaogabriels/kinn/releases",
-        "observed_at": "2026-10-27T18:43:24.023432+00:00",
-        "last_attempt_at": "2026-10-27T18:43:24.023432+00:00",
+        "observed_at": "2026-10-27T22:59:12.850593+00:00",
+        "last_attempt_at": "2026-10-27T22:59:12.850593+00:00",
         "assets": [
           {
             "asset_id": 568043531,
@@ -1070,8 +1070,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-10-27T13:17:20.847883+00:00",
-          "current_observed_at": "2026-10-27T18:43:24.023432+00:00",
+          "previous_observed_at": "2026-10-27T18:43:24.023432+00:00",
+          "current_observed_at": "2026-10-27T22:59:12.850593+00:00",
           "assets": [
             {
               "asset_id": 568043531,
