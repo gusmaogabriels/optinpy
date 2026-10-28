@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "gusmaogabriels/optinpy",
-  "observed_at": "2026-10-27T22:59:12.850593+00:00",
+  "observed_at": "2026-10-28T14:03:51.081170+00:00",
   "stars": 49,
   "assets": [
     {
@@ -68,9 +68,9 @@
     "package": "optinpy",
     "source": "https://pypistats.org/api/packages/optinpy/overall?mirrors=false",
     "mirrors": "excluded",
-    "last_attempt_at": "2026-10-27T13:17:20.847883+00:00",
-    "fetched_at": "2026-10-27T13:17:20.847883+00:00",
-    "data_through": "2026-10-25",
+    "last_attempt_at": "2026-10-28T14:03:51.081170+00:00",
+    "fetched_at": "2026-10-28T14:03:51.081170+00:00",
+    "data_through": "2026-10-27",
     "daily": [
       {
         "date": "2026-09-15",
@@ -179,24 +179,28 @@
       {
         "date": "2026-10-25",
         "downloads": 1
+      },
+      {
+        "date": "2026-10-27",
+        "downloads": 1
       }
     ],
     "windows": {
       "1": {
-        "start_date": "2026-10-25",
-        "end_date": "2026-10-25",
+        "start_date": "2026-10-27",
+        "end_date": "2026-10-27",
         "reported_downloads": 1,
         "reported_days": 1
       },
       "7": {
-        "start_date": "2026-10-19",
-        "end_date": "2026-10-25",
+        "start_date": "2026-10-21",
+        "end_date": "2026-10-27",
         "reported_downloads": 9,
         "reported_days": 5
       },
       "30": {
-        "start_date": "2026-09-26",
-        "end_date": "2026-10-25",
+        "start_date": "2026-09-28",
+        "end_date": "2026-10-27",
         "reported_downloads": 51,
         "reported_days": 19
       }
@@ -206,8 +210,8 @@
     "status": "not_collected"
   },
   "changes": {
-    "previous_observed_at": "2026-10-27T18:43:24.023432+00:00",
-    "current_observed_at": "2026-10-27T22:59:12.850593+00:00",
+    "previous_observed_at": "2026-10-27T22:59:12.850593+00:00",
+    "current_observed_at": "2026-10-28T14:03:51.081170+00:00",
     "assets": [
       {
         "asset_id": 564614421,
