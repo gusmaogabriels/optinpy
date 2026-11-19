@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "observed_at": "2026-11-18T16:29:37.100328+00:00",
+  "observed_at": "2026-11-19T01:15:30.307519+00:00",
   "packages": [
     {
       "id": "optinpy",
@@ -11,8 +11,8 @@
         "package": "optinpy",
         "source": "https://pypistats.org/api/packages/optinpy/overall?mirrors=false",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-11-18T01:38:05.845909+00:00",
-        "fetched_at": "2026-11-18T01:38:05.845909+00:00",
+        "last_attempt_at": "2026-11-19T01:15:30.307519+00:00",
+        "fetched_at": "2026-11-19T01:15:30.307519+00:00",
         "data_through": "2026-11-12",
         "daily": [
           {
@@ -178,8 +178,8 @@
         "package": "optinpy",
         "source": "https://pypistats.org/api/packages/optinpy/recent",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-11-18T01:38:05.845909+00:00",
-        "fetched_at": "2026-11-18T01:38:05.845909+00:00",
+        "last_attempt_at": "2026-11-19T01:15:30.307519+00:00",
+        "fetched_at": "2026-11-19T01:15:30.307519+00:00",
         "counts": {
           "last_day": 0,
           "last_week": 6,
@@ -191,8 +191,8 @@
         "status": "available",
         "repository": "gusmaogabriels/optinpy",
         "source": "https://api.github.com/repos/gusmaogabriels/optinpy/releases",
-        "observed_at": "2026-11-18T16:29:37.100328+00:00",
-        "last_attempt_at": "2026-11-18T16:29:37.100328+00:00",
+        "observed_at": "2026-11-19T01:15:30.307519+00:00",
+        "last_attempt_at": "2026-11-19T01:15:30.307519+00:00",
         "assets": [
           {
             "asset_id": 564614421,
@@ -250,8 +250,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-11-18T01:38:05.845909+00:00",
-          "current_observed_at": "2026-11-18T16:29:37.100328+00:00",
+          "previous_observed_at": "2026-11-18T16:29:37.100328+00:00",
+          "current_observed_at": "2026-11-19T01:15:30.307519+00:00",
           "assets": [
             {
               "asset_id": 564614421,
@@ -309,8 +309,8 @@
         "package": "mkin4py",
         "source": "https://pypistats.org/api/packages/mkin4py/overall?mirrors=false",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-11-18T01:38:05.845909+00:00",
-        "fetched_at": "2026-11-18T01:38:05.845909+00:00",
+        "last_attempt_at": "2026-11-19T01:15:30.307519+00:00",
+        "fetched_at": "2026-11-19T01:15:30.307519+00:00",
         "data_through": "2026-11-15",
         "daily": [
           {
@@ -528,8 +528,8 @@
         "package": "mkin4py",
         "source": "https://pypistats.org/api/packages/mkin4py/recent",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-11-18T01:38:05.845909+00:00",
-        "fetched_at": "2026-11-18T01:38:05.845909+00:00",
+        "last_attempt_at": "2026-11-19T01:15:30.307519+00:00",
+        "fetched_at": "2026-11-19T01:15:30.307519+00:00",
         "counts": {
           "last_day": 0,
           "last_week": 4,
@@ -541,8 +541,8 @@
         "status": "available",
         "repository": "gusmaogabriels/mkin4py",
         "source": "https://api.github.com/repos/gusmaogabriels/mkin4py/releases",
-        "observed_at": "2026-11-18T16:29:37.100328+00:00",
-        "last_attempt_at": "2026-11-18T16:29:37.100328+00:00",
+        "observed_at": "2026-11-19T01:15:30.307519+00:00",
+        "last_attempt_at": "2026-11-19T01:15:30.307519+00:00",
         "assets": [
           {
             "asset_id": 564838573,
@@ -600,8 +600,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-11-18T01:38:05.845909+00:00",
-          "current_observed_at": "2026-11-18T16:29:37.100328+00:00",
+          "previous_observed_at": "2026-11-18T16:29:37.100328+00:00",
+          "current_observed_at": "2026-11-19T01:15:30.307519+00:00",
           "assets": [
             {
               "asset_id": 564838573,
@@ -659,8 +659,8 @@
         "package": "xl2py",
         "source": "https://pypistats.org/api/packages/xl2py/overall?mirrors=false",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-11-18T01:38:05.845909+00:00",
-        "fetched_at": "2026-11-18T01:38:05.845909+00:00",
+        "last_attempt_at": "2026-11-19T01:15:30.307519+00:00",
+        "fetched_at": "2026-11-19T01:15:30.307519+00:00",
         "data_through": "2026-11-09",
         "daily": [
           {
@@ -826,8 +826,8 @@
         "package": "xl2py",
         "source": "https://pypistats.org/api/packages/xl2py/recent",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-11-18T01:38:05.845909+00:00",
-        "fetched_at": "2026-11-18T01:38:05.845909+00:00",
+        "last_attempt_at": "2026-11-19T01:15:30.307519+00:00",
+        "fetched_at": "2026-11-19T01:15:30.307519+00:00",
         "counts": {
           "last_day": 0,
           "last_week": 0,
@@ -840,7 +840,7 @@
         "repository": "gusmaogabriels/xl2py",
         "source": "https://api.github.com/repos/gusmaogabriels/xl2py/releases",
         "observed_at": "2026-09-16T22:12:56.130860+00:00",
-        "last_attempt_at": "2026-11-18T16:29:37.100328+00:00",
+        "last_attempt_at": "2026-11-19T01:15:30.307519+00:00",
         "assets": [
           {
             "asset_id": 564866778,
@@ -910,8 +910,8 @@
         "package": "kinnlib",
         "source": "https://pypistats.org/api/packages/kinnlib/overall?mirrors=false",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-11-18T01:38:05.845909+00:00",
-        "fetched_at": "2026-11-18T01:38:05.845909+00:00",
+        "last_attempt_at": "2026-11-19T01:15:30.307519+00:00",
+        "fetched_at": "2026-11-19T01:15:30.307519+00:00",
         "data_through": "2026-11-12",
         "daily": [
           {
@@ -1057,25 +1057,27 @@
         }
       },
       "pypi_recent": {
-        "status": "available",
+        "status": "stale",
         "package": "kinnlib",
         "source": "https://pypistats.org/api/packages/kinnlib/recent",
         "mirrors": "excluded",
-        "last_attempt_at": "2026-11-18T01:38:05.845909+00:00",
+        "last_attempt_at": "2026-11-19T01:15:30.307519+00:00",
         "fetched_at": "2026-11-18T01:38:05.845909+00:00",
         "counts": {
           "last_day": 0,
           "last_week": 1,
           "last_month": 19
         },
-        "scope": "Source-reported last day/week/month aggregates; exact period dates are not supplied by this endpoint."
+        "scope": "Source-reported last day/week/month aggregates; exact period dates are not supplied by this endpoint.",
+        "retry_at": "2026-11-19T02:15:30.307519+00:00",
+        "error": "rate_limited"
       },
       "github_release_downloads": {
         "status": "available",
         "repository": "gusmaogabriels/kinn",
         "source": "https://api.github.com/repos/gusmaogabriels/kinn/releases",
-        "observed_at": "2026-11-18T16:29:37.100328+00:00",
-        "last_attempt_at": "2026-11-18T16:29:37.100328+00:00",
+        "observed_at": "2026-11-19T01:15:30.307519+00:00",
+        "last_attempt_at": "2026-11-19T01:15:30.307519+00:00",
         "assets": [
           {
             "asset_id": 568043531,
@@ -1106,8 +1108,8 @@
           }
         ],
         "changes": {
-          "previous_observed_at": "2026-11-18T01:38:05.845909+00:00",
-          "current_observed_at": "2026-11-18T16:29:37.100328+00:00",
+          "previous_observed_at": "2026-11-18T16:29:37.100328+00:00",
+          "current_observed_at": "2026-11-19T01:15:30.307519+00:00",
           "assets": [
             {
               "asset_id": 568043531,
