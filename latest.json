@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "gusmaogabriels/optinpy",
-  "observed_at": "2026-11-24T18:55:39.183293+00:00",
+  "observed_at": "2026-11-25T03:03:23.012315+00:00",
   "stars": 49,
   "assets": [
     {
@@ -68,9 +68,9 @@
     "package": "optinpy",
     "source": "https://pypistats.org/api/packages/optinpy/overall?mirrors=false",
     "mirrors": "excluded",
-    "last_attempt_at": "2026-11-24T04:18:40.301963+00:00",
-    "fetched_at": "2026-11-24T04:18:40.301963+00:00",
-    "data_through": "2026-11-23",
+    "last_attempt_at": "2026-11-25T03:03:23.012315+00:00",
+    "fetched_at": "2026-11-25T03:03:23.012315+00:00",
+    "data_through": "2026-11-24",
     "daily": [
       {
         "date": "2026-09-15",
@@ -211,25 +211,29 @@
       {
         "date": "2026-11-23",
         "downloads": 1
+      },
+      {
+        "date": "2026-11-24",
+        "downloads": 2
       }
     ],
     "windows": {
       "1": {
-        "start_date": "2026-11-23",
-        "end_date": "2026-11-23",
-        "reported_downloads": 1,
+        "start_date": "2026-11-24",
+        "end_date": "2026-11-24",
+        "reported_downloads": 2,
         "reported_days": 1
       },
       "7": {
-        "start_date": "2026-11-17",
-        "end_date": "2026-11-23",
-        "reported_downloads": 1,
-        "reported_days": 1
+        "start_date": "2026-11-18",
+        "end_date": "2026-11-24",
+        "reported_downloads": 3,
+        "reported_days": 2
       },
       "30": {
-        "start_date": "2026-10-25",
-        "end_date": "2026-11-23",
-        "reported_downloads": 18,
+        "start_date": "2026-10-26",
+        "end_date": "2026-11-24",
+        "reported_downloads": 19,
         "reported_days": 9
       }
     }
@@ -238,8 +242,8 @@
     "status": "not_collected"
   },
   "changes": {
-    "previous_observed_at": "2026-11-24T04:18:40.301963+00:00",
-    "current_observed_at": "2026-11-24T18:55:39.183293+00:00",
+    "previous_observed_at": "2026-11-24T18:55:39.183293+00:00",
+    "current_observed_at": "2026-11-25T03:03:23.012315+00:00",
     "assets": [
       {
         "asset_id": 564614421,
